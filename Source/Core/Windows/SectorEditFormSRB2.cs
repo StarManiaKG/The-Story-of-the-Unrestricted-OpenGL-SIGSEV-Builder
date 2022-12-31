@@ -175,10 +175,37 @@ namespace CodeImp.DoomBuilder.Windows
 				tabs.SelectTab(activetab);
 			}
 
-			// Fill flags list
-			foreach(KeyValuePair<string, string> lf in General.Map.Config.SectorFlags)
-				flags.Add(lf.Value, lf.Key);
-			flags.Enabled = General.Map.Config.SectorFlags.Count > 0;
+			// Fill flags lists
+			flags.Enabled = false;
+			colormapflags.Enabled = false;
+			effectflags.Enabled = false;
+			triggerflags.Enabled = false;
+			foreach (KeyValuePair<string, string> lf in General.Map.Config.SectorFlags)
+			{
+				string category = General.Map.Config.SectorFlagsCategories[lf.Key];
+				switch (category)
+				{
+					case "regular":
+						flags.Add(lf.Value, lf.Key);
+						flags.Enabled = true;
+						break;
+					case "colormap":
+						colormapflags.Add(lf.Value, lf.Key);
+						colormapflags.Enabled = true;
+						break;
+					case "special":
+						effectflags.Add(lf.Value, lf.Key);
+						effectflags.Enabled = true;
+						break;
+					case "trigger":
+						triggerflags.Add(lf.Value, lf.Key);
+						triggerflags.Enabled = true;
+						break;
+					default:
+						break;
+
+				}
+			}
 
 			// Fill damagetype list
 			damagetype.Items.Add(NO_DAMAGETYPE);
@@ -260,6 +287,12 @@ namespace CodeImp.DoomBuilder.Windows
 			// Flags
 			foreach(CheckBox c in flags.Checkboxes)
 				if(sc.Flags.ContainsKey(c.Tag.ToString())) c.Checked = sc.Flags[c.Tag.ToString()];
+			foreach (CheckBox c in colormapflags.Checkboxes)
+				if (sc.Flags.ContainsKey(c.Tag.ToString())) c.Checked = sc.Flags[c.Tag.ToString()];
+			foreach (CheckBox c in effectflags.Checkboxes)
+				if (sc.Flags.ContainsKey(c.Tag.ToString())) c.Checked = sc.Flags[c.Tag.ToString()];
+			foreach (CheckBox c in triggerflags.Checkboxes)
+				if (sc.Flags.ContainsKey(c.Tag.ToString())) c.Checked = sc.Flags[c.Tag.ToString()];
 
 			// Effects
 			brightness.Text = sc.Brightness.ToString();
@@ -333,9 +366,12 @@ namespace CodeImp.DoomBuilder.Windows
 			{
 				// Flags
 				SetupFlags(flags, s);
+				SetupFlags(colormapflags, s);
+				SetupFlags(effectflags, s);
+				SetupFlags(triggerflags, s);
 
 				// Effects
-				if(s.Brightness.ToString() != brightness.Text) brightness.Text = "";
+				if (s.Brightness.ToString() != brightness.Text) brightness.Text = "";
 
 				// Floor/Ceiling
 				if(s.FloorHeight.ToString() != floorheight.Text) floorheight.Text = "";
@@ -667,6 +703,9 @@ namespace CodeImp.DoomBuilder.Windows
 			{
 				// Apply all flags
 				ApplyFlags(flags, s);
+				ApplyFlags(colormapflags, s);
+				ApplyFlags(effectflags, s);
+				ApplyFlags(triggerflags, s);
 
 				// Fields
 				fieldslist.Apply(s.Fields);

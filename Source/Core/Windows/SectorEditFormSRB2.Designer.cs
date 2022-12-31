@@ -35,6 +35,7 @@
 			System.Windows.Forms.Label labelTriggerTag;
 			System.Windows.Forms.Label label16;
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SectorEditFormSRB2));
+			System.Windows.Forms.Label labelFriction;
 			System.Windows.Forms.Label label9;
 			System.Windows.Forms.Label label2;
 			System.Windows.Forms.GroupBox groupfloorceiling;
@@ -45,24 +46,24 @@
 			System.Windows.Forms.Label labelFadeAlpha;
 			System.Windows.Forms.Label labelFadeStart;
 			System.Windows.Forms.Label labelFadeEnd;
-			System.Windows.Forms.Label labelFriction;
+			System.Windows.Forms.GroupBox groupmisc;
 			this.tagsselector = new CodeImp.DoomBuilder.Controls.TagsSelector();
 			this.triggerer = new System.Windows.Forms.ComboBox();
 			this.triggerTag = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			this.resetdamagetype = new System.Windows.Forms.Button();
-			this.brightness = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			this.damagetype = new System.Windows.Forms.ComboBox();
-			this.gravity = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			this.heightoffset = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			this.ceilingheight = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			this.sectorheightlabel = new System.Windows.Forms.Label();
 			this.sectorheight = new System.Windows.Forms.Label();
 			this.floorheight = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
+			this.friction = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
+			this.gravity = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
+			this.brightness = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tabproperties = new System.Windows.Forms.TabPage();
-			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.flags = new CodeImp.DoomBuilder.Controls.CheckboxArrayControl();
-			this.tabColors = new System.Windows.Forms.TabPage();
+			this.groupBox7 = new System.Windows.Forms.GroupBox();
+			this.colormapflags = new CodeImp.DoomBuilder.Controls.CheckboxArrayControl();
 			this.groupBox8 = new System.Windows.Forms.GroupBox();
 			this.fadeEnd = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			this.fadeStart = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
@@ -70,6 +71,13 @@
 			this.lightAlpha = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			this.lightColor = new CodeImp.DoomBuilder.Controls.ColorFieldsControl();
 			this.fadeColor = new CodeImp.DoomBuilder.Controls.ColorFieldsControl();
+			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.flags = new CodeImp.DoomBuilder.Controls.CheckboxArrayControl();
+			this.tabEffects = new System.Windows.Forms.TabPage();
+			this.groupBox9 = new System.Windows.Forms.GroupBox();
+			this.triggerflags = new CodeImp.DoomBuilder.Controls.CheckboxArrayControl();
+			this.groupBox6 = new System.Windows.Forms.GroupBox();
+			this.effectflags = new CodeImp.DoomBuilder.Controls.CheckboxArrayControl();
 			this.tabSurfaces = new System.Windows.Forms.TabPage();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.resetfloorlight = new System.Windows.Forms.Button();
@@ -111,12 +119,12 @@
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
 			this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-			this.friction = new CodeImp.DoomBuilder.Controls.ButtonsNumericTextbox();
 			groupaction = new System.Windows.Forms.GroupBox();
 			groupeffect = new System.Windows.Forms.GroupBox();
 			labelTriggerer = new System.Windows.Forms.Label();
 			labelTriggerTag = new System.Windows.Forms.Label();
 			label16 = new System.Windows.Forms.Label();
+			labelFriction = new System.Windows.Forms.Label();
 			label9 = new System.Windows.Forms.Label();
 			label2 = new System.Windows.Forms.Label();
 			groupfloorceiling = new System.Windows.Forms.GroupBox();
@@ -127,15 +135,19 @@
 			labelFadeAlpha = new System.Windows.Forms.Label();
 			labelFadeStart = new System.Windows.Forms.Label();
 			labelFadeEnd = new System.Windows.Forms.Label();
-			labelFriction = new System.Windows.Forms.Label();
+			groupmisc = new System.Windows.Forms.GroupBox();
 			groupaction.SuspendLayout();
 			groupeffect.SuspendLayout();
 			groupfloorceiling.SuspendLayout();
+			groupmisc.SuspendLayout();
 			this.tabs.SuspendLayout();
 			this.tabproperties.SuspendLayout();
-			this.groupBox3.SuspendLayout();
-			this.tabColors.SuspendLayout();
+			this.groupBox7.SuspendLayout();
 			this.groupBox8.SuspendLayout();
+			this.groupBox3.SuspendLayout();
+			this.tabEffects.SuspendLayout();
+			this.groupBox9.SuspendLayout();
+			this.groupBox6.SuspendLayout();
 			this.tabSurfaces.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -169,20 +181,14 @@
 			// 
 			groupeffect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			groupeffect.Controls.Add(this.friction);
-			groupeffect.Controls.Add(labelFriction);
 			groupeffect.Controls.Add(labelTriggerer);
 			groupeffect.Controls.Add(this.triggerer);
 			groupeffect.Controls.Add(labelTriggerTag);
 			groupeffect.Controls.Add(this.triggerTag);
 			groupeffect.Controls.Add(label16);
 			groupeffect.Controls.Add(this.resetdamagetype);
-			groupeffect.Controls.Add(this.brightness);
 			groupeffect.Controls.Add(this.damagetype);
-			groupeffect.Controls.Add(label9);
-			groupeffect.Controls.Add(this.gravity);
-			groupeffect.Controls.Add(label2);
-			groupeffect.Location = new System.Drawing.Point(7, 330);
+			groupeffect.Location = new System.Drawing.Point(7, 231);
 			groupeffect.Name = "groupeffect";
 			groupeffect.Size = new System.Drawing.Size(557, 109);
 			groupeffect.TabIndex = 1;
@@ -235,7 +241,7 @@
 			// 
 			// label16
 			// 
-			label16.Location = new System.Drawing.Point(218, 50);
+			label16.Location = new System.Drawing.Point(9, 53);
 			label16.Name = "label16";
 			label16.Size = new System.Drawing.Size(74, 14);
 			label16.TabIndex = 0;
@@ -245,7 +251,7 @@
 			// resetdamagetype
 			// 
 			this.resetdamagetype.Image = ((System.Drawing.Image)(resources.GetObject("resetdamagetype.Image")));
-			this.resetdamagetype.Location = new System.Drawing.Point(471, 44);
+			this.resetdamagetype.Location = new System.Drawing.Point(262, 47);
 			this.resetdamagetype.Name = "resetdamagetype";
 			this.resetdamagetype.Size = new System.Drawing.Size(28, 25);
 			this.resetdamagetype.TabIndex = 2;
@@ -254,65 +260,37 @@
 			this.resetdamagetype.UseVisualStyleBackColor = true;
 			this.resetdamagetype.Click += new System.EventHandler(this.resetdamagetype_Click);
 			// 
-			// brightness
-			// 
-			this.brightness.AllowDecimal = false;
-			this.brightness.AllowExpressions = false;
-			this.brightness.AllowNegative = false;
-			this.brightness.AllowRelative = true;
-			this.brightness.ButtonStep = 8;
-			this.brightness.ButtonStepBig = 16F;
-			this.brightness.ButtonStepFloat = 1F;
-			this.brightness.ButtonStepSmall = 1F;
-			this.brightness.ButtonStepsUseModifierKeys = true;
-			this.brightness.ButtonStepsWrapAround = false;
-			this.brightness.Location = new System.Drawing.Point(89, 46);
-			this.brightness.Name = "brightness";
-			this.brightness.Size = new System.Drawing.Size(81, 24);
-			this.brightness.StepValues = null;
-			this.brightness.TabIndex = 4;
-			this.brightness.WhenTextChanged += new System.EventHandler(this.brightness_WhenTextChanged);
-			// 
 			// damagetype
 			// 
 			this.damagetype.FormattingEnabled = true;
-			this.damagetype.Location = new System.Drawing.Point(298, 46);
+			this.damagetype.Location = new System.Drawing.Point(89, 49);
 			this.damagetype.Name = "damagetype";
 			this.damagetype.Size = new System.Drawing.Size(167, 21);
 			this.damagetype.TabIndex = 1;
 			this.damagetype.TextChanged += new System.EventHandler(this.damagetype_TextChanged);
 			this.damagetype.MouseDown += new System.Windows.Forms.MouseEventHandler(this.damagetype_MouseDown);
 			// 
+			// labelFriction
+			// 
+			labelFriction.Location = new System.Drawing.Point(9, 83);
+			labelFriction.Name = "labelFriction";
+			labelFriction.Size = new System.Drawing.Size(74, 14);
+			labelFriction.TabIndex = 22;
+			labelFriction.Text = "Friction:";
+			labelFriction.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
 			// label9
 			// 
 			label9.AutoSize = true;
-			label9.Location = new System.Drawing.Point(21, 51);
+			label9.Location = new System.Drawing.Point(21, 24);
 			label9.Name = "label9";
 			label9.Size = new System.Drawing.Size(59, 13);
 			label9.TabIndex = 3;
 			label9.Text = "Brightness:";
 			// 
-			// gravity
-			// 
-			this.gravity.AllowDecimal = true;
-			this.gravity.AllowExpressions = false;
-			this.gravity.AllowNegative = true;
-			this.gravity.AllowRelative = true;
-			this.gravity.ButtonStep = 1;
-			this.gravity.ButtonStepBig = 1F;
-			this.gravity.ButtonStepFloat = 0.1F;
-			this.gravity.ButtonStepSmall = 0.01F;
-			this.gravity.ButtonStepsUseModifierKeys = true;
-			this.gravity.ButtonStepsWrapAround = false;
-			this.gravity.Location = new System.Drawing.Point(89, 74);
-			this.gravity.Name = "gravity";
-			this.gravity.Size = new System.Drawing.Size(81, 24);
-			this.gravity.StepValues = null;
-			this.gravity.TabIndex = 6;
-			// 
 			// label2
 			// 
-			label2.Location = new System.Drawing.Point(9, 79);
+			label2.Location = new System.Drawing.Point(9, 52);
 			label2.Name = "label2";
 			label2.Size = new System.Drawing.Size(74, 14);
 			label2.TabIndex = 5;
@@ -484,13 +462,85 @@
 			labelFadeEnd.Text = "Fade end:";
 			labelFadeEnd.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
+			// groupmisc
+			// 
+			groupmisc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			groupmisc.Controls.Add(this.friction);
+			groupmisc.Controls.Add(label9);
+			groupmisc.Controls.Add(labelFriction);
+			groupmisc.Controls.Add(label2);
+			groupmisc.Controls.Add(this.gravity);
+			groupmisc.Controls.Add(this.brightness);
+			groupmisc.Location = new System.Drawing.Point(7, 330);
+			groupmisc.Name = "groupmisc";
+			groupmisc.Size = new System.Drawing.Size(254, 109);
+			groupmisc.TabIndex = 24;
+			groupmisc.TabStop = false;
+			groupmisc.Text = " Misc";
+			// 
+			// friction
+			// 
+			this.friction.AllowDecimal = true;
+			this.friction.AllowExpressions = false;
+			this.friction.AllowNegative = true;
+			this.friction.AllowRelative = true;
+			this.friction.ButtonStep = 1;
+			this.friction.ButtonStepBig = 0.125F;
+			this.friction.ButtonStepFloat = 0.03125F;
+			this.friction.ButtonStepSmall = 0.03125F;
+			this.friction.ButtonStepsUseModifierKeys = true;
+			this.friction.ButtonStepsWrapAround = false;
+			this.friction.Location = new System.Drawing.Point(89, 78);
+			this.friction.Name = "friction";
+			this.friction.Size = new System.Drawing.Size(81, 24);
+			this.friction.StepValues = null;
+			this.friction.TabIndex = 23;
+			// 
+			// gravity
+			// 
+			this.gravity.AllowDecimal = true;
+			this.gravity.AllowExpressions = false;
+			this.gravity.AllowNegative = true;
+			this.gravity.AllowRelative = true;
+			this.gravity.ButtonStep = 1;
+			this.gravity.ButtonStepBig = 1F;
+			this.gravity.ButtonStepFloat = 0.1F;
+			this.gravity.ButtonStepSmall = 0.01F;
+			this.gravity.ButtonStepsUseModifierKeys = true;
+			this.gravity.ButtonStepsWrapAround = false;
+			this.gravity.Location = new System.Drawing.Point(89, 47);
+			this.gravity.Name = "gravity";
+			this.gravity.Size = new System.Drawing.Size(81, 24);
+			this.gravity.StepValues = null;
+			this.gravity.TabIndex = 6;
+			// 
+			// brightness
+			// 
+			this.brightness.AllowDecimal = false;
+			this.brightness.AllowExpressions = false;
+			this.brightness.AllowNegative = false;
+			this.brightness.AllowRelative = true;
+			this.brightness.ButtonStep = 8;
+			this.brightness.ButtonStepBig = 16F;
+			this.brightness.ButtonStepFloat = 1F;
+			this.brightness.ButtonStepSmall = 1F;
+			this.brightness.ButtonStepsUseModifierKeys = true;
+			this.brightness.ButtonStepsWrapAround = false;
+			this.brightness.Location = new System.Drawing.Point(89, 19);
+			this.brightness.Name = "brightness";
+			this.brightness.Size = new System.Drawing.Size(81, 24);
+			this.brightness.StepValues = null;
+			this.brightness.TabIndex = 4;
+			this.brightness.WhenTextChanged += new System.EventHandler(this.brightness_WhenTextChanged);
+			// 
 			// tabs
 			// 
 			this.tabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tabs.Controls.Add(this.tabproperties);
-			this.tabs.Controls.Add(this.tabColors);
+			this.tabs.Controls.Add(this.tabEffects);
 			this.tabs.Controls.Add(this.tabSurfaces);
 			this.tabs.Controls.Add(this.tabslopes);
 			this.tabs.Controls.Add(this.tabcomment);
@@ -506,9 +556,11 @@
 			// 
 			// tabproperties
 			// 
+			this.tabproperties.Controls.Add(this.groupBox7);
+			this.tabproperties.Controls.Add(groupmisc);
+			this.tabproperties.Controls.Add(this.groupBox8);
 			this.tabproperties.Controls.Add(this.groupBox3);
 			this.tabproperties.Controls.Add(groupaction);
-			this.tabproperties.Controls.Add(groupeffect);
 			this.tabproperties.Controls.Add(groupfloorceiling);
 			this.tabproperties.Cursor = System.Windows.Forms.Cursors.Arrow;
 			this.tabproperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -520,39 +572,28 @@
 			this.tabproperties.Text = "Properties";
 			this.tabproperties.UseVisualStyleBackColor = true;
 			// 
-			// groupBox3
+			// groupBox7
 			// 
-			this.groupBox3.Controls.Add(this.flags);
-			this.groupBox3.Location = new System.Drawing.Point(7, 6);
-			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(557, 174);
-			this.groupBox3.TabIndex = 0;
-			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = " Flags ";
+			this.groupBox7.Controls.Add(this.colormapflags);
+			this.groupBox7.Location = new System.Drawing.Point(267, 6);
+			this.groupBox7.Name = "groupBox7";
+			this.groupBox7.Size = new System.Drawing.Size(277, 174);
+			this.groupBox7.TabIndex = 1;
+			this.groupBox7.TabStop = false;
+			this.groupBox7.Text = " Colormap flags";
 			// 
-			// flags
+			// colormapflags
 			// 
-			this.flags.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.colormapflags.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.flags.AutoScroll = true;
-			this.flags.Columns = 2;
-			this.flags.Location = new System.Drawing.Point(15, 21);
-			this.flags.Name = "flags";
-			this.flags.Size = new System.Drawing.Size(536, 147);
-			this.flags.TabIndex = 0;
-			this.flags.VerticalSpacing = 1;
-			// 
-			// tabColors
-			// 
-			this.tabColors.Controls.Add(this.groupBox8);
-			this.tabColors.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.tabColors.Location = new System.Drawing.Point(4, 22);
-			this.tabColors.Name = "tabColors";
-			this.tabColors.Size = new System.Drawing.Size(570, 526);
-			this.tabColors.TabIndex = 5;
-			this.tabColors.Text = "Colors";
-			this.tabColors.UseVisualStyleBackColor = true;
+			this.colormapflags.AutoScroll = true;
+			this.colormapflags.Columns = 2;
+			this.colormapflags.Location = new System.Drawing.Point(15, 21);
+			this.colormapflags.Name = "colormapflags";
+			this.colormapflags.Size = new System.Drawing.Size(256, 147);
+			this.colormapflags.TabIndex = 0;
+			this.colormapflags.VerticalSpacing = 1;
 			// 
 			// groupBox8
 			// 
@@ -566,12 +607,12 @@
 			this.groupBox8.Controls.Add(labelLightAlpha);
 			this.groupBox8.Controls.Add(this.lightColor);
 			this.groupBox8.Controls.Add(this.fadeColor);
-			this.groupBox8.Location = new System.Drawing.Point(3, 3);
+			this.groupBox8.Location = new System.Drawing.Point(267, 186);
 			this.groupBox8.Name = "groupBox8";
-			this.groupBox8.Size = new System.Drawing.Size(277, 229);
+			this.groupBox8.Size = new System.Drawing.Size(277, 253);
 			this.groupBox8.TabIndex = 18;
 			this.groupBox8.TabStop = false;
-			this.groupBox8.Text = "Global sector colors";
+			this.groupBox8.Text = " Colormap";
 			// 
 			// fadeEnd
 			// 
@@ -671,6 +712,88 @@
 			this.fadeColor.TabIndex = 17;
 			this.fadeColor.OnValueChanged += new System.EventHandler(this.fadeColor_OnValueChanged);
 			// 
+			// groupBox3
+			// 
+			this.groupBox3.Controls.Add(this.flags);
+			this.groupBox3.Location = new System.Drawing.Point(7, 6);
+			this.groupBox3.Name = "groupBox3";
+			this.groupBox3.Size = new System.Drawing.Size(254, 174);
+			this.groupBox3.TabIndex = 0;
+			this.groupBox3.TabStop = false;
+			this.groupBox3.Text = " Flags ";
+			// 
+			// flags
+			// 
+			this.flags.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.flags.AutoScroll = true;
+			this.flags.Columns = 2;
+			this.flags.Location = new System.Drawing.Point(15, 21);
+			this.flags.Name = "flags";
+			this.flags.Size = new System.Drawing.Size(233, 147);
+			this.flags.TabIndex = 0;
+			this.flags.VerticalSpacing = 1;
+			// 
+			// tabEffects
+			// 
+			this.tabEffects.Controls.Add(this.groupBox9);
+			this.tabEffects.Controls.Add(this.groupBox6);
+			this.tabEffects.Controls.Add(groupeffect);
+			this.tabEffects.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.tabEffects.Location = new System.Drawing.Point(4, 22);
+			this.tabEffects.Name = "tabEffects";
+			this.tabEffects.Size = new System.Drawing.Size(570, 526);
+			this.tabEffects.TabIndex = 5;
+			this.tabEffects.Text = "Effects";
+			this.tabEffects.UseVisualStyleBackColor = true;
+			// 
+			// groupBox9
+			// 
+			this.groupBox9.Controls.Add(this.triggerflags);
+			this.groupBox9.Location = new System.Drawing.Point(7, 346);
+			this.groupBox9.Name = "groupBox9";
+			this.groupBox9.Size = new System.Drawing.Size(557, 166);
+			this.groupBox9.TabIndex = 2;
+			this.groupBox9.TabStop = false;
+			this.groupBox9.Text = " Trigger conditions";
+			// 
+			// triggerflags
+			// 
+			this.triggerflags.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.triggerflags.AutoScroll = true;
+			this.triggerflags.Columns = 2;
+			this.triggerflags.Location = new System.Drawing.Point(15, 21);
+			this.triggerflags.Name = "triggerflags";
+			this.triggerflags.Size = new System.Drawing.Size(536, 134);
+			this.triggerflags.TabIndex = 0;
+			this.triggerflags.VerticalSpacing = 1;
+			// 
+			// groupBox6
+			// 
+			this.groupBox6.Controls.Add(this.effectflags);
+			this.groupBox6.Location = new System.Drawing.Point(7, 15);
+			this.groupBox6.Name = "groupBox6";
+			this.groupBox6.Size = new System.Drawing.Size(557, 210);
+			this.groupBox6.TabIndex = 1;
+			this.groupBox6.TabStop = false;
+			this.groupBox6.Text = " Effect flags";
+			// 
+			// effectflags
+			// 
+			this.effectflags.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.effectflags.AutoScroll = true;
+			this.effectflags.Columns = 2;
+			this.effectflags.Location = new System.Drawing.Point(15, 21);
+			this.effectflags.Name = "effectflags";
+			this.effectflags.Size = new System.Drawing.Size(536, 178);
+			this.effectflags.TabIndex = 0;
+			this.effectflags.VerticalSpacing = 1;
+			// 
 			// tabSurfaces
 			// 
 			this.tabSurfaces.Controls.Add(this.groupBox2);
@@ -752,7 +875,7 @@
 			// 
 			// floorAngleControl
 			// 
-			this.floorAngleControl.Angle = -2430;
+			this.floorAngleControl.Angle = -3240;
 			this.floorAngleControl.AngleOffset = 90;
 			this.floorAngleControl.DoomAngleClamping = false;
 			this.floorAngleControl.Location = new System.Drawing.Point(6, 156);
@@ -949,7 +1072,7 @@
 			// 
 			// ceilAngleControl
 			// 
-			this.ceilAngleControl.Angle = -2430;
+			this.ceilAngleControl.Angle = -3240;
 			this.ceilAngleControl.AngleOffset = 90;
 			this.ceilAngleControl.DoomAngleClamping = false;
 			this.ceilAngleControl.Location = new System.Drawing.Point(6, 156);
@@ -1214,33 +1337,6 @@
 			this.tooltip.InitialDelay = 10;
 			this.tooltip.ReshowDelay = 100;
 			// 
-			// friction
-			// 
-			this.friction.AllowDecimal = true;
-			this.friction.AllowExpressions = false;
-			this.friction.AllowNegative = true;
-			this.friction.AllowRelative = true;
-			this.friction.ButtonStep = 1;
-			this.friction.ButtonStepBig = 0.125F;
-			this.friction.ButtonStepFloat = 0.03125F;
-			this.friction.ButtonStepSmall = 0.03125F;
-			this.friction.ButtonStepsUseModifierKeys = true;
-			this.friction.ButtonStepsWrapAround = false;
-			this.friction.Location = new System.Drawing.Point(298, 74);
-			this.friction.Name = "friction";
-			this.friction.Size = new System.Drawing.Size(81, 24);
-			this.friction.StepValues = null;
-			this.friction.TabIndex = 23;
-			// 
-			// labelFriction
-			// 
-			labelFriction.Location = new System.Drawing.Point(218, 79);
-			labelFriction.Name = "labelFriction";
-			labelFriction.Size = new System.Drawing.Size(74, 14);
-			labelFriction.TabIndex = 22;
-			labelFriction.Text = "Friction:";
-			labelFriction.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
 			// SectorEditFormSRB2
 			// 
 			this.AcceptButton = this.apply;
@@ -1264,15 +1360,19 @@
 			this.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.SectorEditFormUDMF_HelpRequested);
 			groupaction.ResumeLayout(false);
 			groupeffect.ResumeLayout(false);
-			groupeffect.PerformLayout();
 			groupfloorceiling.ResumeLayout(false);
 			groupfloorceiling.PerformLayout();
+			groupmisc.ResumeLayout(false);
+			groupmisc.PerformLayout();
 			this.tabs.ResumeLayout(false);
 			this.tabproperties.ResumeLayout(false);
-			this.groupBox3.ResumeLayout(false);
-			this.tabColors.ResumeLayout(false);
+			this.groupBox7.ResumeLayout(false);
 			this.groupBox8.ResumeLayout(false);
 			this.groupBox8.PerformLayout();
+			this.groupBox3.ResumeLayout(false);
+			this.tabEffects.ResumeLayout(false);
+			this.groupBox9.ResumeLayout(false);
+			this.groupBox6.ResumeLayout(false);
 			this.tabSurfaces.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
@@ -1344,7 +1444,7 @@
 		private System.Windows.Forms.Button resetceillight;
 		private System.Windows.Forms.Button resetdamagetype;
 		private System.Windows.Forms.ComboBox damagetype;
-        private System.Windows.Forms.TabPage tabColors;
+        private System.Windows.Forms.TabPage tabEffects;
         private Controls.ColorFieldsControl fadeColor;
         private Controls.ColorFieldsControl lightColor;
         private System.Windows.Forms.GroupBox groupBox8;
@@ -1355,5 +1455,11 @@
 		private Controls.ButtonsNumericTextbox fadeEnd;
 		private Controls.ButtonsNumericTextbox fadeStart;
 		private Controls.ButtonsNumericTextbox friction;
+		private System.Windows.Forms.GroupBox groupBox6;
+		private Controls.CheckboxArrayControl effectflags;
+		private System.Windows.Forms.GroupBox groupBox9;
+		private Controls.CheckboxArrayControl triggerflags;
+		private System.Windows.Forms.GroupBox groupBox7;
+		private Controls.CheckboxArrayControl colormapflags;
 	}
 }

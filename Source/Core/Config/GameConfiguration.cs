@@ -168,6 +168,7 @@ namespace CodeImp.DoomBuilder.Config
 		
 		// Sectors
 		private readonly Dictionary<string, string> sectorflags; //mxd
+		private readonly Dictionary<string, string> sectorflagscategories;
 		private readonly Dictionary<string, string> ceilportalflags; //mxd
 		private readonly Dictionary<string, string> floorportalflags; //mxd
 		private readonly Dictionary<int, SectorEffectInfo> sectoreffects;
@@ -328,6 +329,7 @@ namespace CodeImp.DoomBuilder.Config
 
 		// Sectors
 		public IDictionary<string, string> SectorFlags { get { return sectorflags; } } //mxd
+		public IDictionary<string, string> SectorFlagsCategories { get { return sectorflagscategories; } }
 		public IDictionary<string, string> CeilingPortalFlags { get { return ceilportalflags; } } //mxd
 		public IDictionary<string, string> FloorPortalFlags { get { return floorportalflags; } } //mxd
 		public IDictionary<int, SectorEffectInfo> SectorEffects { get { return sectoreffects; } }
@@ -398,6 +400,7 @@ namespace CodeImp.DoomBuilder.Config
 			this.sidedefflags = new Dictionary<string, string>(StringComparer.Ordinal); //mxd
 			this.genactioncategories = new List<GeneralizedCategory>();
 			this.sectorflags = new Dictionary<string, string>(StringComparer.Ordinal); //mxd
+			this.sectorflagscategories = new Dictionary<string, string>(StringComparer.Ordinal);
 			this.ceilportalflags = new Dictionary<string, string>(StringComparer.Ordinal); //mxd
 			this.floorportalflags = new Dictionary<string, string>(StringComparer.Ordinal); //mxd
 			this.sectoreffects = new Dictionary<int, SectorEffectInfo>();
@@ -562,6 +565,14 @@ namespace CodeImp.DoomBuilder.Config
 
 			// Sectors
 			LoadStringDictionary(sectorflags, "sectorflags"); //mxd
+			LoadStringDictionary(sectorflagscategories, "sectorflagscategories");
+			// Flags with a specified category default to "regular"
+			foreach (string key in sectorflags.Keys)
+			{
+				if (!sectorflagscategories.Keys.Contains(key))
+					sectorflagscategories.Add(key, "regular");
+			}
+
 			LoadStringDictionary(ceilportalflags, "ceilingportalflags"); //mxd
 			LoadStringDictionary(floorportalflags, "floorportalflags"); //mxd
 			LoadBrightnessLevels();
