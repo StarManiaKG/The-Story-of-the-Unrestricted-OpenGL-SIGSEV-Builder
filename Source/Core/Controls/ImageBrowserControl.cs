@@ -202,6 +202,7 @@ namespace CodeImp.DoomBuilder.Controls
             General.Settings.WriteSetting(settingpath + ".classicview", classicview.Checked);
 			General.Settings.WriteSetting(settingpath + ".verticallycenteritem", list.CenterItem);
 			General.Settings.WriteSetting(settingpath + ".imagesize", list.ImageSize);
+			General.Settings.WriteSetting(settingpath + ".texturetype", texturetype);
 			
 			if (General.Map.Config.UseLongTextureNames) General.Map.Options.UseLongTextureNames = uselongtexturenames;
 
@@ -661,9 +662,9 @@ namespace CodeImp.DoomBuilder.Controls
             //if (!splitter.Panel2Collapsed) 
 			{
                 if (texturetype == 0 && previtem != null && item.TextureName == previtem.TextureName) return false;
-				if (texturetype == 1 && item.Icon.IsFlat) return false;
-				if (texturetype == 2 && !item.Icon.IsFlat) return false;
-				if (texturetype == 3 && (browseflats != item.Icon.IsFlat)) return false;
+				if (texturetype == 1 && item.Icon.TextureNamespace == TextureNamespace.FLAT) return false;
+				if (texturetype == 2 && !(item.Icon.TextureNamespace == TextureNamespace.FLAT)) return false;
+				if (texturetype == 3 && (browseflats != (item.Icon.TextureNamespace == TextureNamespace.FLAT))) return false;
 			}
             //else if (previtem != null && item.TextureName == previtem.TextureName) return false;
 
