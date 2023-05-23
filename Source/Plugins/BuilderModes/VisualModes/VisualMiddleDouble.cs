@@ -39,12 +39,15 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		#region ================== Variables
 
 		private bool repeatmidtex;
+		private int repetitions;
 		private Plane topclipplane;
 		private Plane bottomclipplane;
 		
 		#endregion
 
 		#region ================== Properties
+
+		private bool RepeatIndefinitely { get { return repeatmidtex && repetitions == 1; } }
 
 		#endregion
 
@@ -210,25 +213,34 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			// Determine if we should repeat the middle texture. In UDMF this is done with a flag, in Hexen with
 			// a argument to the 121:Line_SetIdentification. See https://www.zdoom.org/w/index.php?title=Line_SetIdentification
 			if (General.Map.UDMF)
+			{
 				repeatmidtex = Sidedef.IsFlagSet("wrapmidtex") || Sidedef.Line.IsFlagSet("wrapmidtex"); //mxd
+				repetitions = repeatmidtex ? Sidedef.Fields.GetValue("repeatcnt", 0) + 1 : 1;
+			}
 			else if (General.Map.HEXEN)
+			{
 				repeatmidtex = Sidedef.Line.Action == 121 && (Sidedef.Line.Args[1] & 16) == 16;
+				repetitions = 1;
+			}
 			else
+			{
 				repeatmidtex = false;
+				repetitions = 1;
+			}
 
-			if(!repeatmidtex) 
+			if (!RepeatIndefinitely)
 			{
 				// First determine the visible portion of the texture
 				double textop;
 
 				// Determine top portion height
 				if(Sidedef.Line.IsFlagSet(General.Map.Config.PegMidtextureFlag))
-					textop = geobottom + tof.y + Math.Abs(tsz.y);
+					textop = geobottom + tof.y + repetitions * Math.Abs(tsz.y);
 				else
 					textop = geotop + tof.y;
 
 				// Calculate bottom portion height
-				double texbottom = textop - Math.Abs(tsz.y);
+				double texbottom = textop - repetitions * Math.Abs(tsz.y);
 
 				// Create crop planes (we also need these for intersection testing)
 				topclipplane = new Plane(new Vector3D(0, 0, -1), textop);
@@ -282,9 +294,9 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		// This performs a fast test in object picking
 		public override bool PickFastReject(Vector3D from, Vector3D to, Vector3D dir)
 		{
-			if(!repeatmidtex)
+			if(!RepeatIndefinitely)
 			{
-				// When the texture is not repeated, leave when outside crop planes
+				// When the texture is not repeated indefinitely, leave when outside crop planes
 				if((pickintersect.z < bottomclipplane.GetZ(pickintersect)) ||
 				   (pickintersect.z > topclipplane.GetZ(pickintersect)))
 				   return false;
@@ -316,7 +328,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
                 % imageWidth);
 
             int oy;
-            if (repeatmidtex)
+            if (RepeatIndefinitely)
             {
                 bool pegbottom = Sidedef.Line.IsFlagSet(General.Map.Config.PegMidtextureFlag);
 				double zoffset = (pegbottom ? Sidedef.Sector.FloorHeight : Sidedef.Sector.CeilHeight);
