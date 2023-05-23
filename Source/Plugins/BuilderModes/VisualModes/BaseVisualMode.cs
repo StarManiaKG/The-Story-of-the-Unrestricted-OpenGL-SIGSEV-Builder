@@ -1056,13 +1056,31 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						List<Thing> sourcethings = new List<Thing>();
 						if (!thingtags.ContainsKey(l.Args[1]) || thingtags[l.Args[1]].Count == 0)
 							break;
+						foreach (Thing thing in thingtags[l.Args[1]])
+						{
+							if (sourcethings.Contains(thing))
+								continue;
+							sourcethings.Add(thing);
+							break;
+						}
 						if (!thingtags.ContainsKey(l.Args[2]) || thingtags[l.Args[2]].Count == 0)
 							break;
+						foreach (Thing thing in thingtags[l.Args[2]])
+						{
+							if (sourcethings.Contains(thing))
+								continue;
+							sourcethings.Add(thing);
+							break;
+						}
 						if (!thingtags.ContainsKey(l.Args[3]) || thingtags[l.Args[3]].Count == 0)
 							break;
-						sourcethings.Add(thingtags[l.Args[1]][0]);
-						sourcethings.Add(thingtags[l.Args[2]][0]);
-						sourcethings.Add(thingtags[l.Args[3]][0]);
+						foreach (Thing thing in thingtags[l.Args[3]])
+						{
+							if (sourcethings.Contains(thing))
+								continue;
+							sourcethings.Add(thing);
+							break;
+						}
 						SectorData sd = GetSectorData((l.Args[0] < 2) ? l.Front.Sector : l.Back.Sector);
 						sd.AddEffectSRB2ThingVertexSlope(sourcethings, (l.Args[0] & 1) != 1);
 						break;
