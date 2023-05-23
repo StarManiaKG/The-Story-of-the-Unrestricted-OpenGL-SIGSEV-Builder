@@ -228,11 +228,11 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				repetitions = 1;
 			}
 
+			// First determine the visible portion of the texture
+			double textop, texbottom;
+
 			if (!RepeatIndefinitely)
 			{
-				// First determine the visible portion of the texture
-				double textop;
-
 				// Determine top portion height
 				if(Sidedef.Line.IsFlagSet(General.Map.Config.PegMidtextureFlag))
 					textop = geobottom + tof.y + repetitions * Math.Abs(tsz.y);
@@ -240,16 +240,29 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					textop = geotop + tof.y;
 
 				// Calculate bottom portion height
-				double texbottom = textop - repetitions * Math.Abs(tsz.y);
-
-				// Create crop planes (we also need these for intersection testing)
-				topclipplane = new Plane(new Vector3D(0, 0, -1), textop);
-				bottomclipplane = new Plane(new Vector3D(0, 0, 1), -texbottom);
-
-				// Crop polygon by these heights
-				CropPoly(ref poly, topclipplane, true);
-				CropPoly(ref poly, bottomclipplane, true);
+				texbottom = textop - repetitions * Math.Abs(tsz.y);
 			}
+			else
+			{
+				if (Sidedef.Line.IsFlagSet(General.Map.Config.PegMidtextureFlag))
+				{
+					textop = geotop;
+					texbottom = geobottom + tof.y;
+				}
+				else
+				{
+					textop = geotop + tof.y;
+					texbottom = geobottom;
+				}
+			}
+
+			// Create crop planes (we also need these for intersection testing)
+			topclipplane = new Plane(new Vector3D(0, 0, -1), textop);
+			bottomclipplane = new Plane(new Vector3D(0, 0, 1), -texbottom);
+
+			// Crop polygon by these heights
+			CropPoly(ref poly, topclipplane, true);
+			CropPoly(ref poly, bottomclipplane, true);
 
 			//mxd. In(G)ZDoom, middle sidedef parts are not clipped by extrafloors of any type...
 			List<WallPolygon> polygons = new List<WallPolygon> { poly };
@@ -294,13 +307,13 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		// This performs a fast test in object picking
 		public override bool PickFastReject(Vector3D from, Vector3D to, Vector3D dir)
 		{
-			if(!RepeatIndefinitely)
-			{
+			//if(!RepeatIndefinitely)
+			//{
 				// When the texture is not repeated indefinitely, leave when outside crop planes
 				if((pickintersect.z < bottomclipplane.GetZ(pickintersect)) ||
 				   (pickintersect.z > topclipplane.GetZ(pickintersect)))
 				   return false;
-			}
+			//}
 			
 			return base.PickFastReject(from, to, dir);
 		}
@@ -328,7 +341,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
                 % imageWidth);
 
             int oy;
-            if (RepeatIndefinitely)
+            /*if (RepeatIndefinitely)
             {
                 bool pegbottom = Sidedef.Line.IsFlagSet(General.Map.Config.PegMidtextureFlag);
 				double zoffset = (pegbottom ? Sidedef.Sector.FloorHeight : Sidedef.Sector.CeilHeight);
@@ -337,10 +350,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
                     % imageHeight);
             }
             else
-            {
+            {*/
 				double zoffset = bottomclipplane.GetZ(pickintersect);
                 oy = (int)Math.Ceiling(((pickintersect.z - zoffset) * UniFields.GetFloat(Sidedef.Fields, "scaley_mid", 1.0f) / texscale.y) % imageHeight);
-            }
+            //}
 
             // Make sure offsets are inside of texture dimensions...
             if (ox < 0) ox += imageWidth;
