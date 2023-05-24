@@ -320,7 +320,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			else if(!selecting) //mxd. We don't want to do this stuff while multiselecting
 			{
 				// Find the nearest linedef within highlight range
-				Linedef l = MapSet.NearestLinedefRange(blockmap, mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
+				Linedef l = General.Map.Map.NearestLinedefRange(mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
 				if(l != null)
 				{
 					// Create undo
@@ -487,7 +487,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			else if(e.Button == MouseButtons.None) // Not holding any buttons?
 			{
 				//mxd. Render insert vertex preview
-				Linedef l = MapSet.NearestLinedefRange(blockmap, mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
+				Linedef l = General.Map.Map.NearestLinedefRange(mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
 
 				if(l != null) 
 				{
@@ -908,7 +908,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				General.Map.UndoRedo.CreateUndo("Insert vertex");
 
 				// Snap to geometry?
-				Linedef l = MapSet.NearestLinedefRange(blockmap, mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
+				Linedef l = General.Map.Map.NearestLinedefRange(mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
 				if(snaptonearest && (l != null))
 				{
 					// Snip to grid also?

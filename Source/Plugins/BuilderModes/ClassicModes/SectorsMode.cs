@@ -1171,7 +1171,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				}
 
 				// Find the nearest linedef within highlight range
-				Linedef l = MapSet.NearestLinedefRange(blockmap, mousemappos, BuilderPlug.Me.HighlightRange / renderer.Scale);
+				Linedef l = General.Map.Map.NearestLinedefRange(mousemappos, BuilderPlug.Me.HighlightRange / renderer.Scale);
 				Sector s = null;
 
 				if(l != null) 
