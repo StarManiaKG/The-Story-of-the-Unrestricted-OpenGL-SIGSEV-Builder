@@ -223,7 +223,7 @@ namespace CodeImp.DoomBuilder.VisualModes
 					if(nearestsector != null)
 					{
 						int sectorheight = nearestsector.CeilHeight - nearestsector.FloorHeight;
-						if(sectorheight < 41)
+						if(sectorheight < 48)
 							posz = nearestsector.FloorHeight + Math.Max(16, sectorheight / 2);
 						else if(General.Map.VisualCamera.Position.z < nearestsector.FloorHeight + 41)
 							posz = nearestsector.FloorHeight + 41; // same as in doom
@@ -360,7 +360,7 @@ namespace CodeImp.DoomBuilder.VisualModes
 				}
 
 				//41 = player's height in Doom. Is that so in all other games as well?
-				if(s.CeilHeight - s.FloorHeight < 41) 
+				if(s.CeilHeight - s.FloorHeight < 48) 
 				{
 					General.MainWindow.DisplayStatus(StatusType.Warning, "Can't test from current position: sector is too low!");
 					return false;

@@ -791,7 +791,7 @@ namespace CodeImp.DoomBuilder.Editing
 				playerStartPosition = start.Position;
 
 				//everything should be valid, let's move player start here
-				start.Move(new Vector3D(mousemappos.x, mousemappos.y, s.FloorHeight));
+				start.Move(new Vector3D(mousemappos.x, mousemappos.y, 0));
 
 				General.Map.UndoRedo.IgnorePropChanges = oldignorepropchanges;
 			}
