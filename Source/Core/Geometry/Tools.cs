@@ -972,11 +972,6 @@ namespace CodeImp.DoomBuilder.Geometry
 			List<Vertex> nonmergeverts = new List<Vertex>(General.Map.Map.Vertices);
 			MapSet map = General.Map.Map;
 
-			//mxd. Let's use a blockmap...
-			RectangleF area = MapSet.CreateArea(oldlines);
-			BlockMap<BlockEntry> oldlinesmap = new BlockMap<BlockEntry>(area);
-			oldlinesmap.AddLinedefsSet(oldlines);
-
 			General.Map.Map.ClearAllMarks(false);
 			
 			// Any points to do?
@@ -1121,7 +1116,7 @@ namespace CodeImp.DoomBuilder.Geometry
 						foreach(Linedef ld in newlines)
 						{
 							Vector2D ldcp = ld.GetCenterPoint();
-							Linedef nld = MapSet.NearestLinedef(oldlinesmap, ldcp); //mxd. Lines collection -> Blockmap
+							Linedef nld = MapSet.NearestLinedef(oldlines, ldcp);
 							if(nld != null)
 							{
 								double ldside = nld.SideOfLine(ldcp);
@@ -1158,7 +1153,7 @@ namespace CodeImp.DoomBuilder.Geometry
 								List<LinedefSide> endpoints = new List<LinedefSide>();
 
 								// Find out where the start will stitch and create test points
-								Linedef l1 = MapSet.NearestLinedefRange(oldlinesmap, firstline.Start.Position, MapSet.STITCH_DISTANCE); //mxd. Lines collection -> Blockmap
+								Linedef l1 = MapSet.NearestLinedefRange(oldlines, firstline.Start.Position, MapSet.STITCH_DISTANCE);
 								Vertex vv1 = null;
 								if(l1 != null)
 								{
@@ -1183,7 +1178,7 @@ namespace CodeImp.DoomBuilder.Geometry
 								}
 
 								// Find out where the end will stitch and create test points
-								Linedef l2 = MapSet.NearestLinedefRange(oldlinesmap, lastline.End.Position, MapSet.STITCH_DISTANCE); //mxd. Lines collection -> Blockmap
+								Linedef l2 = MapSet.NearestLinedefRange(oldlines, lastline.End.Position, MapSet.STITCH_DISTANCE);
 								Vertex vv2 = null;
 								if(l2 != null)
 								{

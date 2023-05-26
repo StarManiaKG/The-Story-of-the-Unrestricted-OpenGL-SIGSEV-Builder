@@ -2182,8 +2182,9 @@ namespace CodeImp.DoomBuilder.Map
 				return false;
 			}
 
-            // Split non-moving lines with selected vertices
-            fixedlines = new HashSet<Linedef>(fixedlines.Where(fixedline => !fixedline.IsDisposed));
+			// Split non-moving lines with selected vertices
+			fixedlines = new HashSet<Linedef>(fixedlines.Where(fixedline => !fixedline.IsDisposed));
+			fixedlines = FilterByArea(fixedlines, ref editarea);
 			if (!SplitLinesByVertices(fixedlines, movingverts, STITCH_DISTANCE, movinglines, mergemode))
 			{
 				EndAddRemove(); // Unfreeze arrays before returning
