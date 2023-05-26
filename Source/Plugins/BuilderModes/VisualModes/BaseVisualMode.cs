@@ -4380,12 +4380,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				//assign/remove action
 				if(vg.GeometryType == VisualGeometryType.WALL_LOWER) 
 				{
-					if(vg.Sidedef.Line.Action == 0 || (vg.Sidedef.Line.Action == 181 && vg.Sidedef.Line.Args[0] == 0)) 
+					if(vg.Sidedef.Line.Action == 0 || (vg.Sidedef.Line.Action == 700 && vg.Sidedef.Line.Args[0] == 0)) 
 					{
 						//check if the sector already has floor slopes
 						foreach(Sidedef side in vg.Sidedef.Sector.Sidedefs) 
 						{
-							if(side == vg.Sidedef || side.Line.Action != 181) continue;
+							if(side == vg.Sidedef || side.Line.Action != 700) continue;
 
 							int arg = (side == side.Line.Front ? 1 : 2);
 
@@ -4400,19 +4400,19 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						}
 
 						//set action
-						vg.Sidedef.Line.Action = 181;
+						vg.Sidedef.Line.Action = 700;
 						vg.Sidedef.Line.Args[0] = (vg.Sidedef == vg.Sidedef.Line.Front ? 1 : 2);
 						update = true;
 					}
 				} 
 				else if(vg.GeometryType == VisualGeometryType.WALL_UPPER) 
 				{
-					if(vg.Sidedef.Line.Action == 0 || (vg.Sidedef.Line.Action == 181 && vg.Sidedef.Line.Args[1] == 0)) 
+					if(vg.Sidedef.Line.Action == 0 || (vg.Sidedef.Line.Action == 700 && vg.Sidedef.Line.Args[1] == 0)) 
 					{
 						//check if the sector already has ceiling slopes
 						foreach(Sidedef side in vg.Sidedef.Sector.Sidedefs) 
 						{
-							if(side == vg.Sidedef || side.Line.Action != 181) continue;
+							if(side == vg.Sidedef || side.Line.Action != 700) continue;
 
 							int arg = (side == side.Line.Front ? 1 : 2);
 
@@ -4427,7 +4427,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						}
 
 						//set action
-						vg.Sidedef.Line.Action = 181;
+						vg.Sidedef.Line.Action = 700;
 						vg.Sidedef.Line.Args[1] = (vg.Sidedef == vg.Sidedef.Line.Front ? 1 : 2);
 						update = true;
 					}
@@ -4437,7 +4437,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					//check if the sector has ceiling slopes
 					foreach(Sidedef side in vg.Sector.Sector.Sidedefs) 
 					{
-						if(side.Line.Action != 181)	continue;
+						if(side.Line.Action != 700)	continue;
 
 						int arg = (side == side.Line.Front ? 1 : 2);
 
@@ -4458,7 +4458,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					//check if the sector has floor slopes
 					foreach(Sidedef side in vg.Sector.Sector.Sidedefs) 
 					{
-						if(side.Line.Action != 181)	continue;
+						if(side.Line.Action != 700)	continue;
 
 						int arg = (side == side.Line.Front ? 1 : 2);
 
