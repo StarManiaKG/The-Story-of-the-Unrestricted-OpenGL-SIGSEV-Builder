@@ -19,7 +19,7 @@ namespace CodeImp.DoomBuilder.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -536,6 +536,16 @@ namespace CodeImp.DoomBuilder.Properties {
         internal static System.Drawing.Bitmap Github {
             get {
                 object obj = ResourceManager.GetObject("Github", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GitLab {
+            get {
+                object obj = ResourceManager.GetObject("GitLab", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1616,6 +1626,36 @@ namespace CodeImp.DoomBuilder.Properties {
         internal static System.Drawing.Bitmap Update {
             get {
                 object obj = ResourceManager.GetObject("Update", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon UZB {
+            get {
+                object obj = ResourceManager.GetObject("UZB", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UZB_Splash {
+            get {
+                object obj = ResourceManager.GetObject("UZB_Splash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UZB16 {
+            get {
+                object obj = ResourceManager.GetObject("UZB16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
