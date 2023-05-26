@@ -6,10 +6,10 @@ using System.Resources;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Builder Modes")]
-[assembly: AssemblyDescription("Ultimate Doom Builder Editing Modes")]
+[assembly: AssemblyDescription("Ultimate Zone Builder Editing Modes")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CodeImp, MaxED, ZZYZX, boris, dpJudas and others")]
-[assembly: AssemblyProduct("Ultimate Doom Builder")]
+[assembly: AssemblyProduct("Ultimate Zone Builder")]
 [assembly: AssemblyCopyright("Copyright © 2007, 2016, 2017-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -29,5 +29,5 @@ using System.Resources;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("3.0.0.3274")]
+[assembly: AssemblyVersion("1.0.0.3274")]
 [assembly: NeutralResourcesLanguageAttribute("en")]

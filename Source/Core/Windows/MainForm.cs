@@ -432,8 +432,8 @@ namespace CodeImp.DoomBuilder.Windows
 		//mxd
 		private void UpdateTitle()
 		{
-			string programname = this.Text = Application.ProductName + " R" + General.ThisAssembly.GetName().Version.Revision;
-            if (Environment.Is64BitProcess)
+			string programname = this.Text = Application.ProductName + " v" + General.ThisAssembly.GetName().Version.Major + "." + General.ThisAssembly.GetName().Version.Minor;
+			if (Environment.Is64BitProcess)
                 programname += " (64-bit)";
             else programname += " (32-bit)";
 
@@ -3379,7 +3379,7 @@ namespace CodeImp.DoomBuilder.Windows
 		//mxd. Github issues clicked
 		private void itemhelpissues_Click(object sender, EventArgs e)
 		{
-			General.OpenWebsite("https://github.com/jewalky/GZDoom-Builder-Bugfix/issues");
+			General.OpenWebsite("https://git.do.srb2.org/STJr/UltimateZoneBuilder/-/issues");
 		}
 		
 		// About clicked

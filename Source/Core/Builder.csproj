@@ -11,7 +11,7 @@
     <RootNamespace>CodeImp.DoomBuilder</RootNamespace>
     <AssemblyName>Builder</AssemblyName>
     <StartupObject>CodeImp.DoomBuilder.General</StartupObject>
-    <ApplicationIcon>Resources\UDB2.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\UZB.ico</ApplicationIcon>
     <Win32Resource>
     </Win32Resource>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -906,6 +906,9 @@
     <EmbeddedResource Include="Resources\MissingTexture3D.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\UZB16.png" />
+    <None Include="Resources\UZB_Splash.png" />
+    <None Include="Resources\UZB.ico" />
     <None Include="Resources\Updater.ico" />
     <None Include="Resources\UDB2.ico" />
     <None Include="app.manifest" />
@@ -1416,6 +1419,7 @@
     <EmbeddedResource Include="Resources\Folder96.png" />
     <EmbeddedResource Include="Resources\Folder96Up.png" />
     <None Include="Resources\Github.png" />
+    <None Include="Resources\gitlab.png" />
     <Content Include="Resources\Light.png" />
     <None Include="Resources\Lightbulb.png" />
     <None Include="Resources\LightDisabled.png" />
