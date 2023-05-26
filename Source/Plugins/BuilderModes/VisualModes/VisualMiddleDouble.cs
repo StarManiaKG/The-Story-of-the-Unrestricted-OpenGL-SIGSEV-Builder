@@ -39,12 +39,15 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		#region ================== Variables
 
 		private bool repeatmidtex;
+		private int repetitions;
 		private Plane topclipplane;
 		private Plane bottomclipplane;
 		
 		#endregion
 
 		#region ================== Properties
+
+		private bool RepeatIndefinitely { get { return repeatmidtex && repetitions == 1; } }
 
 		#endregion
 
@@ -210,34 +213,56 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			// Determine if we should repeat the middle texture. In UDMF this is done with a flag, in Hexen with
 			// a argument to the 121:Line_SetIdentification. See https://www.zdoom.org/w/index.php?title=Line_SetIdentification
 			if (General.Map.UDMF)
-				repeatmidtex = Sidedef.IsFlagSet("wrapmidtex") || Sidedef.Line.IsFlagSet("wrapmidtex"); //mxd
-			else if (General.Map.HEXEN)
-				repeatmidtex = Sidedef.Line.Action == 121 && (Sidedef.Line.Args[1] & 16) == 16;
-			else
-				repeatmidtex = false;
-
-			if(!repeatmidtex) 
 			{
-				// First determine the visible portion of the texture
-				double textop;
+				repeatmidtex = Sidedef.IsFlagSet("wrapmidtex") || Sidedef.Line.IsFlagSet("wrapmidtex"); //mxd
+				repetitions = repeatmidtex ? Sidedef.Fields.GetValue("repeatcnt", 0) + 1 : 1;
+			}
+			else if (General.Map.HEXEN)
+			{
+				repeatmidtex = Sidedef.Line.Action == 121 && (Sidedef.Line.Args[1] & 16) == 16;
+				repetitions = 1;
+			}
+			else
+			{
+				repeatmidtex = false;
+				repetitions = 1;
+			}
 
+			// First determine the visible portion of the texture
+			double textop, texbottom;
+
+			if (!RepeatIndefinitely)
+			{
 				// Determine top portion height
 				if(Sidedef.Line.IsFlagSet(General.Map.Config.PegMidtextureFlag))
-					textop = geobottom + tof.y + Math.Abs(tsz.y);
+					textop = geobottom + tof.y + repetitions * Math.Abs(tsz.y);
 				else
 					textop = geotop + tof.y;
 
 				// Calculate bottom portion height
-				double texbottom = textop - Math.Abs(tsz.y);
-
-				// Create crop planes (we also need these for intersection testing)
-				topclipplane = new Plane(new Vector3D(0, 0, -1), textop);
-				bottomclipplane = new Plane(new Vector3D(0, 0, 1), -texbottom);
-
-				// Crop polygon by these heights
-				CropPoly(ref poly, topclipplane, true);
-				CropPoly(ref poly, bottomclipplane, true);
+				texbottom = textop - repetitions * Math.Abs(tsz.y);
 			}
+			else
+			{
+				if (Sidedef.Line.IsFlagSet(General.Map.Config.PegMidtextureFlag))
+				{
+					textop = geotop;
+					texbottom = geobottom + tof.y;
+				}
+				else
+				{
+					textop = geotop + tof.y;
+					texbottom = geobottom;
+				}
+			}
+
+			// Create crop planes (we also need these for intersection testing)
+			topclipplane = new Plane(new Vector3D(0, 0, -1), textop);
+			bottomclipplane = new Plane(new Vector3D(0, 0, 1), -texbottom);
+
+			// Crop polygon by these heights
+			CropPoly(ref poly, topclipplane, true);
+			CropPoly(ref poly, bottomclipplane, true);
 
 			//mxd. In(G)ZDoom, middle sidedef parts are not clipped by extrafloors of any type...
 			List<WallPolygon> polygons = new List<WallPolygon> { poly };
@@ -282,13 +307,13 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		// This performs a fast test in object picking
 		public override bool PickFastReject(Vector3D from, Vector3D to, Vector3D dir)
 		{
-			if(!repeatmidtex)
-			{
-				// When the texture is not repeated, leave when outside crop planes
+			//if(!RepeatIndefinitely)
+			//{
+				// When the texture is not repeated indefinitely, leave when outside crop planes
 				if((pickintersect.z < bottomclipplane.GetZ(pickintersect)) ||
 				   (pickintersect.z > topclipplane.GetZ(pickintersect)))
 				   return false;
-			}
+			//}
 			
 			return base.PickFastReject(from, to, dir);
 		}
@@ -316,7 +341,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
                 % imageWidth);
 
             int oy;
-            if (repeatmidtex)
+            /*if (RepeatIndefinitely)
             {
                 bool pegbottom = Sidedef.Line.IsFlagSet(General.Map.Config.PegMidtextureFlag);
 				double zoffset = (pegbottom ? Sidedef.Sector.FloorHeight : Sidedef.Sector.CeilHeight);
@@ -325,10 +350,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
                     % imageHeight);
             }
             else
-            {
+            {*/
 				double zoffset = bottomclipplane.GetZ(pickintersect);
                 oy = (int)Math.Ceiling(((pickintersect.z - zoffset) * UniFields.GetFloat(Sidedef.Fields, "scaley_mid", 1.0f) / texscale.y) % imageHeight);
-            }
+            //}
 
             // Make sure offsets are inside of texture dimensions...
             if (ox < 0) ox += imageWidth;
