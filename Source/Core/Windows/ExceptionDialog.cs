@@ -114,7 +114,7 @@ namespace CodeImp.DoomBuilder.Windows
 			}
 
             // Get UZB version
-            result += "UZB: " + General.ThisAssembly.GetName().Version + Environment.NewLine;
+            result += "UZB: v" + General.ThisAssembly.GetName().Version + Environment.NewLine;
             result += "Platform: " + (Environment.Is64BitProcess ? "x64" : "x86") + Environment.NewLine + Environment.NewLine;
 
 			return result;
