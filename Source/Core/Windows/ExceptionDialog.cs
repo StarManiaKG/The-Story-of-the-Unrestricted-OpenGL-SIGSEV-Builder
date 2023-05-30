@@ -12,7 +12,7 @@ namespace CodeImp.DoomBuilder.Windows
 {
 	public partial class ExceptionDialog : Form
 	{
-		private const string CRASH_DUMP_FILE = "UDBCrash.txt";
+		private const string CRASH_DUMP_FILE = "UZBCrash.txt";
 
 		private readonly bool isterminating;
 		private readonly string logpath;
@@ -113,8 +113,8 @@ namespace CodeImp.DoomBuilder.Windows
 				}
 			}
 
-            // Get GZDB version
-            result += "UDB: R" + General.ThisAssembly.GetName().Version.Revision + Environment.NewLine;
+            // Get UZB version
+            result += "UZB: " + General.ThisAssembly.GetName().Version + Environment.NewLine;
             result += "Platform: " + (Environment.Is64BitProcess ? "x64" : "x86") + Environment.NewLine + Environment.NewLine;
 
 			return result;
