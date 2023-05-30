@@ -323,10 +323,10 @@ namespace CodeImp.DoomBuilder.Config
 			{
 				// Read the cache variables
 				blackbrowsers = cfg.ReadSetting("blackbrowsers", true);
-				visualfov = cfg.ReadSetting("visualfov", 80);
+				visualfov = cfg.ReadSetting("visualfov", 90);
 				visualmousesensx = cfg.ReadSetting("visualmousesensx", 40f);
 				visualmousesensy = cfg.ReadSetting("visualmousesensy", 40f);
-				imagebrightness = cfg.ReadSetting("imagebrightness", 3);
+				imagebrightness = cfg.ReadSetting("imagebrightness", 0);
 				doublesidedalpha = cfg.ReadSetting("doublesidedalpha", 0.4f);
 				doublesidedalphabyte = (byte)(doublesidedalpha * 255f);
 				activethingsalpha = cfg.ReadSetting("activethingsalpha", Presentation.THINGS_ALPHA); //mxd
@@ -405,7 +405,7 @@ namespace CodeImp.DoomBuilder.Config
 				gzShowEventLines = cfg.ReadSetting("gzshoweventlines", true);
 				gzOldHighlightMode = cfg.ReadSetting("gzoldhighlightmode", false);
 				gzMaxDynamicLights = cfg.ReadSetting("gzmaxdynamiclights", 16);
-				gzStretchView = cfg.ReadSetting("gzstretchview", true);
+				gzStretchView = cfg.ReadSetting("gzstretchview", false);
 				gzVertexScale2D = cfg.ReadSetting("gzvertexscale2d", 1.0f);
 				gzShowVisualVertices = cfg.ReadSetting("gzshowvisualvertices", true);
 				gzVertexScale3D = cfg.ReadSetting("gzvertexscale3d", 1.0f);
