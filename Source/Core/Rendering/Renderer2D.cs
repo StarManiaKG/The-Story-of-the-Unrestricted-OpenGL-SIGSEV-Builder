@@ -27,6 +27,8 @@ using CodeImp.DoomBuilder.Editing;
 using CodeImp.DoomBuilder.GZBuilder.Data; //mxd
 using CodeImp.DoomBuilder.Config; //mxd
 using CodeImp.DoomBuilder.GZBuilder;
+using System.Security.Cryptography;
+
 
 #endregion
 
@@ -109,7 +111,18 @@ namespace CodeImp.DoomBuilder.Rendering
 
         // Presentation
         private Presentation present;
-		
+
+		// SRB2 stuff
+		private List<Thing> axes;
+		private List<Thing> axistransferlines;
+		private List<Thing> waypoints;
+		private List<Thing> polyanchors;
+		private List<Thing> polyspawns;
+		private List<Linedef> firstlines;
+
+		private TextLabel spawnlabel;
+		private TextLabel anchorlabel;
+
 		#endregion
 
 		#region ================== Properties
@@ -1579,8 +1592,200 @@ namespace CodeImp.DoomBuilder.Rendering
 		public void RenderThingSet(ICollection<Thing> things, float alpha)
 		{
 			RenderThingsBatch(things, alpha, false, new PixelColor());
+			RenderSRB2Extras();
 		}
-		
+
+		public void RenderSRB2Extras()
+		{
+			//if (!(General.Settings.RenderNiGHTSPath || General.Settings.RenderZoomtubes || General.Settings.RenderPolyPreview)) return;
+
+			axes = new List<Thing>();
+			axistransferlines = new List<Thing>();
+			//waypoints = new List<Thing>();
+			//polyanchors = new List<Thing>();
+			//polyspawns = new List<Thing>();
+			//firstlines = new List<Linedef>();
+
+			// Collect relevant things
+			foreach (Thing t in General.Map.Map.Things)
+			{
+				if (t.Type == 1700) // General.Settings.RenderNiGHTSPath && t.Type == General.Map.FormatInterface.AxisType
+					axes.Add(t);
+				else if (t.Type == 1702) // General.Settings.RenderNiGHTSPath && t.Type == General.Map.FormatInterface.AxisTransferLineType
+					axistransferlines.Add(t);
+				//else if (General.Settings.RenderZoomtubes && t.Type == 753) //General.Map.FormatInterface.WaypointType
+				//	waypoints.Add(t);
+				//else if (General.Settings.RenderPolyPreview && t.Type == 760)
+				//	polyanchors.Add(t);
+				//else if (General.Settings.RenderPolyPreview && (t.Type == 761 || t.Type == 762))
+				//	polyspawns.Add(t);
+			}
+
+			// Sort waypoints by angle
+			//waypoints.Sort((x, y) => (x.AngleDoom.CompareTo(y.AngleDoom)));
+
+			// Sort polyobject stuff by "angle"/tag
+			//polyanchors.Sort((x, y) => (x.AngleDoom.CompareTo(y.AngleDoom)));
+			//polyspawns.Sort((x, y) => (x.AngleDoom.CompareTo(y.AngleDoom)));
+
+			// Sort by axis number and mare number.
+			axistransferlines.Sort((x, y) => (x.Args[1] | x.Args[0]).CompareTo(y.Args[1] | y.Args[0]));
+
+			// Collect relevant lines
+			//if (General.Settings.RenderPolyPreview)
+			//{
+			//	foreach (Linedef l in General.Map.Map.Linedefs)
+			//	{
+			//		if (l.Action == 20) firstlines.Add(l);
+			//	}
+			//
+			//	//Sort polyobject first lines by tag
+			//	firstlines.Sort((x, y) => (x.Tag.CompareTo(y.Tag)));
+			//}
+
+			//Render (zoom tube) waypoint sequences.
+			//if (General.Settings.RenderZoomtubes)
+			//{
+			//	int i = 0;
+			//	int size = waypoints.Count;
+			//	int seqStart = 0;
+			//	ITextLabel[] sequencelabels = new ITextLabel[256];
+			//	while (i < size)
+			//	{
+			//		int iNext = i + 1;
+			//		if (waypoints[i].AngleDoom % 256 == 0) // start of a new sequence?
+			//		{
+			//			seqStart = i;
+			//			sequencelabels[waypoints[i].AngleDoom / 256] = new TextLabel() // create sequence ID label
+			//			{
+			//				Text = (waypoints[i].AngleDoom / 256).ToString(),
+			//				AlignX = TextAlignmentX.Center,
+			//				AlignY = TextAlignmentY.Middle,
+			//				Color = General.Colors.WaypointColor,
+			//				TransformCoords = true,
+			//				Location = waypoints[i].Position
+			//			};
+			//		}
+			//		if (iNext < size && waypoints[iNext].AngleDoom == waypoints[i].AngleDoom + 1)
+			//		{
+			//			// draw line between this waypoint and the next
+			//			RenderLine(waypoints[i].Position, waypoints[iNext].Position, 1.5f, General.Colors.WaypointColor, true);
+			//		}
+			//		else if (iNext < size && waypoints[iNext].AngleDoom == waypoints[i].AngleDoom)
+			//		{
+			//			// mark duplicate waypoints
+			//			RenderCircle(waypoints[i].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
+			//			RenderCircle(waypoints[iNext].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
+			//		}
+			//		else if (iNext < size && i > 0 && waypoints[i].AngleDoom - waypoints[i - 1].AngleDoom > 1 && waypoints[iNext].AngleDoom > waypoints[seqStart].AngleDoom + 255)
+			//		{
+			//			// mark inaccessible waypoints
+			//			RenderCircle(waypoints[i].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
+			//		}
+			//		else
+			//		{
+			//			// draw different line between last and first waypoint of this sequence
+			//			RenderLine(waypoints[i].Position, waypoints[seqStart].Position, 0.75f, General.Colors.WaypointLoopColor, true);
+			//		}
+			//		i = iNext;
+			//	}
+			//
+			//	for (i = 0; i < 256; i++)
+			//		if (sequencelabels[i] != null) RenderText(sequencelabels[i]);
+			//}
+
+			//Render axis transfer lines.
+			//if (General.Settings.RenderNiGHTSPath)
+			{
+				int i = 0;
+				int size = axistransferlines.Count;
+				while (i < size - 1)
+				{
+					int iNext = i;
+					while (iNext < size - 1 && axistransferlines[++iNext].Args[1] <= axistransferlines[i].Args[1]) ;
+
+					if (iNext < size && axistransferlines[iNext].Args[1] == axistransferlines[i].Args[1] + 1)
+					{
+						int mare = axistransferlines[i].Args[0];
+						RenderLine(axistransferlines[i].Position, axistransferlines[iNext].Position, 1f, General.Colors.GetNiGHTSColor(mare), true);
+						/* Start looking for partners for the one beyond iNext. */
+						i = iNext + 1;
+					}
+					else
+					{
+						/* No partner, so start looking for partners for iNext. */
+						i = iNext;
+					}
+				}
+				//Render axes.
+				foreach (Thing axis in axes)
+				{
+					int mare = axis.Args[0];
+					RenderCircle(axis.Position, (float)(axis.AngleDoom & 0x3FFF), 1f, General.Colors.GetNiGHTSColor(mare), true);
+				}
+			}
+
+			//if (General.Settings.RenderPolyPreview)
+			//{
+			//	int i = 0, j = 0, k = 0;
+			//	Sector s = null;
+			//	while (i < polyanchors.Count && j < polyspawns.Count && k < firstlines.Count)
+			//	{
+			//		while (j + 1 < polyspawns.Count && polyanchors[i].AngleDoom > polyspawns[j].AngleDoom) j++;
+			//		while (k + 1 < firstlines.Count && polyanchors[i].AngleDoom > firstlines[k].Tag) k++;
+			//
+			//		if (polyanchors[i].AngleDoom == firstlines[k].Tag)
+			//			s = firstlines[k].Back.Sector;
+			//		else
+			//			s = null;
+			//
+			//		if (polyanchors[i].AngleDoom == polyspawns[j].AngleDoom && s != null)
+			//		{
+			//			while (j + 1 < polyspawns.Count && polyspawns[j].AngleDoom == polyspawns[j + 1].AngleDoom)
+			//			{
+			//				// Mark redundant spawnpoints
+			//				spawnlabel.Text = polyspawns[j].AngleDoom.ToString();
+			//				spawnlabel.Location = polyspawns[j].Position;
+			//				spawnlabel.Color = PixelColor.FromColor(Color.Red);
+			//				RenderText((ITextLabel)spawnlabel);
+			//				j++;
+			//			}
+			//
+			//			float xdiff = polyanchors[i].Position.x - polyspawns[j].Position.x;
+			//			float ydiff = polyanchors[i].Position.y - polyspawns[j].Position.y;
+			//
+			//			foreach (Sidedef side in s.Sidedefs)
+			//			{
+			//				Vector2D start = side.Line.Start.Position;
+			//				Vector2D end = side.Line.End.Position;
+			//				start.x -= xdiff;
+			//				start.y -= ydiff;
+			//				end.x -= xdiff;
+			//				end.y -= ydiff;
+			//				RenderLine(start, end, 1.0f, General.Colors.PolySpawnColor, true);
+			//			}
+			//			anchorlabel.Color = General.Colors.PolyAnchorColor;
+			//			spawnlabel.Color = General.Colors.PolySpawnColor;
+			//
+			//			spawnlabel.Text = polyspawns[j].AngleDoom.ToString();
+			//			spawnlabel.Location = polyspawns[j].Position;
+			//			RenderText((ITextLabel)spawnlabel);
+			//		}
+			//		else
+			//		{
+			//			// Mark unused polyobject anchors
+			//			anchorlabel.Color = PixelColor.FromColor(Color.Red);
+			//		}
+			//
+			//		anchorlabel.Text = polyanchors[i].AngleDoom.ToString();
+			//		anchorlabel.Location = polyanchors[i].Position;
+			//		RenderText((ITextLabel)anchorlabel);
+			//
+			//		i++;
+			//	}
+			//}
+		}
+
 		#endregion
 
 		#region ================== Surface
@@ -2231,7 +2436,7 @@ namespace CodeImp.DoomBuilder.Rendering
 			// Draw pixel here
 			plotter.DrawVertexSolid((int)nv.x, TransformY((int)nv.y), vertexsize, ref General.Colors.Colors[colorindex], ref General.Colors.BrightColors[colorindex], ref General.Colors.DarkColors[colorindex]);
 		}
-		
+
 		// This renders a set of vertices
 		public void PlotVerticesSet(ICollection<Vertex> vertices, bool checkMode = true)
 		{
@@ -2265,10 +2470,27 @@ namespace CodeImp.DoomBuilder.Rendering
 					Vector2D nv = v.Position.GetTransformed(translatex, translatey, scale, -scale);
 
 					int colorindex = DetermineVertexColor(v);
-					
+
 					// Draw pixel here
 					plotter.DrawVertexSolid((int)nv.x, TransformY((int)nv.y), vertexsize, ref General.Colors.Colors[colorindex], ref General.Colors.BrightColors[colorindex], ref General.Colors.DarkColors[colorindex]);
 				}
+			}
+		}
+
+		// This renders a circle with given color
+		public void RenderCircle(Vector2D center, float radius, float thickness, PixelColor c, bool transformcoords)
+		{
+			int CIRCLE_PRECISION = 128;
+			Vector2D[] points = new Vector2D[CIRCLE_PRECISION];
+			for (int i = 0; i < CIRCLE_PRECISION; i++)
+			{
+				float fAngle = i * 2 * (float)Math.PI / CIRCLE_PRECISION;
+				points[i].x = center.x + ((float)Math.Cos(fAngle) * radius);
+				points[i].y = center.y + ((float)Math.Sin(fAngle) * radius);
+			}
+			for (int i = 0; i < CIRCLE_PRECISION; i++)
+			{
+				RenderLine(points[i], points[(i + 1) % CIRCLE_PRECISION], thickness, c, transformcoords);
 			}
 		}
 
