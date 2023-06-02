@@ -162,7 +162,25 @@ namespace CodeImp.DoomBuilder.Rendering
 
 			// Create rendertargets
 			CreateRendertargets();
-			
+
+			anchorlabel = new TextLabel() // create sequence ID label
+			{
+				Text = "0",
+				AlignX = TextAlignmentX.Center,
+				AlignY = TextAlignmentY.Middle,
+				Color = PixelColor.FromColor(Color.FromArgb(255, 255, 192, 0)),
+				TransformCoords = true
+			};
+
+			spawnlabel = new TextLabel() // create sequence ID label
+			{
+				Text = "0",
+				AlignX = TextAlignmentX.Center,
+				AlignY = TextAlignmentY.Middle,
+				Color = PixelColor.FromColor(Color.FromArgb(255, 128, 255, 0)),
+				TransformCoords = true
+			};
+
 			// We have no destructor
 			GC.SuppressFinalize(this);
 		}
@@ -1602,9 +1620,9 @@ namespace CodeImp.DoomBuilder.Rendering
 			axes = new List<Thing>();
 			axistransferlines = new List<Thing>();
 			waypoints = new List<Thing>();
-			//polyanchors = new List<Thing>();
-			//polyspawns = new List<Thing>();
-			//firstlines = new List<Linedef>();
+			polyanchors = new List<Thing>();
+			polyspawns = new List<Thing>();
+			firstlines = new List<Linedef>();
 
 			// Collect relevant things
 			foreach (Thing t in General.Map.Map.Things)
@@ -1615,33 +1633,33 @@ namespace CodeImp.DoomBuilder.Rendering
 					axistransferlines.Add(t);
 				else if (t.Type == 753) // General.Settings.RenderZoomtubes && t.Type == General.Map.FormatInterface.WaypointType
 					waypoints.Add(t);
-				//else if (General.Settings.RenderPolyPreview && t.Type == 760)
-				//	polyanchors.Add(t);
-				//else if (General.Settings.RenderPolyPreview && (t.Type == 761 || t.Type == 762))
-				//	polyspawns.Add(t);
+				else if (t.Type == 760) // General.Settings.RenderPolyPreview
+					polyanchors.Add(t);
+				else if (t.Type == 761 || t.Type == 762) // General.Settings.RenderPolyPreview
+					polyspawns.Add(t);
 			}
 
 			// Sort waypoints by order and sequence number.
 			waypoints = waypoints.OrderBy(x => x.Args[0]).ThenBy(x => x.Args[1]).ToList();
 
 			// Sort polyobject stuff by "angle"/tag
-			//polyanchors.Sort((x, y) => (x.AngleDoom.CompareTo(y.AngleDoom)));
-			//polyspawns.Sort((x, y) => (x.AngleDoom.CompareTo(y.AngleDoom)));
+			polyanchors.Sort((x, y) => x.Tag.CompareTo(y.Tag));
+			polyspawns.Sort((x, y) => x.Tag.CompareTo(y.Tag));
 
 			// Sort by axis number and mare number.
 			axistransferlines.Sort((x, y) => (x.Args[1] | x.Args[0]).CompareTo(y.Args[1] | y.Args[0]));
 
 			// Collect relevant lines
 			//if (General.Settings.RenderPolyPreview)
-			//{
-			//	foreach (Linedef l in General.Map.Map.Linedefs)
-			//	{
-			//		if (l.Action == 20) firstlines.Add(l);
-			//	}
-			//
-			//	//Sort polyobject first lines by tag
-			//	firstlines.Sort((x, y) => (x.Tag.CompareTo(y.Tag)));
-			//}
+			{
+				foreach (Linedef l in General.Map.Map.Linedefs)
+				{
+					if (l.Action == 20) firstlines.Add(l);
+				}
+			
+				//Sort polyobject first lines by tag
+				firstlines.Sort((x, y) => x.Tag.CompareTo(y.Tag));
+			}
 
 			//Render (zoom tube) waypoint sequences.
 			//if (General.Settings.RenderZoomtubes)
@@ -1727,64 +1745,64 @@ namespace CodeImp.DoomBuilder.Rendering
 			}
 
 			//if (General.Settings.RenderPolyPreview)
-			//{
-			//	int i = 0, j = 0, k = 0;
-			//	Sector s = null;
-			//	while (i < polyanchors.Count && j < polyspawns.Count && k < firstlines.Count)
-			//	{
-			//		while (j + 1 < polyspawns.Count && polyanchors[i].AngleDoom > polyspawns[j].AngleDoom) j++;
-			//		while (k + 1 < firstlines.Count && polyanchors[i].AngleDoom > firstlines[k].Tag) k++;
-			//
-			//		if (polyanchors[i].AngleDoom == firstlines[k].Tag)
-			//			s = firstlines[k].Back.Sector;
-			//		else
-			//			s = null;
-			//
-			//		if (polyanchors[i].AngleDoom == polyspawns[j].AngleDoom && s != null)
-			//		{
-			//			while (j + 1 < polyspawns.Count && polyspawns[j].AngleDoom == polyspawns[j + 1].AngleDoom)
-			//			{
-			//				// Mark redundant spawnpoints
-			//				spawnlabel.Text = polyspawns[j].AngleDoom.ToString();
-			//				spawnlabel.Location = polyspawns[j].Position;
-			//				spawnlabel.Color = PixelColor.FromColor(Color.Red);
-			//				RenderText((ITextLabel)spawnlabel);
-			//				j++;
-			//			}
-			//
-			//			float xdiff = polyanchors[i].Position.x - polyspawns[j].Position.x;
-			//			float ydiff = polyanchors[i].Position.y - polyspawns[j].Position.y;
-			//
-			//			foreach (Sidedef side in s.Sidedefs)
-			//			{
-			//				Vector2D start = side.Line.Start.Position;
-			//				Vector2D end = side.Line.End.Position;
-			//				start.x -= xdiff;
-			//				start.y -= ydiff;
-			//				end.x -= xdiff;
-			//				end.y -= ydiff;
-			//				RenderLine(start, end, 1.0f, General.Colors.PolySpawnColor, true);
-			//			}
-			//			anchorlabel.Color = General.Colors.PolyAnchorColor;
-			//			spawnlabel.Color = General.Colors.PolySpawnColor;
-			//
-			//			spawnlabel.Text = polyspawns[j].AngleDoom.ToString();
-			//			spawnlabel.Location = polyspawns[j].Position;
-			//			RenderText((ITextLabel)spawnlabel);
-			//		}
-			//		else
-			//		{
-			//			// Mark unused polyobject anchors
-			//			anchorlabel.Color = PixelColor.FromColor(Color.Red);
-			//		}
-			//
-			//		anchorlabel.Text = polyanchors[i].AngleDoom.ToString();
-			//		anchorlabel.Location = polyanchors[i].Position;
-			//		RenderText((ITextLabel)anchorlabel);
-			//
-			//		i++;
-			//	}
-			//}
+			{
+				int i = 0, j = 0, k = 0;
+				Sector s = null;
+				while (i < polyanchors.Count && j < polyspawns.Count && k < firstlines.Count)
+				{
+					while (j + 1 < polyspawns.Count && polyanchors[i].Tag > polyspawns[j].Tag) j++;
+					while (k + 1 < firstlines.Count && polyanchors[i].Tag > firstlines[k].Tag) k++;
+			
+					if (polyanchors[i].Tag == firstlines[k].Tag)
+						s = firstlines[k].Back.Sector;
+					else
+						s = null;
+			
+					if (polyanchors[i].Tag == polyspawns[j].Tag && s != null)
+					{
+						while (j + 1 < polyspawns.Count && polyspawns[j].Tag == polyspawns[j + 1].Tag)
+						{
+							// Mark redundant spawnpoints
+							spawnlabel.Text = polyspawns[j].Tag.ToString();
+							spawnlabel.Location = polyspawns[j].Position;
+							spawnlabel.Color = PixelColor.FromColor(Color.Red);
+							RenderText((ITextLabel)spawnlabel);
+							j++;
+						}
+			
+						double xdiff = polyanchors[i].Position.x - polyspawns[j].Position.x;
+						double ydiff = polyanchors[i].Position.y - polyspawns[j].Position.y;
+			
+						foreach (Sidedef side in s.Sidedefs)
+						{
+							Vector2D start = side.Line.Start.Position;
+							Vector2D end = side.Line.End.Position;
+							start.x -= xdiff;
+							start.y -= ydiff;
+							end.x -= xdiff;
+							end.y -= ydiff;
+							RenderLine(start, end, 1.0f, PixelColor.FromColor(Color.FromArgb(255, 128, 255, 0)), true);
+						}
+						anchorlabel.Color = PixelColor.FromColor(Color.FromArgb(255, 255, 192, 0));
+						spawnlabel.Color = PixelColor.FromColor(Color.FromArgb(255, 128, 255, 0));
+			
+						spawnlabel.Text = polyspawns[j].AngleDoom.ToString();
+						spawnlabel.Location = polyspawns[j].Position;
+						RenderText((ITextLabel)spawnlabel);
+					}
+					else
+					{
+						// Mark unused polyobject anchors
+						anchorlabel.Color = PixelColor.FromColor(Color.Red);
+					}
+			
+					anchorlabel.Text = polyanchors[i].Tag.ToString();
+					anchorlabel.Location = polyanchors[i].Position;
+					RenderText((ITextLabel)anchorlabel);
+			
+					i++;
+				}
+			}
 		}
 
 		#endregion
