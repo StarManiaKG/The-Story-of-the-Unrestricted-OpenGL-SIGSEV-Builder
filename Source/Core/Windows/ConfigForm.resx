@@ -185,6 +185,8 @@
 %L1   - The first number found in the map lump name (as is set in the map options window).
 %L2   - The second number found in the map lump name (as is set in the map options window).
 %AP  - All resource files, except the first IWAD, with full paths included.
+%AA  - All archives (WAD and PK3 files), except the first IWAD, with full paths included.
+%AF  - All folder resources, with full paths included.
 %S     - Skill number at which to test.
 %NM - Either -nomonsters when testing without monsters, or nothing at all.</value>
   </data>
