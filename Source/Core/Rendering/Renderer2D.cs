@@ -27,7 +27,7 @@ using CodeImp.DoomBuilder.Editing;
 using CodeImp.DoomBuilder.GZBuilder.Data; //mxd
 using CodeImp.DoomBuilder.Config; //mxd
 using CodeImp.DoomBuilder.GZBuilder;
-using System.Security.Cryptography;
+using System.Linq;
 
 
 #endregion
@@ -1601,7 +1601,7 @@ namespace CodeImp.DoomBuilder.Rendering
 
 			axes = new List<Thing>();
 			axistransferlines = new List<Thing>();
-			//waypoints = new List<Thing>();
+			waypoints = new List<Thing>();
 			//polyanchors = new List<Thing>();
 			//polyspawns = new List<Thing>();
 			//firstlines = new List<Linedef>();
@@ -1613,16 +1613,16 @@ namespace CodeImp.DoomBuilder.Rendering
 					axes.Add(t);
 				else if (t.Type == 1702) // General.Settings.RenderNiGHTSPath && t.Type == General.Map.FormatInterface.AxisTransferLineType
 					axistransferlines.Add(t);
-				//else if (General.Settings.RenderZoomtubes && t.Type == 753) //General.Map.FormatInterface.WaypointType
-				//	waypoints.Add(t);
+				else if (t.Type == 753) // General.Settings.RenderZoomtubes && t.Type == General.Map.FormatInterface.WaypointType
+					waypoints.Add(t);
 				//else if (General.Settings.RenderPolyPreview && t.Type == 760)
 				//	polyanchors.Add(t);
 				//else if (General.Settings.RenderPolyPreview && (t.Type == 761 || t.Type == 762))
 				//	polyspawns.Add(t);
 			}
 
-			// Sort waypoints by angle
-			//waypoints.Sort((x, y) => (x.AngleDoom.CompareTo(y.AngleDoom)));
+			// Sort waypoints by order and sequence number.
+			waypoints = waypoints.OrderBy(x => x.Args[0]).ThenBy(x => x.Args[1]).ToList();
 
 			// Sort polyobject stuff by "angle"/tag
 			//polyanchors.Sort((x, y) => (x.AngleDoom.CompareTo(y.AngleDoom)));
@@ -1645,54 +1645,55 @@ namespace CodeImp.DoomBuilder.Rendering
 
 			//Render (zoom tube) waypoint sequences.
 			//if (General.Settings.RenderZoomtubes)
-			//{
-			//	int i = 0;
-			//	int size = waypoints.Count;
-			//	int seqStart = 0;
-			//	ITextLabel[] sequencelabels = new ITextLabel[256];
-			//	while (i < size)
-			//	{
-			//		int iNext = i + 1;
-			//		if (waypoints[i].AngleDoom % 256 == 0) // start of a new sequence?
-			//		{
-			//			seqStart = i;
-			//			sequencelabels[waypoints[i].AngleDoom / 256] = new TextLabel() // create sequence ID label
-			//			{
-			//				Text = (waypoints[i].AngleDoom / 256).ToString(),
-			//				AlignX = TextAlignmentX.Center,
-			//				AlignY = TextAlignmentY.Middle,
-			//				Color = General.Colors.WaypointColor,
-			//				TransformCoords = true,
-			//				Location = waypoints[i].Position
-			//			};
-			//		}
-			//		if (iNext < size && waypoints[iNext].AngleDoom == waypoints[i].AngleDoom + 1)
-			//		{
-			//			// draw line between this waypoint and the next
-			//			RenderLine(waypoints[i].Position, waypoints[iNext].Position, 1.5f, General.Colors.WaypointColor, true);
-			//		}
-			//		else if (iNext < size && waypoints[iNext].AngleDoom == waypoints[i].AngleDoom)
-			//		{
-			//			// mark duplicate waypoints
-			//			RenderCircle(waypoints[i].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
-			//			RenderCircle(waypoints[iNext].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
-			//		}
-			//		else if (iNext < size && i > 0 && waypoints[i].AngleDoom - waypoints[i - 1].AngleDoom > 1 && waypoints[iNext].AngleDoom > waypoints[seqStart].AngleDoom + 255)
-			//		{
-			//			// mark inaccessible waypoints
-			//			RenderCircle(waypoints[i].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
-			//		}
-			//		else
-			//		{
-			//			// draw different line between last and first waypoint of this sequence
-			//			RenderLine(waypoints[i].Position, waypoints[seqStart].Position, 0.75f, General.Colors.WaypointLoopColor, true);
-			//		}
-			//		i = iNext;
-			//	}
-			//
-			//	for (i = 0; i < 256; i++)
-			//		if (sequencelabels[i] != null) RenderText(sequencelabels[i]);
-			//}
+			{
+				int i = 0;
+				int size = waypoints.Count;
+				int seqStart = 0;
+				ITextLabel[] sequencelabels = new ITextLabel[256];
+				while (i < size)
+				{
+					int iNext = i + 1;
+					if (waypoints[i].Args[1] == 0) // start of a new sequence?
+					{
+						seqStart = i;
+						sequencelabels[waypoints[i].Args[0]] = new TextLabel() // create sequence ID label
+						{
+							Text = waypoints[i].Args[0].ToString(),
+							AlignX = TextAlignmentX.Center,
+							AlignY = TextAlignmentY.Middle,
+							Color = PixelColor.FromColor(Color.FromArgb(255, 0, 255, 192)),
+							TransformCoords = true,
+							Location = waypoints[i].Position
+						};
+					}
+
+					if (iNext < size)
+					{
+						// draw line between this waypoint and the next
+						if (waypoints[iNext].Args[1] == waypoints[i].Args[1] + 1)
+							RenderLine(waypoints[i].Position, waypoints[iNext].Position, 1.5f, PixelColor.FromColor(Color.FromArgb(255, 0, 255, 192)), true);
+
+						// mark duplicate waypoints
+						else if (waypoints[iNext].Args[1] == waypoints[i].Args[1])
+						{
+							RenderCircle(waypoints[i].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
+							RenderCircle(waypoints[iNext].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
+						}
+
+						// mark inaccessible waypoints
+						else if (i > 0 && waypoints[i].Args[1] - waypoints[i - 1].Args[1] > 1)
+							RenderCircle(waypoints[i].Position, 32f, 1f, PixelColor.FromColor(Color.Red), true);
+
+						// draw different line between last and first waypoint of this sequence
+						else if (waypoints[i].Args[0] == waypoints[seqStart].Args[0] && waypoints[iNext].Args[0] > waypoints[i].Args[0])
+							RenderLine(waypoints[i].Position, waypoints[seqStart].Position, 0.75f, PixelColor.FromColor(Color.FromArgb(255, 0, 192, 255)), true);
+					}
+					i = iNext;
+				}
+			
+				for (i = 0; i < 256; i++)
+					if (sequencelabels[i] != null) RenderText(sequencelabels[i]);
+			}
 
 			//Render axis transfer lines.
 			//if (General.Settings.RenderNiGHTSPath)
@@ -1721,7 +1722,7 @@ namespace CodeImp.DoomBuilder.Rendering
 				foreach (Thing axis in axes)
 				{
 					int mare = axis.Args[0];
-					RenderCircle(axis.Position, (float)(axis.AngleDoom & 0x3FFF), 1f, General.Colors.GetNiGHTSColor(mare), true);
+					RenderCircle(axis.Position, axis.Args[2], 1f, General.Colors.GetNiGHTSColor(mare), true);
 				}
 			}
 
