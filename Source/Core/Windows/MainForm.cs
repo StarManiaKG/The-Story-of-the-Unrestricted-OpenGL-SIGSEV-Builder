@@ -3349,6 +3349,45 @@ namespace CodeImp.DoomBuilder.Windows
 			General.MainWindow.UpdateGZDoomPanel();
 		}
 
+		[BeginAction("srb2togglenights")]
+		internal void SRB2ToggleNiGHTS()
+		{
+			General.Settings.SRB2RenderNiGHTS = !General.Settings.SRB2RenderNiGHTS;
+
+			//itemtogglerendernights.Checked = General.Settings.SRB2RenderNiGHTS;
+			//buttontogglerendernights.Checked = General.Settings.SRB2RenderNiGHTS;
+
+			General.MainWindow.DisplayStatus(StatusType.Action, "NiGHTS track rendering " + (General.Settings.SRB2RenderNiGHTS ? "ENABLED" : "DISABLED"));
+			General.MainWindow.RedrawDisplay();
+			General.MainWindow.UpdateGZDoomPanel();
+		}
+
+		[BeginAction("srb2togglezoomtubes")]
+		internal void SRB2ToggleZoomTubes()
+		{
+			General.Settings.SRB2RenderZoomTubes = !General.Settings.SRB2RenderZoomTubes;
+
+			//itemtogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
+			//buttontogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
+
+			General.MainWindow.DisplayStatus(StatusType.Action, "Zoom tube waypoint rendering is " + (General.Settings.SRB2RenderZoomTubes ? "ENABLED" : "DISABLED"));
+			General.MainWindow.RedrawDisplay();
+			General.MainWindow.UpdateGZDoomPanel();
+		}
+
+		[BeginAction("srb2togglepolyobjects")]
+		internal void SRB2TogglePolyobjects()
+		{
+			General.Settings.SRB2RenderPolyobjects = !General.Settings.SRB2RenderPolyobjects;
+
+			//itemtogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
+			//buttontogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
+
+			General.MainWindow.DisplayStatus(StatusType.Action, "Polyobject preview rendering is " + (General.Settings.SRB2RenderPolyobjects ? "ENABLED" : "DISABLED"));
+			General.MainWindow.RedrawDisplay();
+			General.MainWindow.UpdateGZDoomPanel();
+		}
+
 		#endregion
 
 		#region ================== Mode Menu

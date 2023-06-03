@@ -153,6 +153,11 @@ namespace CodeImp.DoomBuilder.Config
 		private bool flatShadeVertices;
 		private bool alwaysShowVertices;
 
+		// SRB2
+		private bool srb2rendernights;
+		private bool srb2renderzoomtubes;
+		private bool srb2renderpolyobjects;
+
 		// These are not stored in the configuration, only used at runtime
 		private int defaultbrightness;
 		private int defaultfloorheight;
@@ -286,6 +291,11 @@ namespace CodeImp.DoomBuilder.Config
 		public bool FlatShadeVertices {  get { return flatShadeVertices; } internal set { flatShadeVertices = value;  } }
 
 		public bool AlwaysShowVertices {  get { return alwaysShowVertices; } internal set { alwaysShowVertices = value; } }
+
+		//SRB2
+		public bool SRB2RenderNiGHTS { get { return srb2rendernights; } internal set { srb2rendernights = value; } }
+		public bool SRB2RenderZoomTubes { get { return srb2renderzoomtubes; } internal set { srb2renderzoomtubes = value; } }
+		public bool SRB2RenderPolyobjects { get { return srb2renderpolyobjects; } internal set { srb2renderpolyobjects = value; } }
 
 		//mxd. Left here for compatibility reasons...
 		public string DefaultTexture { get { return General.Map != null ? General.Map.Options.DefaultWallTexture : "-"; } set { if(General.Map != null) General.Map.Options.DefaultWallTexture = value; } }
@@ -427,6 +437,11 @@ namespace CodeImp.DoomBuilder.Config
 				classicRendering = cfg.ReadSetting("classicrendering", false);
 				alwaysShowVertices = cfg.ReadSetting("alwaysshowvertices", true);
 				flatShadeVertices = cfg.ReadSetting("flatshadevertices", false);
+
+				// SRB2
+				srb2rendernights = cfg.ReadSetting("srb2rendernights", true);
+				srb2renderpolyobjects = cfg.ReadSetting("srb2renderpolyobjects", true);
+				srb2renderzoomtubes = cfg.ReadSetting("srb2renderzoomtubes", true);
 
 				//mxd. Sector defaults
 				defaultceilheight = cfg.ReadSetting("defaultceilheight", 128);
@@ -572,6 +587,11 @@ namespace CodeImp.DoomBuilder.Config
 			cfg.WriteSetting("classicrendering", classicRendering);
 			cfg.WriteSetting("alwaysshowvertices", alwaysShowVertices);
 			cfg.WriteSetting("flatshadevertices", flatShadeVertices);
+
+			//SRB2
+			cfg.WriteSetting("srb2rendernights", srb2rendernights);
+			cfg.WriteSetting("srb2renderzoomtubes", srb2renderzoomtubes);
+			cfg.WriteSetting("srb2renderpolyobjects", srb2renderpolyobjects);
 
 			// Toasts
 			General.ToastManager.WriteSettings(cfg);

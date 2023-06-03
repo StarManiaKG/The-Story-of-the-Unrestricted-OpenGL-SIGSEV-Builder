@@ -1615,7 +1615,7 @@ namespace CodeImp.DoomBuilder.Rendering
 
 		public void RenderSRB2Extras()
 		{
-			//if (!(General.Settings.RenderNiGHTSPath || General.Settings.RenderZoomtubes || General.Settings.RenderPolyPreview)) return;
+			if (!(General.Settings.SRB2RenderNiGHTS || General.Settings.SRB2RenderZoomTubes || General.Settings.SRB2RenderPolyobjects)) return;
 
 			axes = new List<Thing>();
 			axistransferlines = new List<Thing>();
@@ -1627,15 +1627,15 @@ namespace CodeImp.DoomBuilder.Rendering
 			// Collect relevant things
 			foreach (Thing t in General.Map.Map.Things)
 			{
-				if (t.Type == 1700) // General.Settings.RenderNiGHTSPath && t.Type == General.Map.FormatInterface.AxisType
+				if (General.Settings.SRB2RenderNiGHTS && t.Type == 1700)
 					axes.Add(t);
-				else if (t.Type == 1702) // General.Settings.RenderNiGHTSPath && t.Type == General.Map.FormatInterface.AxisTransferLineType
+				else if (General.Settings.SRB2RenderNiGHTS && t.Type == 1702)
 					axistransferlines.Add(t);
-				else if (t.Type == 753) // General.Settings.RenderZoomtubes && t.Type == General.Map.FormatInterface.WaypointType
+				else if (General.Settings.SRB2RenderZoomTubes && t.Type == 753)
 					waypoints.Add(t);
-				else if (t.Type == 760) // General.Settings.RenderPolyPreview
+				else if (General.Settings.SRB2RenderPolyobjects && t.Type == 760)
 					polyanchors.Add(t);
-				else if (t.Type == 761 || t.Type == 762) // General.Settings.RenderPolyPreview
+				else if (General.Settings.SRB2RenderPolyobjects && (t.Type == 761 || t.Type == 762))
 					polyspawns.Add(t);
 			}
 
@@ -1650,7 +1650,7 @@ namespace CodeImp.DoomBuilder.Rendering
 			axistransferlines.Sort((x, y) => (x.Args[1] | x.Args[0]).CompareTo(y.Args[1] | y.Args[0]));
 
 			// Collect relevant lines
-			//if (General.Settings.RenderPolyPreview)
+			if (General.Settings.SRB2RenderPolyobjects)
 			{
 				foreach (Linedef l in General.Map.Map.Linedefs)
 				{
@@ -1662,7 +1662,7 @@ namespace CodeImp.DoomBuilder.Rendering
 			}
 
 			//Render (zoom tube) waypoint sequences.
-			//if (General.Settings.RenderZoomtubes)
+			if (General.Settings.SRB2RenderZoomTubes)
 			{
 				int i = 0;
 				int size = waypoints.Count;
@@ -1714,7 +1714,7 @@ namespace CodeImp.DoomBuilder.Rendering
 			}
 
 			//Render axis transfer lines.
-			//if (General.Settings.RenderNiGHTSPath)
+			if (General.Settings.SRB2RenderNiGHTS)
 			{
 				int i = 0;
 				int size = axistransferlines.Count;
@@ -1744,7 +1744,7 @@ namespace CodeImp.DoomBuilder.Rendering
 				}
 			}
 
-			//if (General.Settings.RenderPolyPreview)
+			if (General.Settings.SRB2RenderPolyobjects)
 			{
 				int i = 0, j = 0, k = 0;
 				Sector s = null;
