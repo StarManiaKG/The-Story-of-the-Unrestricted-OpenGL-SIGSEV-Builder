@@ -293,6 +293,14 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemaligngridtolinedef = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemsetgridorigintovertex = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemresetgrid = new System.Windows.Forms.ToolStripMenuItem();
+			this.buttontogglerendernights = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontogglerenderzoomtubes = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontogglerenderpolyobjects = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.itemtogglerendernights = new System.Windows.Forms.ToolStripMenuItem();
+			this.itemtogglerenderzoomtubes = new System.Windows.Forms.ToolStripMenuItem();
+			this.itemtogglerenderpolyobjects = new System.Windows.Forms.ToolStripMenuItem();
+			this.seperatorviewsrb2 = new System.Windows.Forms.ToolStripSeparator();
+			this.separatorsrb2 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -792,6 +800,10 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemviewfloors,
 			this.itemviewceilings,
 			this.seperatorviewviews,
+			this.itemtogglerendernights,
+			this.itemtogglerenderzoomtubes,
+			this.itemtogglerenderpolyobjects,
+			this.seperatorviewsrb2,
 			this.itemfullbrightness,
 			this.itemtogglegrid,
 			this.itemtogglecomments,
@@ -1387,6 +1399,10 @@ namespace CodeImp.DoomBuilder.Windows
 			this.buttonviewbrightness,
 			this.buttonviewfloors,
 			this.buttonviewceilings,
+			this.separatorsrb2,
+			this.buttontogglerendernights,
+			this.buttontogglerenderzoomtubes,
+			this.buttontogglerenderpolyobjects,
 			this.separatorgeomergemodes,
 			this.buttonmergegeoclassic,
 			this.buttonmergegeo,
@@ -2858,6 +2874,83 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemdynamicgridsize.Text = "Dynamic Grid Size";
 			this.itemdynamicgridsize.Click += new System.EventHandler(this.InvokeTaggedAction);
 			// 
+			// buttontogglerendernights
+			// 
+			this.buttontogglerendernights.CheckOnClick = true;
+			this.buttontogglerendernights.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.buttontogglerendernights.Image = global::CodeImp.DoomBuilder.Properties.Resources.NiGHTSAxis;
+			this.buttontogglerendernights.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttontogglerendernights.Name = "buttontogglerendernights";
+			this.buttontogglerendernights.Size = new System.Drawing.Size(23, 20);
+			this.buttontogglerendernights.Tag = "builder_srb2togglenights";
+			this.buttontogglerendernights.Text = "Render NiGHTS track";
+			this.buttontogglerendernights.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// buttontogglerenderzoomtubes
+			// 
+			this.buttontogglerenderzoomtubes.CheckOnClick = true;
+			this.buttontogglerenderzoomtubes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.buttontogglerenderzoomtubes.Image = global::CodeImp.DoomBuilder.Properties.Resources.ZoomTube;
+			this.buttontogglerenderzoomtubes.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttontogglerenderzoomtubes.Name = "buttontogglerenderzoomtubes";
+			this.buttontogglerenderzoomtubes.Size = new System.Drawing.Size(23, 20);
+			this.buttontogglerenderzoomtubes.Tag = "builder_srb2togglezoomtubes";
+			this.buttontogglerenderzoomtubes.Text = "Render zoom tube waypoints";
+			this.buttontogglerenderzoomtubes.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// buttontogglerenderpolyobjects
+			// 
+			this.buttontogglerenderpolyobjects.CheckOnClick = true;
+			this.buttontogglerenderpolyobjects.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.buttontogglerenderpolyobjects.Image = global::CodeImp.DoomBuilder.Properties.Resources.Polyobject;
+			this.buttontogglerenderpolyobjects.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttontogglerenderpolyobjects.Name = "buttontogglerenderpolyobjects";
+			this.buttontogglerenderpolyobjects.Size = new System.Drawing.Size(23, 20);
+			this.buttontogglerenderpolyobjects.Tag = "builder_srb2togglepolyobjects";
+			this.buttontogglerenderpolyobjects.Text = "Render polyobjects";
+			this.buttontogglerenderpolyobjects.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// itemtogglerendernights
+			// 
+			this.itemtogglerendernights.CheckOnClick = true;
+			this.itemtogglerendernights.Image = global::CodeImp.DoomBuilder.Properties.Resources.NiGHTSAxis;
+			this.itemtogglerendernights.Name = "itemtogglerendernights";
+			this.itemtogglerendernights.Size = new System.Drawing.Size(273, 22);
+			this.itemtogglerendernights.Tag = "builder_srb2rendernights";
+			this.itemtogglerendernights.Text = "Render NiGHTS track";
+			this.itemtogglerendernights.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// itemtogglerenderzoomtubes
+			// 
+			this.itemtogglerenderzoomtubes.CheckOnClick = true;
+			this.itemtogglerenderzoomtubes.Image = global::CodeImp.DoomBuilder.Properties.Resources.ZoomTube;
+			this.itemtogglerenderzoomtubes.Name = "itemtogglerenderzoomtubes";
+			this.itemtogglerenderzoomtubes.Size = new System.Drawing.Size(273, 22);
+			this.itemtogglerenderzoomtubes.Tag = "builder_srb2renderzoomtubes";
+			this.itemtogglerenderzoomtubes.Text = "Render zoom tube waypoints";
+			this.itemtogglerenderzoomtubes.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// itemtogglerenderpolyobjects
+			// 
+			this.itemtogglerenderpolyobjects.CheckOnClick = true;
+			this.itemtogglerenderpolyobjects.Image = global::CodeImp.DoomBuilder.Properties.Resources.Polyobject;
+			this.itemtogglerenderpolyobjects.Name = "itemtogglerenderpolyobjects";
+			this.itemtogglerenderpolyobjects.Size = new System.Drawing.Size(273, 22);
+			this.itemtogglerenderpolyobjects.Tag = "builder_srb2togglepolyobjects";
+			this.itemtogglerenderpolyobjects.Text = "Render polyobjects";
+			this.itemtogglerenderpolyobjects.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// seperatorviewsrb2
+			// 
+			this.seperatorviewsrb2.Name = "seperatorviewsrb2";
+			this.seperatorviewsrb2.Size = new System.Drawing.Size(212, 6);
+			// 
+			// separatorsrb2
+			// 
+			this.separatorsrb2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+			this.separatorsrb2.Name = "separatorsrb2";
+			this.separatorsrb2.Size = new System.Drawing.Size(6, 25);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3117,6 +3210,14 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripMenuItem itemtoggleclassicrendering;
 		private System.Windows.Forms.ToolStripMenuItem itemtoggleeventlines;
 		private System.Windows.Forms.ToolStripMenuItem itemtogglevisualverts;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglerendernights;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglerenderzoomtubes;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglerenderpolyobjects;
+		private System.Windows.Forms.ToolStripMenuItem itemtogglerendernights;
+		private System.Windows.Forms.ToolStripMenuItem itemtogglerenderzoomtubes;
+		private System.Windows.Forms.ToolStripMenuItem itemtogglerenderpolyobjects;
+		private System.Windows.Forms.ToolStripSeparator seperatorviewsrb2;
+		private System.Windows.Forms.ToolStripSeparator separatorsrb2;
 		private ToolStripMenuItem itemimport;
 		private ToolStripMenuItem itemexport;
 		private ToolStripSeparator separatorio;

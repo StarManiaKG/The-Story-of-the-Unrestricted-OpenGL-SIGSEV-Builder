@@ -2196,6 +2196,9 @@ namespace CodeImp.DoomBuilder.Windows
 			buttonautoclearsidetextures.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
 			buttontest.Visible = General.Settings.ToolbarTesting && maploaded;
 			buttontoggleclassicrendering.Visible = General.Settings.ToolbarViewModes && maploaded;
+			buttontogglerendernights.Visible = General.Settings.ToolbarViewModes && maploaded;
+			buttontogglerenderzoomtubes.Visible = General.Settings.ToolbarViewModes && maploaded;
+			buttontogglerenderpolyobjects.Visible = General.Settings.ToolbarViewModes && maploaded;
 
 			//mxd
 			modelrendermode.Visible = General.Settings.GZToolbarGZDoom && maploaded;
@@ -2377,6 +2380,9 @@ namespace CodeImp.DoomBuilder.Windows
 				buttontoggleeventlines.Checked = General.Settings.GZShowEventLines;
 				buttontogglevisualvertices.Visible = General.Map.UDMF;
 				buttontogglevisualvertices.Checked = General.Settings.GZShowVisualVertices;
+				buttontogglerendernights.Checked = General.Settings.SRB2RenderNiGHTS;
+				buttontogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
+				buttontogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
 			} 
 		}
 
@@ -3222,9 +3228,12 @@ namespace CodeImp.DoomBuilder.Windows
 			itemtoggleeventlines.Checked = General.Settings.GZShowEventLines;
 			itemtogglevisualverts.Visible = (General.Map != null && General.Map.UDMF);
 			itemtogglevisualverts.Checked = General.Settings.GZShowVisualVertices;
+			itemtogglerendernights.Checked = General.Settings.SRB2RenderNiGHTS;
+			itemtogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
+			itemtogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
 
 			// Update Model Rendering Mode items...
-			foreach(ToolStripMenuItem item in itemmodelmodes.DropDownItems)
+			foreach (ToolStripMenuItem item in itemmodelmodes.DropDownItems)
 			{
 				item.Checked = ((ModelRenderMode)item.Tag == General.Settings.GZDrawModelsMode);
 				if(item.Checked) itemmodelmodes.Image = item.Image;
@@ -3354,8 +3363,8 @@ namespace CodeImp.DoomBuilder.Windows
 		{
 			General.Settings.SRB2RenderNiGHTS = !General.Settings.SRB2RenderNiGHTS;
 
-			//itemtogglerendernights.Checked = General.Settings.SRB2RenderNiGHTS;
-			//buttontogglerendernights.Checked = General.Settings.SRB2RenderNiGHTS;
+			itemtogglerendernights.Checked = General.Settings.SRB2RenderNiGHTS;
+			buttontogglerendernights.Checked = General.Settings.SRB2RenderNiGHTS;
 
 			General.MainWindow.DisplayStatus(StatusType.Action, "NiGHTS track rendering " + (General.Settings.SRB2RenderNiGHTS ? "ENABLED" : "DISABLED"));
 			General.MainWindow.RedrawDisplay();
@@ -3367,8 +3376,8 @@ namespace CodeImp.DoomBuilder.Windows
 		{
 			General.Settings.SRB2RenderZoomTubes = !General.Settings.SRB2RenderZoomTubes;
 
-			//itemtogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
-			//buttontogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
+			itemtogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
+			buttontogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
 
 			General.MainWindow.DisplayStatus(StatusType.Action, "Zoom tube waypoint rendering is " + (General.Settings.SRB2RenderZoomTubes ? "ENABLED" : "DISABLED"));
 			General.MainWindow.RedrawDisplay();
@@ -3380,8 +3389,8 @@ namespace CodeImp.DoomBuilder.Windows
 		{
 			General.Settings.SRB2RenderPolyobjects = !General.Settings.SRB2RenderPolyobjects;
 
-			//itemtogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
-			//buttontogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
+			itemtogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
+			buttontogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
 
 			General.MainWindow.DisplayStatus(StatusType.Action, "Polyobject preview rendering is " + (General.Settings.SRB2RenderPolyobjects ? "ENABLED" : "DISABLED"));
 			General.MainWindow.RedrawDisplay();

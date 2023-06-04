@@ -906,6 +906,8 @@
     <EmbeddedResource Include="Resources\MissingTexture3D.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\polycenter.png" />
+    <None Include="Resources\ZoomTube.png" />
     <None Include="Resources\UZB16.png" />
     <None Include="Resources\UZB_Splash.png" />
     <None Include="Resources\UZB.ico" />
@@ -1392,6 +1394,7 @@
     <None Include="Resources\Angle6.png" />
     <None Include="Resources\Angle7.png" />
     <None Include="Resources\AboutBack.png" />
+    <None Include="Resources\axis1.png" />
     <Content Include="Resources\ClassicRendering.png" />
     <Content Include="Resources\DB2.ico" />
     <None Include="Resources\GZDB2.ico" />
