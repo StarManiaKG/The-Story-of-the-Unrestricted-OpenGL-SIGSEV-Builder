@@ -2916,7 +2916,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemtogglerendernights.Image = global::CodeImp.DoomBuilder.Properties.Resources.NiGHTSAxis;
 			this.itemtogglerendernights.Name = "itemtogglerendernights";
 			this.itemtogglerendernights.Size = new System.Drawing.Size(273, 22);
-			this.itemtogglerendernights.Tag = "builder_srb2rendernights";
+			this.itemtogglerendernights.Tag = "builder_srb2togglenights";
 			this.itemtogglerendernights.Text = "Render NiGHTS track";
 			this.itemtogglerendernights.Click += new System.EventHandler(this.InvokeTaggedAction);
 			// 
@@ -2926,7 +2926,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemtogglerenderzoomtubes.Image = global::CodeImp.DoomBuilder.Properties.Resources.ZoomTube;
 			this.itemtogglerenderzoomtubes.Name = "itemtogglerenderzoomtubes";
 			this.itemtogglerenderzoomtubes.Size = new System.Drawing.Size(273, 22);
-			this.itemtogglerenderzoomtubes.Tag = "builder_srb2renderzoomtubes";
+			this.itemtogglerenderzoomtubes.Tag = "builder_srb2togglezoomtubes";
 			this.itemtogglerenderzoomtubes.Text = "Render zoom tube waypoints";
 			this.itemtogglerenderzoomtubes.Click += new System.EventHandler(this.InvokeTaggedAction);
 			// 
