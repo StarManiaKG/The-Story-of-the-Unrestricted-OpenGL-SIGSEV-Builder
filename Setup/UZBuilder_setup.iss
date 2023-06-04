@@ -4,16 +4,14 @@
 #define public Dependency_NoExampleSetup
 #include "CodeDependencies.iss"
 
-#define UDB_arch "x64"
-#define UDB_GetVersionString() \
-  Local[0] = GetVersionNumbersString("..\Build\Builder.exe"), \
-  Delete(Local[0], 0, RPos(".", Local[0])+1), \
-  "R" + Local[0]
+#define UZB_arch "x86"
+#define UZB_GetVersionString() \
+  Local[0] = GetVersionNumbersString("..\Build\Builder.exe")
 
 [Setup]
 AppName=Ultimate Zone Builder
-AppVerName=Ultimate Zone Builder v0.1 ({#UDB_arch})
-;AppVerName=Ultimate Doom Builder {#UDB_GetVersionString} ({#UDB_arch})
+AppVerName=Ultimate Zone Builder {#UZB_GetVersionString} ({#UZB_arch})   
+VersionInfoVersion={#UZB_GetVersionString}
 AppPublisher=Sonic Team Junior
 AppPublisherURL=https://www.srb2.org/
 AppSupportURL=https://git.do.srb2.org/STJr/UltimateZoneBuilder
@@ -38,7 +36,7 @@ WizardImageFile=..\Setup\UZB-large.bmp
 WizardSmallImageFile=..\Setup\UZB-small.bmp
 WizardImageAlphaFormat=defined
 WizardImageStretch=false   
-#if UDB_arch != "x86"
+#if UZB_arch != "x86"
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
 #endif
@@ -53,7 +51,7 @@ Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:Ad
 Source: Builder.exe; DestDir: {app}; Flags: ignoreversion
 Source: Builder.pdb; DestDir: {app}; Flags: ignoreversion
 Source: Builder.exe.config; DestDir: {app}; Flags: ignoreversion
-Source: UDBuilder.default.cfg; DestDir: {app}; Flags: ignoreversion
+Source: UZBuilder.default.cfg; DestDir: {app}; Flags: ignoreversion
 //Source: Updater.exe; DestDir: {app}; Flags: ignoreversion
 Source: Updater.ini; DestDir: {app}; Flags: ignoreversion
 Source: Refmanual.chm; DestDir: {app}; Flags: ignoreversion
@@ -142,11 +140,11 @@ begin
 	if MsgBox('Delete map restore data and program configuration files?', mbConfirmation, MB_YESNO) = IDYES then
 	begin
 		// Remove restore data
-		DelTree(ExpandConstant('{localappdata}\Doom Builder\Restore'), True, True, True);
+		DelTree(ExpandConstant('{localappdata}\Ultimate Zone Builder\Restore'), True, True, True);
 
 		// Remove configs
-		DeleteFile(ExpandConstant('{localappdata}\Doom Builder\UDBuilder.cfg'));
-		DeleteFile(ExpandConstant('{localappdata}\Doom Builder\UDBuilder.log'));
-		DeleteFile(ExpandConstant('{localappdata}\Doom Builder\UDBCrash.txt'));
+		DeleteFile(ExpandConstant('{localappdata}\Ultimate Zone Builder\UZBuilder.cfg'));
+		DeleteFile(ExpandConstant('{localappdata}\Ultimate Zone Builder\UZBuilder.log'));
+		DeleteFile(ExpandConstant('{localappdata}\Ultimate Zone Builder\UZBCrash.txt'));
 	end;
 end;
