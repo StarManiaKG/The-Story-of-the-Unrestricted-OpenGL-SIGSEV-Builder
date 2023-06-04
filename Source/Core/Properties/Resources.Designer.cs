@@ -1013,6 +1013,16 @@ namespace CodeImp.DoomBuilder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NiGHTSAxis {
+            get {
+                object obj = ResourceManager.GetObject("NiGHTSAxis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap OpenMap {
             get {
                 object obj = ResourceManager.GetObject("OpenMap", resourceCulture);
@@ -1056,6 +1066,16 @@ namespace CodeImp.DoomBuilder.Properties {
         internal static System.Drawing.Bitmap Pin {
             get {
                 object obj = ResourceManager.GetObject("Pin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Polyobject {
+            get {
+                object obj = ResourceManager.GetObject("Polyobject", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1786,6 +1806,16 @@ namespace CodeImp.DoomBuilder.Properties {
         internal static System.Drawing.Bitmap Zoom_arrowup {
             get {
                 object obj = ResourceManager.GetObject("Zoom_arrowup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ZoomTube {
+            get {
+                object obj = ResourceManager.GetObject("ZoomTube", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

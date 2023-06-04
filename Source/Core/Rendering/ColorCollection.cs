@@ -337,7 +337,23 @@ namespace CodeImp.DoomBuilder.Rendering
 				cfg.WriteSetting("colors.color" + i.ToString(CultureInfo.InvariantCulture), colors[i].ToInt());
 			}
 		}
-		
+
+		public PixelColor GetNiGHTSColor(int mare)
+		{
+			switch (mare)
+			{
+				case 0: return PixelColor.FromColor(Color.FromArgb(255, 255, 224, 0));
+				case 1: return PixelColor.FromColor(Color.FromArgb(255, 255, 128, 16));
+				case 2: return PixelColor.FromColor(Color.FromArgb(255, 255, 0, 0));
+				case 3: return PixelColor.FromColor(Color.FromArgb(255, 255, 16, 224));
+				case 4: return PixelColor.FromColor(Color.FromArgb(255, 128, 0, 255));
+				case 5: return PixelColor.FromColor(Color.FromArgb(255, 0, 0, 255));
+				case 6: return PixelColor.FromColor(Color.FromArgb(255, 16, 224, 255));
+				case 7: return PixelColor.FromColor(Color.FromArgb(255, 0, 224, 0));
+				default: return PixelColor.FromColor(Color.Gray);
+			}
+		}
+
 		#endregion
 	}
 }
