@@ -1658,7 +1658,7 @@ namespace CodeImp.DoomBuilder.Rendering
 				}
 			
 				//Sort polyobject first lines by tag
-				firstlines.Sort((x, y) => x.Tag.CompareTo(y.Tag));
+				firstlines.Sort((x, y) => x.Args[0].CompareTo(y.Args[0]));
 			}
 
 			//Render (zoom tube) waypoint sequences.
@@ -1751,9 +1751,9 @@ namespace CodeImp.DoomBuilder.Rendering
 				while (i < polyanchors.Count && j < polyspawns.Count && k < firstlines.Count)
 				{
 					while (j + 1 < polyspawns.Count && polyanchors[i].Tag > polyspawns[j].Tag) j++;
-					while (k + 1 < firstlines.Count && polyanchors[i].Tag > firstlines[k].Tag) k++;
+					while (k + 1 < firstlines.Count && polyanchors[i].Tag > firstlines[k].Args[0]) k++;
 			
-					if (polyanchors[i].Tag == firstlines[k].Tag)
+					if (polyanchors[i].Tag == firstlines[k].Args[0])
 						s = firstlines[k].Back.Sector;
 					else
 						s = null;
