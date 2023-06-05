@@ -4,7 +4,7 @@
 #define public Dependency_NoExampleSetup
 #include "CodeDependencies.iss"
 
-#define UZB_arch "x86"
+#define UZB_arch "x64"
 #define UZB_GetVersionString() \
   Local[0] = GetVersionNumbersString("..\Build\Builder.exe")
 
