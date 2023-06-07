@@ -1786,7 +1786,7 @@ namespace CodeImp.DoomBuilder.Rendering
 						anchorlabel.Color = PixelColor.FromColor(Color.FromArgb(255, 255, 192, 0));
 						spawnlabel.Color = PixelColor.FromColor(Color.FromArgb(255, 128, 255, 0));
 			
-						spawnlabel.Text = polyspawns[j].AngleDoom.ToString();
+						spawnlabel.Text = polyspawns[j].Tag.ToString();
 						spawnlabel.Location = polyspawns[j].Position;
 						RenderText((ITextLabel)spawnlabel);
 					}
