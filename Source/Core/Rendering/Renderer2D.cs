@@ -51,7 +51,7 @@ namespace CodeImp.DoomBuilder.Rendering
 		//private const float THING_CIRCLE_SIZE = 1f;
 		private const float THING_SPRITE_SHRINK = 2f;
 		private const int THING_BUFFER_SIZE = 100;
-		private const float MINIMUM_THING_RADIUS = 1.5f; //mxd
+		private const float MINIMUM_THING_RADIUS = 0.5f; //mxd
 		private const float MINIMUM_SPRITE_RADIUS = 8.0f; //mxd
 		internal const float FIXED_THING_SIZE = 48.0f; //mxd
 
