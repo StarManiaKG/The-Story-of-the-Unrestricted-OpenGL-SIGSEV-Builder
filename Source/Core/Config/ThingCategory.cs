@@ -59,7 +59,10 @@ namespace CodeImp.DoomBuilder.Config
 		private readonly bool fixedrotation; //mxd
 		private readonly bool absolutez;
 		private readonly float spritescale;
-		
+
+		// SRB2 stuff
+		private readonly bool centerHitbox;
+
 		// Disposing
 		private bool isdisposed;
 
@@ -93,6 +96,7 @@ namespace CodeImp.DoomBuilder.Config
 		public bool IsValid { get { return !isinvalid; } } //mxd
 		public bool AbsoluteZ { get { return absolutez; } }
 		public float SpriteScale { get { return spritescale; } }
+		public bool CenterHitbox { get { return centerHitbox; } }
 		public List<ThingTypeInfo> Things { get { return things; } }
         public bool Optional { get { return optional; } }
 
@@ -127,7 +131,8 @@ namespace CodeImp.DoomBuilder.Config
 				this.fixedrotation = parent.fixedrotation;
 				this.absolutez = parent.absolutez;
 				this.spritescale = parent.spritescale;
-                this.optional = parent.optional;
+				this.centerHitbox = parent.centerHitbox;
+				this.optional = parent.optional;
 			}
 			// Set default properties
 			else
@@ -147,7 +152,8 @@ namespace CodeImp.DoomBuilder.Config
 				this.fixedrotation = false; //mxd
 				this.absolutez = false;
 				this.spritescale = 1.0f;
-                this.optional = false;
+				this.centerHitbox = false;
+				this.optional = false;
 			}
 
 			//mxd. Apply DecorateCategoryInfo overrides...
@@ -214,7 +220,8 @@ namespace CodeImp.DoomBuilder.Config
 				this.fixedrotation = cfg.ReadSetting("thingtypes." + name + ".fixedrotation", parent.fixedrotation);
 				this.absolutez = cfg.ReadSetting("thingtypes." + name + ".absolutez", parent.absolutez);
 				this.spritescale = cfg.ReadSetting("thingtypes." + name + ".spritescale", parent.spritescale);
-                this.optional = cfg.ReadSetting("thingtypes." + name + ".optional", parent.optional);
+				this.centerHitbox = cfg.ReadSetting("thingtypes." + name + ".centerHitbox", parent.centerHitbox);
+				this.optional = cfg.ReadSetting("thingtypes." + name + ".optional", parent.optional);
             }
 			else
 			{
@@ -233,7 +240,8 @@ namespace CodeImp.DoomBuilder.Config
 				this.fixedrotation = cfg.ReadSetting("thingtypes." + name + ".fixedrotation", false); //mxd
 				this.absolutez = cfg.ReadSetting("thingtypes." + name + ".absolutez", false);
 				this.spritescale = cfg.ReadSetting("thingtypes." + name + ".spritescale", 1.0f);
-                this.optional = cfg.ReadSetting("thingtypes." + name + ".optional", false);
+				this.centerHitbox = cfg.ReadSetting("thingtypes." + name + ".centerHitbox", false);
+				this.optional = cfg.ReadSetting("thingtypes." + name + ".optional", false);
             }
 			
 			// Safety

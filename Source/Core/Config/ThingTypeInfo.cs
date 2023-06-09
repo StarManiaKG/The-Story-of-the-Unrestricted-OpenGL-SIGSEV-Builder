@@ -98,6 +98,9 @@ namespace CodeImp.DoomBuilder.Config
 		private bool rollsprite;
 		private bool rollcenter;
 
+		// SRB2
+		private bool centerhitbox;
+
 		//mxd. Ambinent sound info
 		private AmbientSoundInfo ambientsound;
 
@@ -152,6 +155,9 @@ namespace CodeImp.DoomBuilder.Config
 
 		public int ThingLink { get { return thinglink; } }
 
+		//SRB2
+		public bool CenterHitbox { get { return centerhitbox; } }
+
 		//mxd. Ambinent sound info
 		public AmbientSoundInfo AmbientSound { get { return ambientsound; } internal set { ambientsound = value; } }
 
@@ -202,6 +208,8 @@ namespace CodeImp.DoomBuilder.Config
 			this.thinglink = 0;
             this.optional = false; // [ZZ]
 			this.adduniversalfields = new List<string>();
+			// SRB2
+			this.centerhitbox = false;
 			
 			// We have no destructor
 			GC.SuppressFinalize(this);
@@ -243,6 +251,8 @@ namespace CodeImp.DoomBuilder.Config
 			this.locksprite = cfg.ReadSetting("thingtypes." + cat.Name + "." + key + ".locksprite", false); //mxd
 			this.classname = cfg.ReadSetting("thingtypes." + cat.Name + "." + key + ".class", String.Empty); //mxd
 			this.thinglink = cfg.ReadSetting("thingtypes." + cat.Name + "." + key + ".thinglink", 0);
+			// SRB2
+			this.centerhitbox = (cfg.ReadSetting("thingtypes." + cat.Name + "." + key + ".centerhitbox", cat.CenterHitbox));
 
 			// Read universal fields that should be added to this thing type
 			adduniversalfields = new List<string>();
@@ -336,6 +346,9 @@ namespace CodeImp.DoomBuilder.Config
 			this.flagsrename = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase); //mxd
 			this.adduniversalfields = new List<string>();
 
+			// SRB2
+			this.centerhitbox = cat.CenterHitbox;
+
 			// Safety
 			if(this.radius < 4f || this.fixedsize) this.radius = THING_FIXED_SIZE;
 			if(this.hangs && this.absolutez) this.hangs = false; //mxd
@@ -384,6 +397,8 @@ namespace CodeImp.DoomBuilder.Config
 			this.spritescale = new SizeF(cat.SpriteScale, cat.SpriteScale);
 			this.flagsrename = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase); //mxd
 			this.adduniversalfields = new List<string>();
+			// SRB2
+			this.centerhitbox = cat.CenterHitbox;
 
 			// Safety
 			if(this.hangs && this.absolutez) this.hangs = false; //mxd
@@ -437,6 +452,8 @@ namespace CodeImp.DoomBuilder.Config
 			this.spritescale = new SizeF(cat.SpriteScale, cat.SpriteScale);
 			this.flagsrename = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase); //mxd
 			this.adduniversalfields = new List<string>();
+			// SRB2
+			this.centerhitbox = cat.CenterHitbox;
 
 			// Safety
 			if(this.hangs && this.absolutez) this.hangs = false; //mxd
@@ -494,14 +511,16 @@ namespace CodeImp.DoomBuilder.Config
 			this.spritescale = new SizeF(other.spritescale.Width, other.spritescale.Height);
 			this.flagsrename = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase); //mxd
 			this.adduniversalfields = new List<string>(other.adduniversalfields);
+			// SRB2
+			this.centerhitbox = other.centerhitbox;
 
 			//mxd. Copy GZDoom rendering properties
 			this.rendermode = other.rendermode;
 			this.rollsprite = other.rollsprite;
 			this.rollcenter = other.rollcenter;
 
-            //
-            this.dynamiclighttype = other.dynamiclighttype;
+			//
+			this.dynamiclighttype = other.dynamiclighttype;
 
             //
             this.optional = other.optional;

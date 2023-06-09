@@ -352,7 +352,17 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						verts[3] = verts[0];
 						verts[4] = verts[2];
 						verts[5] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)(offsets.y - hh), sectorcolor, ur, 1.0f);
-					} 
+					}
+					else if (info.CenterHitbox)
+					{
+						float hh = height / 2;
+						verts[0] = new WorldVertex((float)(-radius + offsets.x), 0.0f, -hh, sectorcolor, 0.0f, 1.0f);
+						verts[1] = new WorldVertex((float)(-radius + offsets.x), 0.0f, hh, sectorcolor, 0.0f, 0.0f);
+						verts[2] = new WorldVertex((float)(+radius + offsets.x), 0.0f, hh, sectorcolor, 1.0f, 0.0f);
+						verts[3] = verts[0];
+						verts[4] = verts[2];
+						verts[5] = new WorldVertex((float)(+radius + offsets.x), 0.0f, -hh, sectorcolor, 1.0f, 1.0f);
+					}
 					else 
 					{
 						verts[0] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)offsets.y, sectorcolor, ul, 1.0f);
@@ -481,7 +491,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			{ 
 				boxp1 = new Vector3D(pos.x - thingradius, pos.y - thingradius, pos.z - thingradius/2);
 				boxp2 = new Vector3D(pos.x + thingradius, pos.y + thingradius, pos.z + thingradius/2);
-			} 
+			}
+			else if (info.CenterHitbox)
+			{
+				boxp1 = new Vector3D(pos.x - thingradius, pos.y - thingradius, pos.z - thingheight / 2);
+				boxp2 = new Vector3D(pos.x + thingradius, pos.y + thingradius, pos.z + thingheight / 2);
+			}
 			else 
 			{
 				boxp1 = new Vector3D(pos.x - thingradius, pos.y - thingradius, pos.z);
