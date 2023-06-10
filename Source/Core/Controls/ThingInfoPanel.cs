@@ -87,7 +87,7 @@ namespace CodeImp.DoomBuilder.Controls
 			// Determine z info to show
 			t.DetermineSector();
 			string zinfo;
-			if(ti.AbsoluteZ || t.Sector == null)
+			if(ti.AbsoluteZ || t.IsFlagSet(General.Map.UDMF ? "absolutez" : "16") || t.Sector == null)
 			{
 				zinfo = t.Position.z.ToString(CultureInfo.InvariantCulture) + " (abs.)"; //mxd
 			}

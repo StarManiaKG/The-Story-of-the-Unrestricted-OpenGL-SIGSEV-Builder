@@ -354,7 +354,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		{
 			Vector3D pos = thing.Thing.Position;
 			double thingheight = thing.Thing.Height;
-			bool absolute = thing.Info.AbsoluteZ;
+			bool absolute = thing.Info.AbsoluteZ || thing.Thing.IsFlagSet(General.Map.UDMF ? "absolutez" : "16");
 			bool hangs = thing.Info.Hangs;
 			
 			if(absolute && hangs)
@@ -450,7 +450,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		{
 			Vector3D pos = thing.Thing.Position;
 			double thingheight = thing.Thing.Height;
-			bool absolute = thing.Info.AbsoluteZ;
+			bool absolute = thing.Info.AbsoluteZ || thing.Thing.IsFlagSet(General.Map.UDMF ? "absolutez" : "16"); ;
 			bool hangs = thing.Info.Hangs;
 			
 			if(absolute && hangs)
@@ -577,7 +577,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			if(info != null)
 			{
 				if(info.AbsoluteZ && info.Hangs) return t.Position.z; // Not sure what to do here...
-				if(info.AbsoluteZ)
+				if(info.AbsoluteZ || t.IsFlagSet(General.Map.UDMF ? "absolutez" : "16"))
 				{
 					// Transform to floor-aligned position
 					SectorData nsd = mode.GetSectorData(t.Sector);

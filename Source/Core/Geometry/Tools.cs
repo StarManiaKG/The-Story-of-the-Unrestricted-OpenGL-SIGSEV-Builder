@@ -2213,7 +2213,7 @@ namespace CodeImp.DoomBuilder.Geometry
 			if(initialSector != t.Sector && General.Map.FormatInterface.HasThingHeight) 
 			{
 				ThingTypeInfo ti = General.Map.Data.GetThingInfo(t.Type);
-				if(ti.AbsoluteZ) return;
+				if(ti.AbsoluteZ || t.IsFlagSet(General.Map.UDMF ? "absolutez" : "16")) return;
 
 				if(ti.Hangs && initialSector.CeilHeight != t.Sector.CeilHeight) 
 				{
@@ -2226,10 +2226,10 @@ namespace CodeImp.DoomBuilder.Geometry
 			}
 		}
 
-		public static int GetThingAbsoluteZ(Thing t, ThingTypeInfo ti) 
+		public static int GetThingAbsoluteZ(Thing t, ThingTypeInfo ti)
 		{
 			// Determine z info
-			if(ti.AbsoluteZ) return (int)t.Position.z;
+			if(ti.AbsoluteZ || t.IsFlagSet(General.Map.UDMF ? "absolutez" : "16")) return (int)t.Position.z;
 
 			if(t.Sector != null) 
 			{

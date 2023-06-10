@@ -434,7 +434,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					pos.z = (Thing.Args[0] == 0) ? sd.Floor.sector.FloorHeight + Thing.Position.z : Thing.Position.z;
 				}
 			}
-			else if(info.AbsoluteZ)
+			else if(info.AbsoluteZ || Thing.IsFlagSet(General.Map.UDMF ? "absolutez" : "16"))
 			{
 				// Absolute Z position
 				pos.z = Thing.Position.z;
