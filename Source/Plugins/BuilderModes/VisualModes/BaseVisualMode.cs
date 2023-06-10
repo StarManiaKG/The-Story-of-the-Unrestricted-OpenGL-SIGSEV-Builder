@@ -4844,8 +4844,9 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			if(start.GeometryType == VisualGeometryType.WALL_MIDDLE_3D) 
 			{
 				first.controlSide = start.GetControlLinedef().Front;
-				first.offsetx += first.controlSide.OffsetX;
-				ystartalign += first.controlSide.OffsetY;
+				//first.offsetx += first.controlSide.OffsetX;
+				//ystartalign += first.controlSide.OffsetY;
+				ystartalign = first.controlSide.OffsetY;
 			} 
 			else 
 			{
@@ -4889,8 +4890,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				if(j.forward) 
 				{
 					// Apply alignment
-					if(alignx) j.controlSide.OffsetX = (int)j.offsetx;
-					if(aligny) j.sidedef.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
+					//if(alignx) j.controlSide.OffsetX = (int)j.offsetx;
+					//if(aligny) j.sidedef.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
+					if (alignx) j.sidedef.OffsetX = (int)j.offsetx;
+					if (aligny) j.controlSide.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
 					int forwardoffset = (int)j.offsetx + (int)Math.Round(j.sidedef.Line.Length / scalex);
 					int backwardoffset = (int)j.offsetx;
 
@@ -4901,7 +4904,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					if(texture.IsImageLoaded && BuilderModesTools.SidedefTextureMatch(this, j.sidedef, texturehashes)) 
 					{
 						if(alignx) j.sidedef.OffsetX %= texture.Width;
-						if(aligny) j.sidedef.OffsetY %= texture.Height;
+						//if(aligny) j.sidedef.OffsetY %= texture.Height;
+						if(aligny) j.controlSide.OffsetY %= texture.Height;
 					}
 
 					// Add sidedefs backward (connected to the left vertex)
@@ -4915,8 +4919,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				else 
 				{
 					// Apply alignment
-					if(alignx) j.controlSide.OffsetX = (int)j.offsetx - (int)Math.Round(j.sidedef.Line.Length / scalex);
-					if(aligny) j.sidedef.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
+					//if(alignx) j.controlSide.OffsetX = (int)j.offsetx - (int)Math.Round(j.sidedef.Line.Length / scalex);
+					//if(aligny) j.sidedef.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
+					if (alignx) j.sidedef.OffsetX = (int)j.offsetx - (int)Math.Round(j.sidedef.Line.Length / scalex);
+					if (aligny) j.controlSide.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
 					int forwardoffset = (int)j.offsetx;
 					int backwardoffset = (int)j.offsetx - (int)Math.Round(j.sidedef.Line.Length / scalex);
 
@@ -4927,7 +4933,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					if(texture.IsImageLoaded && BuilderModesTools.SidedefTextureMatch(this, j.sidedef, texturehashes)) 
 					{
 						if(alignx) j.sidedef.OffsetX %= texture.Width;
-						if(aligny) j.sidedef.OffsetY %= texture.Height;
+						//if(aligny) j.sidedef.OffsetY %= texture.Height;
+						if (aligny) j.controlSide.OffsetY %= texture.Height;
 					}
 
 					// Add sidedefs forward (connected to the right vertex)
