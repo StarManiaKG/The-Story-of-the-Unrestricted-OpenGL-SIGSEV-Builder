@@ -87,14 +87,14 @@ namespace CodeImp.DoomBuilder.Controls
 			// Determine z info to show
 			t.DetermineSector();
 			string zinfo;
-			if(ti.AbsoluteZ || t.Sector == null)
+			if(ti.AbsoluteZ || t.AbsoluteZ || t.Sector == null)
 			{
 				zinfo = t.Position.z.ToString(CultureInfo.InvariantCulture) + " (abs.)"; //mxd
 			}
 			else
 			{
-				// Hangs from ceiling?
-				if(ti.Hangs)
+				// Hangs from ceiling? / Is flipped?
+				if(t.IsFlipped)
 					zinfo = t.Position.z + " (" + Math.Round(Sector.GetCeilingPlane(t.Sector).GetZ(t.Position) - t.Position.z - ti.Height, General.Map.FormatInterface.VertexDecimals).ToString(CultureInfo.InvariantCulture) + ")"; //mxd
 				else
 					zinfo = t.Position.z + " (" + Math.Round(Sector.GetFloorPlane(t.Sector).GetZ(t.Position) + t.Position.z, General.Map.FormatInterface.VertexDecimals).ToString(CultureInfo.InvariantCulture) + ")"; //mxd

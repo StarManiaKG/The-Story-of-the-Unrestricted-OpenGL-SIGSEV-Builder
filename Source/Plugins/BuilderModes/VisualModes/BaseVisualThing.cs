@@ -216,7 +216,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 
 				if(!info.Bright)
 				{
-					Vector3D thingpos = new Vector3D(Thing.Position.x, Thing.Position.y, Thing.Position.z + sd.Floor.plane.GetZ(Thing.Position));
+					double thingz = Thing.IsFlipped ? sd.Ceiling.plane.GetZ(Thing.Position) - Thing.Position.z - Thing.Height : Thing.Position.z + sd.Floor.plane.GetZ(Thing.Position);
+					Vector3D thingpos = new Vector3D(Thing.Position.x, Thing.Position.y, thingz);
 					SectorLevel level = sd.GetLevelAboveOrAt(thingpos);
 
 					//mxd. Let's use point on floor plane instead of Thing.Sector.FloorHeight;
@@ -290,7 +291,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				//TECH: even Bright Thing frames are affected by custom fade...
 				else
 				{
-					Vector3D thingpos = new Vector3D(Thing.Position.x, Thing.Position.y, Thing.Position.z + sd.Floor.plane.GetZ(Thing.Position));
+					double thingz = Thing.IsFlipped ? sd.Ceiling.plane.GetZ(Thing.Position) - Thing.Position.z - Thing.Height : Thing.Position.z + sd.Floor.plane.GetZ(Thing.Position);
+					Vector3D thingpos = new Vector3D(Thing.Position.x, Thing.Position.y, thingz);
 					SectorLevel level = sd.GetLevelAboveOrAt(thingpos);
 
 					if(level != null && level.sector.FogMode > SectorFogMode.CLASSIC)
@@ -342,35 +344,37 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					//mxd. Sprite mirroring
 					float ul = (info.SpriteFrame[i].Mirror ? 1f : 0f);
 					float ur = (info.SpriteFrame[i].Mirror ? 0f : 1f);
+					float vb = (Thing.Flip ? 1f : 0f);
+					float vt = (Thing.Flip ? 0f : 1f);
 
 					if(sizeless) //mxd
 					{ 
 						float hh = height / 2;
-						verts[0] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)(offsets.y - hh), sectorcolor, ul, 1.0f);
-						verts[1] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)(hh + offsets.y), sectorcolor, ul, 0.0f);
-						verts[2] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)(hh + offsets.y), sectorcolor, ur, 0.0f);
+						verts[0] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)(offsets.y - hh), sectorcolor, ul, vt);
+						verts[1] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)(hh + offsets.y), sectorcolor, ul, vb);
+						verts[2] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)(hh + offsets.y), sectorcolor, ur, vb);
 						verts[3] = verts[0];
 						verts[4] = verts[2];
-						verts[5] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)(offsets.y - hh), sectorcolor, ur, 1.0f);
+						verts[5] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)(offsets.y - hh), sectorcolor, ur, vt);
 					}
 					else if (info.CenterHitbox)
 					{
 						float hh = height / 2;
-						verts[0] = new WorldVertex((float)(-radius + offsets.x), 0.0f, -hh, sectorcolor, 0.0f, 1.0f);
-						verts[1] = new WorldVertex((float)(-radius + offsets.x), 0.0f, hh, sectorcolor, 0.0f, 0.0f);
-						verts[2] = new WorldVertex((float)(+radius + offsets.x), 0.0f, hh, sectorcolor, 1.0f, 0.0f);
+						verts[0] = new WorldVertex((float)(-radius + offsets.x), 0.0f, -hh, sectorcolor, 0.0f, vt);
+						verts[1] = new WorldVertex((float)(-radius + offsets.x), 0.0f, hh, sectorcolor, 0.0f, vb);
+						verts[2] = new WorldVertex((float)(+radius + offsets.x), 0.0f, hh, sectorcolor, 1.0f, vb);
 						verts[3] = verts[0];
 						verts[4] = verts[2];
-						verts[5] = new WorldVertex((float)(+radius + offsets.x), 0.0f, -hh, sectorcolor, 1.0f, 1.0f);
+						verts[5] = new WorldVertex((float)(+radius + offsets.x), 0.0f, -hh, sectorcolor, 1.0f, vt);
 					}
 					else 
 					{
-						verts[0] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)offsets.y, sectorcolor, ul, 1.0f);
-						verts[1] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)(height + offsets.y), sectorcolor, ul, 0.0f);
-						verts[2] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)(height + offsets.y), sectorcolor, ur, 0.0f);
+						verts[0] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)offsets.y, sectorcolor, ul, vt);
+						verts[1] = new WorldVertex((float)(-radius + offsets.x), 0.0f, (float)(height + offsets.y), sectorcolor, ul, vb);
+						verts[2] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)(height + offsets.y), sectorcolor, ur, vb);
 						verts[3] = verts[0];
 						verts[4] = verts[2];
-						verts[5] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)offsets.y, sectorcolor, ur, 1.0f);
+						verts[5] = new WorldVertex((float)(+radius + offsets.x), 0.0f, (float)offsets.y, sectorcolor, ur, vt);
 					}
 					allverts[i] = verts;
 				}
@@ -434,12 +438,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					pos.z = (Thing.Args[0] == 0) ? sd.Floor.sector.FloorHeight + Thing.Position.z : Thing.Position.z;
 				}
 			}
-			else if(info.AbsoluteZ)
+			else if(info.AbsoluteZ || Thing.AbsoluteZ)
 			{
 				// Absolute Z position
 				pos.z = Thing.Position.z;
 			}
-			else if(info.Hangs)
+			else if(Thing.IsFlipped) // info.Hangs
 			{
 				// Hang from ceiling
 				if(Thing.Sector != null)
@@ -477,6 +481,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					}
 				}
 			}
+
+			//if (info.ZOffset != 0) pos.z += Thing.IsFlipped ? -info.ZOffset : info.ZOffset;
 			
 			// Apply settings
 			SetPosition(pos);
@@ -817,7 +823,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				if((General.Map.UndoRedo.NextUndo == null) || (General.Map.UndoRedo.NextUndo.TicketID != undoticket))
 					undoticket = mode.CreateUndo("Change thing height");
 
-				Thing.Move(Thing.Position + new Vector3D(0.0f, 0.0f, (info.Hangs ? -amount : amount)));
+				Thing.Move(Thing.Position + new Vector3D(0.0f, 0.0f, (Thing.IsFlipped ? -amount : amount)));
 
 				mode.SetActionResult("Changed thing height to " + Thing.Position.z + ".");
 				
