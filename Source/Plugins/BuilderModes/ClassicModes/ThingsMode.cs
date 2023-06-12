@@ -165,10 +165,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			General.Interface.AddButton(BuilderPlug.Me.MenusForm.AlignThingsToWall); //mxd
 
 			//mxd. Add radii buttons/items...
-			General.Interface.AddButton(BuilderPlug.Me.MenusForm.ButtonLightRadii, ToolbarSection.Helpers);
-			General.Interface.AddButton(BuilderPlug.Me.MenusForm.ButtonSoundRadii, ToolbarSection.Helpers);
-			General.Interface.AddMenu(BuilderPlug.Me.MenusForm.ItemLightRadii, MenuSection.ViewHelpers);
-			General.Interface.AddMenu(BuilderPlug.Me.MenusForm.ItemSoundRadii, MenuSection.ViewHelpers);
+			if (General.Map.Config.DynamicLightSupport) General.Interface.AddButton(BuilderPlug.Me.MenusForm.ButtonLightRadii, ToolbarSection.Helpers);
+			if (General.Map.Config.SoundSupport) General.Interface.AddButton(BuilderPlug.Me.MenusForm.ButtonSoundRadii, ToolbarSection.Helpers);
+			if (General.Map.Config.DynamicLightSupport) General.Interface.AddMenu(BuilderPlug.Me.MenusForm.ItemLightRadii, MenuSection.ViewHelpers);
+			if (General.Map.Config.SoundSupport) General.Interface.AddMenu(BuilderPlug.Me.MenusForm.ItemSoundRadii, MenuSection.ViewHelpers);
 			General.Interface.EndToolbarUpdate(); //mxd
 			
 			// Convert geometry selection to linedefs selection
@@ -196,10 +196,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.AlignThingsToWall); //mxd
 
 			//mxd. Remove radii buttons/items...
-			General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.ButtonLightRadii);
-			General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.ButtonSoundRadii);
-			General.Interface.RemoveMenu(BuilderPlug.Me.MenusForm.ItemLightRadii);
-			General.Interface.RemoveMenu(BuilderPlug.Me.MenusForm.ItemSoundRadii);
+			if (General.Map.Config.DynamicLightSupport) General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.ButtonLightRadii);
+			if (General.Map.Config.SoundSupport) General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.ButtonSoundRadii);
+			if (General.Map.Config.DynamicLightSupport) General.Interface.RemoveMenu(BuilderPlug.Me.MenusForm.ItemLightRadii);
+			if (General.Map.Config.SoundSupport) General.Interface.RemoveMenu(BuilderPlug.Me.MenusForm.ItemSoundRadii);
 			General.Interface.EndToolbarUpdate(); //mxd
 
 			//mxd. Do some highlight management...
