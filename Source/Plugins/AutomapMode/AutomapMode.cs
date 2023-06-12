@@ -34,6 +34,7 @@ namespace CodeImp.DoomBuilder.AutomapMode
 			  ButtonImage = "automap.png",	// Image resource name for the button
 			  ButtonOrder = int.MinValue + 503,	// Position of the button (lower is more to the bottom)
 			  ButtonGroup = "000_editing",
+			  RequiredMapFeatures = new[] { "AutomapSupport" },
 			  UseByDefault = true)]
 
 	public class AutomapMode : ClassicMode

@@ -2201,8 +2201,8 @@ namespace CodeImp.DoomBuilder.Windows
 			buttontogglerenderpolyobjects.Visible = General.Settings.ToolbarViewModes && maploaded;
 
 			//mxd
-			modelrendermode.Visible = General.Settings.GZToolbarGZDoom && maploaded;
-			dynamiclightmode.Visible = General.Settings.GZToolbarGZDoom && maploaded;
+			modelrendermode.Visible = maploaded && General.Map.Config.ModelRenderSupport;
+			dynamiclightmode.Visible = maploaded && General.Map.Config.DynamicLightSupport;
 			buttontogglefog.Visible = General.Settings.GZToolbarGZDoom && maploaded;
 			buttontogglesky.Visible = General.Settings.GZToolbarGZDoom && maploaded;
 			buttontoggleeventlines.Visible = General.Settings.GZToolbarGZDoom && maploaded;

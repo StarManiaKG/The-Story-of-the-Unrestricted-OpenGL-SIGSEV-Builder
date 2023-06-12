@@ -40,6 +40,7 @@ namespace CodeImp.DoomBuilder.SoundPropagationMode
 			  UseByDefault = true,
 			  SafeStartMode = false,
 			  SupportedMapFormats = new[] { "UniversalMapSetIO" }, //mxd
+			  RequiredMapFeatures = new[] { "SoundSupport" },
 			  Volatile = false)]
 
 	public class SoundEnvironmentMode : ClassicMode

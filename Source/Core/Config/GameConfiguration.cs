@@ -119,6 +119,10 @@ namespace CodeImp.DoomBuilder.Config
 		private readonly bool sectormultitag;
 		private readonly int maxcolormapalpha;
 		private readonly int numbrightnesslevels;
+		private readonly bool soundsupport;
+		private readonly bool automapsupport;
+		private readonly bool dynamiclightsupport;
+		private readonly bool modelrendersupport;
 
 		// Skills
 		private readonly List<SkillInfo> skills;
@@ -307,6 +311,10 @@ namespace CodeImp.DoomBuilder.Config
 		public bool SectorMultiTag { get { return sectormultitag; } }
 		public int MaxColormapAlpha { get { return maxcolormapalpha; } }
 		public int NumBrightnessLevels { get { return numbrightnesslevels; } }
+		public bool SoundSupport { get { return soundsupport; } }
+		public bool AutomapSupport { get { return automapsupport; } }
+		public bool DynamicLightSupport { get { return dynamiclightsupport; } }
+		public bool ModelRenderSupport { get { return modelrendersupport; } }
 
 		// Texture/flat/voxel sources
 		public IDictionary TextureRanges { get { return textureranges; } }
@@ -497,6 +505,10 @@ namespace CodeImp.DoomBuilder.Config
 			maxcolormapalpha = cfg.ReadSetting("maxcolormapalpha", 25);
 			numbrightnesslevels = cfg.ReadSetting("numbrightnesslevels", 32);
 			for (int i = 0; i < makedoorargs.Length; i++) makedoorargs[i] = cfg.ReadSetting("makedoorarg" + i.ToString(CultureInfo.InvariantCulture), 0);
+			soundsupport = cfg.ReadSetting("soundsupport", true);
+			automapsupport = cfg.ReadSetting("automapsupport", true);
+			dynamiclightsupport = cfg.ReadSetting("dynamiclightsupport", false);
+			modelrendersupport = cfg.ReadSetting("modelrendersupport", false);
 
 			//mxd. Update map format flags
 			universalmapformat = (formatinterface == "UniversalMapSetIO");
