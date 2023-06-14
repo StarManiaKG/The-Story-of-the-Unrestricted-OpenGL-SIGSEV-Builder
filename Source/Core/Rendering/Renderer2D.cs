@@ -1647,7 +1647,7 @@ namespace CodeImp.DoomBuilder.Rendering
 			polyspawns.Sort((x, y) => x.Tag.CompareTo(y.Tag));
 
 			// Sort by axis number and mare number.
-			axistransferlines.Sort((x, y) => (x.Args[1] | x.Args[0]).CompareTo(y.Args[1] | y.Args[0]));
+			axistransferlines = axistransferlines.OrderBy(x => x.Args[0]).ThenBy(x => x.Args[1]).ToList();
 
 			// Collect relevant lines
 			if (General.Settings.SRB2RenderPolyobjects)
