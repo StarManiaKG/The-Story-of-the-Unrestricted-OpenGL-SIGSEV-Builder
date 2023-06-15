@@ -320,6 +320,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, General.Settings.HiddenThingsAlpha);
 				renderer.RenderThingSet(unmovingthings, General.Settings.ActiveThingsAlpha);
 				renderer.RenderThingSet(dragthings, General.Settings.ActiveThingsAlpha);
+				renderer.RenderSRB2Extras();
 
 				// Draw the dragged item highlighted
 				// This is important to know, because this item is used

@@ -142,7 +142,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			if(renderer.StartThings(true))
 			{
 				renderer.RenderThingSet(General.Map.Map.Things, General.Settings.ActiveThingsAlpha);
-				if(BuilderPlug.Me.FindReplaceForm.Finder != null)
+				renderer.RenderSRB2Extras();
+				if (BuilderPlug.Me.FindReplaceForm.Finder != null)
 					BuilderPlug.Me.FindReplaceForm.Finder.RenderThingsSelection(renderer, selection);
 				renderer.Finish();
 			}

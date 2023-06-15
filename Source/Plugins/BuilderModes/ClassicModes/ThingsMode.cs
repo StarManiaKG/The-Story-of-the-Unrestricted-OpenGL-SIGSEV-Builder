@@ -249,8 +249,9 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				float alpha = (General.Settings.FixedThingsScale ? Presentation.THINGS_ALPHA : General.Settings.ActiveThingsAlpha); //mxd
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, General.Settings.HiddenThingsAlpha);
 				renderer.RenderThingSet(General.Map.ThingsFilter.VisibleThings, alpha);
-				
-				if(highlighted != null && !highlighted.IsDisposed)
+				renderer.RenderSRB2Extras();
+
+				if (highlighted != null && !highlighted.IsDisposed)
 				{
 					renderer.RenderThing(highlighted, General.Colors.Highlight, alpha);
 					highlightasso.Render();

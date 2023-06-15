@@ -210,6 +210,7 @@ namespace CodeImp.DoomBuilder.ThreeDFloorMode
 			{
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, Presentation.THINGS_HIDDEN_ALPHA);
 				renderer.RenderThingSet(General.Map.ThingsFilter.VisibleThings, 1.0f);
+				renderer.RenderSRB2Extras();
 
 				renderer.Finish();
 			}

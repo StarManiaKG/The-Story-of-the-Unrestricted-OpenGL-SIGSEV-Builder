@@ -1962,7 +1962,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			{
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, General.Settings.HiddenThingsAlpha);
 				renderer.RenderThingSet(General.Map.ThingsFilter.VisibleThings, General.Settings.ActiveThingsAlpha);
-				if(highlighted is Thing) renderer.RenderThing((Thing)highlighted, General.Colors.Highlight, General.Settings.ActiveThingsAlpha);
+				renderer.RenderSRB2Extras();
+				if (highlighted is Thing) renderer.RenderThing((Thing)highlighted, General.Colors.Highlight, General.Settings.ActiveThingsAlpha);
 				renderer.Finish();
 			}
 

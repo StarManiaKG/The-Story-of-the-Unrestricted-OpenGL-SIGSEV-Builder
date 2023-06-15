@@ -900,6 +900,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			if(renderer.StartThings(true))
 			{
 				renderer.RenderThingSet(General.Map.Map.Things, General.Settings.ActiveThingsAlpha);
+				renderer.RenderSRB2Extras();
 				renderer.Finish();
 			}
 

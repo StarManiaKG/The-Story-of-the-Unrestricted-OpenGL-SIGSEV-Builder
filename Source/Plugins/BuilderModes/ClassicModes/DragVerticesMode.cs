@@ -106,6 +106,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				if(renderer.StartThings(true))
 				{
 					renderer.RenderThingSet(General.Map.Map.Things, General.Settings.ActiveThingsAlpha);
+					renderer.RenderSRB2Extras();
 					renderer.Finish();
 				}
 			}
@@ -139,6 +140,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, General.Settings.HiddenThingsAlpha);
 				renderer.RenderThingSet(unselectedthings, General.Settings.ActiveThingsAlpha);
 				renderer.RenderThingSet(selectedthings, General.Settings.ActiveThingsAlpha);
+				renderer.RenderSRB2Extras();
 				renderer.Finish();
 			}
 

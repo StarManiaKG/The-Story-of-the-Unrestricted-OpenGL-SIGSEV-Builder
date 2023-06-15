@@ -69,12 +69,13 @@ namespace CodeImp.DoomBuilder.Rendering
 		void PlotVerticesSet(ICollection<Vertex> vertices, bool checkMode = true);
 		void RenderThing(Thing t, PixelColor c, float alpha);
 		void RenderThingSet(ICollection<Thing> things, float alpha);
+		void RenderSRB2Extras();
 		void RenderRectangle(RectangleF rect, float bordersize, PixelColor c, bool transformrect);
 		void RenderRectangleFilled(RectangleF rect, PixelColor c, bool transformrect);
 		void RenderRectangleFilled(RectangleF rect, PixelColor c, bool transformrect, ImageData texture);
 		void RenderLine(Vector2D start, Vector2D end, float thickness, PixelColor c, bool transformcoords);
 		void RenderArrows(ICollection<Line3D> line); //mxd
-		void RenderArrows(ICollection<Line3D> line, bool transformcoords); //mxd
+		void RenderArrows(ICollection<Line3D> line, bool transformcoords, bool sizecheck); //mxd
 		void RenderText(TextLabel text); //mxd, DB2 compatibility
 		void RenderText(ITextLabel text); //mxd
 		void RenderText(IList<ITextLabel> labels); //mxd
