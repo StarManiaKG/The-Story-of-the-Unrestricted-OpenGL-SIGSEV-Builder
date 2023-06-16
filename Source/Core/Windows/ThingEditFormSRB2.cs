@@ -173,14 +173,15 @@ namespace CodeImp.DoomBuilder.Windows
 
 			// Coordination
 			angle.Text = ft.AngleDoom.ToString();
-			cbAbsoluteHeight.Checked = useabsoluteheight; //mxd
+			cbAbsoluteHeight.Checked = useabsoluteheight || ft.AbsoluteZ; //mxd
+			cbAbsoluteHeight.Enabled = !ft.AbsoluteZ;
 
 			//mxd
 			ft.DetermineSector();
 			double floorheight = (ft.Sector != null ? Sector.GetFloorPlane(ft.Sector).GetZ(ft.Position) : 0);
 			posX.Text = (ft.Position.x).ToString();
 			posY.Text = (ft.Position.y).ToString();
-			posZ.Text = (useabsoluteheight ? (Math.Round(ft.Position.z + floorheight, General.Map.FormatInterface.VertexDecimals)).ToString() : (ft.Position.z).ToString());
+			posZ.Text = ((useabsoluteheight && !ft.AbsoluteZ) ? (Math.Round(ft.Position.z + floorheight, General.Map.FormatInterface.VertexDecimals)).ToString() : (ft.Position.z).ToString());
 			posX.ButtonStep = General.Map.Grid.GridSize;
 			posY.ButtonStep = General.Map.Grid.GridSize;
 			posZ.ButtonStep = General.Map.Grid.GridSize;
@@ -249,7 +250,7 @@ namespace CodeImp.DoomBuilder.Windows
 				//mxd. Position
 				if((t.Position.x).ToString() != posX.Text) posX.Text = "";
 				if((t.Position.y).ToString() != posY.Text) posY.Text = "";
-				if(useabsoluteheight && t.Sector != null) 
+				if(useabsoluteheight && !t.AbsoluteZ && t.Sector != null) 
 				{
 					if((Math.Round(Sector.GetFloorPlane(t.Sector).GetZ(t.Position) + t.Position.z, General.Map.FormatInterface.VertexDecimals)).ToString() != posZ.Text)
 						posZ.Text = "";
@@ -482,9 +483,10 @@ namespace CodeImp.DoomBuilder.Windows
 				if (ti != null && ti.Actor != null)
 				{
 					Dictionary<string, UniversalType> uservars = ti.Actor.GetAllUserVars();
+					Dictionary<string, object> uservardefaults = ti.Actor.GetAllUserVarDefaults();
 
-					if(uservars.Count > 0)
-						fieldslist.ApplyUserVars(uservars, t.Fields);
+					if (uservars.Count > 0)
+						fieldslist.ApplyUserVars(uservars, uservardefaults, t.Fields);
 				}
 
 				//mxd. Comments
@@ -546,13 +548,13 @@ namespace CodeImp.DoomBuilder.Windows
 			//update label text
 			Thing ft = General.GetByIndex(things, 0);
 			double z = ft.Position.z;
-			if(useabsoluteheight && ft.Sector != null) z += Sector.GetFloorPlane(ft.Sector).GetZ(ft.Position);
+			if(useabsoluteheight && !ft.AbsoluteZ && ft.Sector != null) z += Sector.GetFloorPlane(ft.Sector).GetZ(ft.Position);
 			posZ.Text = Math.Round(z, General.Map.FormatInterface.VertexDecimals).ToString();
 
 			foreach(Thing t in things) 
 			{
 				z = t.Position.z;
-				if(useabsoluteheight && t.Sector != null) z += Sector.GetFloorPlane(t.Sector).GetZ(t.Position);
+				if(useabsoluteheight && !ft.AbsoluteZ && t.Sector != null) z += Sector.GetFloorPlane(t.Sector).GetZ(t.Position);
 				string ztext = Math.Round(z, General.Map.FormatInterface.VertexDecimals).ToString();
 				if(posZ.Text != ztext) 
 				{
@@ -655,7 +657,7 @@ namespace CodeImp.DoomBuilder.Windows
 				foreach(Thing t in things) 
 				{
 					double z = posZ.GetResultFloat(thingprops[i++].Z);
-					if(useabsoluteheight && !posZ.CheckIsRelative() && t.Sector != null)
+					if(useabsoluteheight && !t.AbsoluteZ && !posZ.CheckIsRelative() && t.Sector != null)
 						z -= Math.Round(Sector.GetFloorPlane(t.Sector).GetZ(t.Position.x, t.Position.y), General.Map.FormatInterface.VertexDecimals);
 					t.Move(new Vector3D(t.Position.x, t.Position.y, z));
 				}
@@ -838,6 +840,31 @@ namespace CodeImp.DoomBuilder.Windows
 				return;
 			}
 
+			preventchanges = true;
+
+			// Update Z height, in case AbsoluteZ flag changed
+			Thing ft = General.GetByIndex(things, 0);
+			double z = ft.Position.z;
+			if (useabsoluteheight && !ft.AbsoluteZ && ft.Sector != null) z += Sector.GetFloorPlane(ft.Sector).GetZ(ft.Position);
+			posZ.Text = Math.Round(z, General.Map.FormatInterface.VertexDecimals).ToString();
+
+			foreach (Thing t in things)
+			{
+				z = t.Position.z;
+				if (useabsoluteheight && !ft.AbsoluteZ && t.Sector != null) z += Sector.GetFloorPlane(t.Sector).GetZ(t.Position);
+				string ztext = Math.Round(z, General.Map.FormatInterface.VertexDecimals).ToString();
+				if (posZ.Text != ztext)
+				{
+					posZ.Text = "";
+					break;
+				}
+			}
+
+			cbAbsoluteHeight.Checked = useabsoluteheight || ft.AbsoluteZ; //mxd
+			cbAbsoluteHeight.Enabled = !ft.AbsoluteZ;
+
+			preventchanges = false;
+
 			// Everything is OK
 			missingflags.Visible = false;
 			settingsgroup.ForeColor = SystemColors.ControlText;
@@ -872,6 +899,5 @@ namespace CodeImp.DoomBuilder.Windows
 		{
 
 		}
-
 	}
 }

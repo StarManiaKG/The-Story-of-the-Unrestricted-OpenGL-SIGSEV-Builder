@@ -118,6 +118,8 @@ namespace CodeImp.DoomBuilder
 			DataLocation iwadloc;
 			string p_wp = "", p_wf = "";
 			string p_ap = "", p_apq = "";
+			string p_aa = "", p_aaq = "";
+			string p_af = "", p_afq = "";
 			string p_l1 = "", p_l2 = "";
 			string p_nm = "";
 			string f = tempwad;
@@ -149,7 +151,7 @@ namespace CodeImp.DoomBuilder
 			//mxd. General.Map.FilePathName will be empty when a newly created map was not saved yet.
 			if(!string.IsNullOrEmpty(General.Map.FilePathName))
 			{
-				DataLocation maplocation = new DataLocation(DataLocation.RESOURCE_WAD, General.Map.FilePathName, false, false, false);
+				DataLocation maplocation = new DataLocation(DataLocation.RESOURCE_WAD, General.Map.FilePathName, false, false, false, null);
 				locations.Remove(maplocation); //If maplocation was already added as a resource, make sure it's singular and is last in the list
 				locations.Add(maplocation); 
 			}
@@ -168,16 +170,46 @@ namespace CodeImp.DoomBuilder
 						{
 							p_ap += General.GetShortFilePath(dl.location) + " ";
 							p_apq += "\"" + General.GetShortFilePath(dl.location) + "\" ";
+							if (dl.type == DataLocation.RESOURCE_WAD || dl.type == DataLocation.RESOURCE_PK3)
+							{
+								p_aa += General.GetShortFilePath(dl.location) + " ";
+								p_aaq += "\"" + General.GetShortFilePath(dl.location) + "\" ";
+							}
+							else
+							{
+								p_af += General.GetShortFilePath(dl.location) + " ";
+								p_afq += "\"" + General.GetShortFilePath(dl.location) + "\" ";
+							}
 						}
 						else if (linuxpaths)
 						{
 							p_ap += General.GetLinuxFilePath(dl.location) + " ";
 							p_apq += "\"" + General.GetLinuxFilePath(dl.location) + "\" ";
+							if (dl.type == DataLocation.RESOURCE_WAD || dl.type == DataLocation.RESOURCE_PK3)
+							{
+								p_aa += General.GetLinuxFilePath(dl.location) + " ";
+								p_aaq += "\"" + General.GetLinuxFilePath(dl.location) + "\" ";
+							}
+							else
+							{
+								p_af += General.GetLinuxFilePath(dl.location) + " ";
+								p_afq += "\"" + General.GetLinuxFilePath(dl.location) + "\" ";
+							}
 						}
 						else
 						{
 							p_ap += dl.location + " ";
 							p_apq += "\"" + dl.location + "\" ";
+							if (dl.type == DataLocation.RESOURCE_WAD || dl.type == DataLocation.RESOURCE_PK3)
+							{
+								p_aa += dl.location + " ";
+								p_aaq += "\"" + dl.location + "\" ";
+							}
+							else
+							{
+								p_af += dl.location + " ";
+								p_afq += "\"" + dl.location + "\" ";
+							}
 						}
 					}
 				}
@@ -186,6 +218,10 @@ namespace CodeImp.DoomBuilder
 			// Trim last space from resource file locations
 			p_ap = p_ap.TrimEnd(' ');
 			p_apq = p_apq.TrimEnd(' ');
+			p_aa = p_aa.TrimEnd(' ');
+			p_aaq = p_aaq.TrimEnd(' ');
+			p_af = p_af.TrimEnd(' ');
+			p_afq = p_afq.TrimEnd(' ');
 
 			// Try finding the L1 and L2 numbers from the map name
 			string numstr = "";
@@ -250,7 +286,11 @@ namespace CodeImp.DoomBuilder
 			outp = outp.Replace("%L2", p_l2);
 			outp = outp.Replace("%L", General.Map.Options.CurrentName);
 			outp = outp.Replace("\"%AP\"", p_apq);
+			outp = outp.Replace("\"%AA\"", p_aaq);
+			outp = outp.Replace("\"%AF\"", p_afq);
 			outp = outp.Replace("%AP", p_ap);
+			outp = outp.Replace("%AA", p_aa);
+			outp = outp.Replace("%AF", p_af);
 			outp = outp.Replace("%S", skill.ToString());
 			outp = outp.Replace("%NM", p_nm);
 			

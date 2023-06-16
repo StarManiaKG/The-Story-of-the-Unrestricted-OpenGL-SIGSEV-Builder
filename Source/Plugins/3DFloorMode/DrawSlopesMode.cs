@@ -786,6 +786,7 @@ namespace CodeImp.DoomBuilder.ThreeDFloorMode
 			if (renderer.StartThings(true))
 			{
 				renderer.RenderThingSet(General.Map.Map.Things, 1.0f);
+				renderer.RenderSRB2Extras();
 				renderer.Finish();
 			}
 

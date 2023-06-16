@@ -972,11 +972,6 @@ namespace CodeImp.DoomBuilder.Geometry
 			List<Vertex> nonmergeverts = new List<Vertex>(General.Map.Map.Vertices);
 			MapSet map = General.Map.Map;
 
-			//mxd. Let's use a blockmap...
-			RectangleF area = MapSet.CreateArea(oldlines);
-			BlockMap<BlockEntry> oldlinesmap = new BlockMap<BlockEntry>(area);
-			oldlinesmap.AddLinedefsSet(oldlines);
-
 			General.Map.Map.ClearAllMarks(false);
 			
 			// Any points to do?
@@ -1121,7 +1116,7 @@ namespace CodeImp.DoomBuilder.Geometry
 						foreach(Linedef ld in newlines)
 						{
 							Vector2D ldcp = ld.GetCenterPoint();
-							Linedef nld = MapSet.NearestLinedef(oldlinesmap, ldcp); //mxd. Lines collection -> Blockmap
+							Linedef nld = MapSet.NearestLinedef(oldlines, ldcp);
 							if(nld != null)
 							{
 								double ldside = nld.SideOfLine(ldcp);
@@ -1158,7 +1153,7 @@ namespace CodeImp.DoomBuilder.Geometry
 								List<LinedefSide> endpoints = new List<LinedefSide>();
 
 								// Find out where the start will stitch and create test points
-								Linedef l1 = MapSet.NearestLinedefRange(oldlinesmap, firstline.Start.Position, MapSet.STITCH_DISTANCE); //mxd. Lines collection -> Blockmap
+								Linedef l1 = MapSet.NearestLinedefRange(oldlines, firstline.Start.Position, MapSet.STITCH_DISTANCE);
 								Vertex vv1 = null;
 								if(l1 != null)
 								{
@@ -1183,7 +1178,7 @@ namespace CodeImp.DoomBuilder.Geometry
 								}
 
 								// Find out where the end will stitch and create test points
-								Linedef l2 = MapSet.NearestLinedefRange(oldlinesmap, lastline.End.Position, MapSet.STITCH_DISTANCE); //mxd. Lines collection -> Blockmap
+								Linedef l2 = MapSet.NearestLinedefRange(oldlines, lastline.End.Position, MapSet.STITCH_DISTANCE);
 								Vertex vv2 = null;
 								if(l2 != null)
 								{
@@ -2169,7 +2164,7 @@ namespace CodeImp.DoomBuilder.Geometry
 			ThingTypeInfo ti = General.Map.Data.GetThingInfo(t.Type);
 			int absz = GetThingAbsoluteZ(t, ti);
 			int height = ti.Height == 0 ? 1 : (int)ti.Height;
-			Rectangle thing =  new Rectangle(0, ti.Hangs ? absz - height : absz, 1, height);
+			Rectangle thing =  new Rectangle(0, t.IsFlipped ? absz - height : absz, 1, height);
 
 			if(front.FloorHeight < back.FloorHeight) 
 			{
@@ -2218,9 +2213,9 @@ namespace CodeImp.DoomBuilder.Geometry
 			if(initialSector != t.Sector && General.Map.FormatInterface.HasThingHeight) 
 			{
 				ThingTypeInfo ti = General.Map.Data.GetThingInfo(t.Type);
-				if(ti.AbsoluteZ) return;
+				if(ti.AbsoluteZ || t.AbsoluteZ) return;
 
-				if(ti.Hangs && initialSector.CeilHeight != t.Sector.CeilHeight) 
+				if(t.IsFlipped && initialSector.CeilHeight != t.Sector.CeilHeight) 
 				{
 					t.Move(t.Position.x, t.Position.y, t.Position.z - (initialSector.CeilHeight - t.Sector.CeilHeight));
 					return;
@@ -2231,15 +2226,15 @@ namespace CodeImp.DoomBuilder.Geometry
 			}
 		}
 
-		public static int GetThingAbsoluteZ(Thing t, ThingTypeInfo ti) 
+		public static int GetThingAbsoluteZ(Thing t, ThingTypeInfo ti)
 		{
 			// Determine z info
-			if(ti.AbsoluteZ) return (int)t.Position.z;
+			if(ti.AbsoluteZ || t.AbsoluteZ) return (int)t.Position.z;
 
 			if(t.Sector != null) 
 			{
-				// Hangs from ceiling?
-				if(ti.Hangs) return (int)(t.Sector.CeilHeight - t.Position.z - ti.Height);
+				// Hangs from ceiling? / is flipped?
+				if(t.IsFlipped) return (int)(t.Sector.CeilHeight - t.Position.z - ti.Height);
 				
 				return (int)(t.Sector.FloorHeight + t.Position.z);
 			}

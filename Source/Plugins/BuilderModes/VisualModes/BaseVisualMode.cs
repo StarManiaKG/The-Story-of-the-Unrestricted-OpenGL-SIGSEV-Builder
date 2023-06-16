@@ -1056,13 +1056,31 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						List<Thing> sourcethings = new List<Thing>();
 						if (!thingtags.ContainsKey(l.Args[1]) || thingtags[l.Args[1]].Count == 0)
 							break;
+						foreach (Thing thing in thingtags[l.Args[1]])
+						{
+							if (sourcethings.Contains(thing))
+								continue;
+							sourcethings.Add(thing);
+							break;
+						}
 						if (!thingtags.ContainsKey(l.Args[2]) || thingtags[l.Args[2]].Count == 0)
 							break;
+						foreach (Thing thing in thingtags[l.Args[2]])
+						{
+							if (sourcethings.Contains(thing))
+								continue;
+							sourcethings.Add(thing);
+							break;
+						}
 						if (!thingtags.ContainsKey(l.Args[3]) || thingtags[l.Args[3]].Count == 0)
 							break;
-						sourcethings.Add(thingtags[l.Args[1]][0]);
-						sourcethings.Add(thingtags[l.Args[2]][0]);
-						sourcethings.Add(thingtags[l.Args[3]][0]);
+						foreach (Thing thing in thingtags[l.Args[3]])
+						{
+							if (sourcethings.Contains(thing))
+								continue;
+							sourcethings.Add(thing);
+							break;
+						}
 						SectorData sd = GetSectorData((l.Args[0] < 2) ? l.Front.Sector : l.Back.Sector);
 						sd.AddEffectSRB2ThingVertexSlope(sourcethings, (l.Args[0] & 1) != 1);
 						break;
@@ -2770,9 +2788,33 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			PostAction();
 	    }
 
+		[BeginAction("raisemapelementbygridsize")]
+		public void RaiseMapElementByGridSize()
+		{
+			PreAction(UndoGroup.SectorHeightChange);
+			List<IVisualEventReceiver> objs = GetSelectedObjects(true, true, true, true, true);
+			bool hasvisualslopehandles = objs.Any(o => o is VisualSlope);
+			foreach (IVisualEventReceiver i in objs) // If slope handles are selected only apply the action to them
+				if (!hasvisualslopehandles || (hasvisualslopehandles && i is VisualSlope))
+					i.OnChangeTargetHeight(General.Map.Grid.GridSize);
+			PostAction();
+		}
 
-        //mxd
-        [BeginAction("raisesectortonearest")]
+		[BeginAction("lowermapelementbygridsize")]
+		public void LowerMapElementByGridSize()
+		{
+			PreAction(UndoGroup.SectorHeightChange);
+			List<IVisualEventReceiver> objs = GetSelectedObjects(true, true, true, true, true);
+			bool hasvisualslopehandles = objs.Any(o => o is VisualSlope);
+			foreach (IVisualEventReceiver i in objs) // If slope handles are selected only apply the action to them
+				if (!hasvisualslopehandles || (hasvisualslopehandles && i is VisualSlope))
+					i.OnChangeTargetHeight(-General.Map.Grid.GridSize);
+			PostAction();
+		}
+
+
+		//mxd
+		[BeginAction("raisesectortonearest")]
 		public void RaiseSectorToNearest() 
 		{
 			List<VisualSidedefSlope> selectedhandles = GetSelectedSlopeHandles();
@@ -3666,8 +3708,15 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		public void ToggleGravity()
 		{
 			BuilderPlug.Me.UseGravity = !BuilderPlug.Me.UseGravity;
-			string onoff = BuilderPlug.Me.UseGravity ? "ON" : "OFF";
-			General.Interface.DisplayStatus(StatusType.Action, "Gravity is now " + onoff + ".");
+
+			string shortmessage = "Gravity is now " + (BuilderPlug.Me.UseGravity ? "ON" : "OFF") + ".";
+			string message = shortmessage;
+			string key = Actions.Action.GetShortcutKeyDesc(General.Actions.Current.ShortcutKey);
+
+			if (!string.IsNullOrEmpty(key))
+				message += $" Press '{key}' to toggle.";
+
+			General.ToastManager.ShowToast("togglegravity", ToastType.INFO, "Changed gravity", message, new StatusInfo(StatusType.Action, shortmessage));
 		}
 
 		[BeginAction("resettexture")]
@@ -3876,8 +3925,11 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			List<IVisualEventReceiver> objs = GetSelectedObjects(true, true, true, true, false);
             foreach (IVisualEventReceiver i in objs)
             {
-                if (i is BaseVisualThing)
-                    visiblethings.Remove((BaseVisualThing)i); // [ZZ] if any
+				if (i is BaseVisualThing)
+				{
+					visiblethings.Remove((BaseVisualThing)i); // [ZZ] if any
+					allthings.Remove(((BaseVisualThing)i).Thing);
+				}
                 i.OnDelete();
             }
             PostAction();
@@ -4328,12 +4380,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				//assign/remove action
 				if(vg.GeometryType == VisualGeometryType.WALL_LOWER) 
 				{
-					if(vg.Sidedef.Line.Action == 0 || (vg.Sidedef.Line.Action == 181 && vg.Sidedef.Line.Args[0] == 0)) 
+					if(vg.Sidedef.Line.Action == 0 || (vg.Sidedef.Line.Action == 700 && vg.Sidedef.Line.Args[0] == 0)) 
 					{
 						//check if the sector already has floor slopes
 						foreach(Sidedef side in vg.Sidedef.Sector.Sidedefs) 
 						{
-							if(side == vg.Sidedef || side.Line.Action != 181) continue;
+							if(side == vg.Sidedef || side.Line.Action != 700) continue;
 
 							int arg = (side == side.Line.Front ? 1 : 2);
 
@@ -4348,19 +4400,19 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						}
 
 						//set action
-						vg.Sidedef.Line.Action = 181;
+						vg.Sidedef.Line.Action = 700;
 						vg.Sidedef.Line.Args[0] = (vg.Sidedef == vg.Sidedef.Line.Front ? 1 : 2);
 						update = true;
 					}
 				} 
 				else if(vg.GeometryType == VisualGeometryType.WALL_UPPER) 
 				{
-					if(vg.Sidedef.Line.Action == 0 || (vg.Sidedef.Line.Action == 181 && vg.Sidedef.Line.Args[1] == 0)) 
+					if(vg.Sidedef.Line.Action == 0 || (vg.Sidedef.Line.Action == 700 && vg.Sidedef.Line.Args[1] == 0)) 
 					{
 						//check if the sector already has ceiling slopes
 						foreach(Sidedef side in vg.Sidedef.Sector.Sidedefs) 
 						{
-							if(side == vg.Sidedef || side.Line.Action != 181) continue;
+							if(side == vg.Sidedef || side.Line.Action != 700) continue;
 
 							int arg = (side == side.Line.Front ? 1 : 2);
 
@@ -4375,7 +4427,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						}
 
 						//set action
-						vg.Sidedef.Line.Action = 181;
+						vg.Sidedef.Line.Action = 700;
 						vg.Sidedef.Line.Args[1] = (vg.Sidedef == vg.Sidedef.Line.Front ? 1 : 2);
 						update = true;
 					}
@@ -4385,7 +4437,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					//check if the sector has ceiling slopes
 					foreach(Sidedef side in vg.Sector.Sector.Sidedefs) 
 					{
-						if(side.Line.Action != 181)	continue;
+						if(side.Line.Action != 700)	continue;
 
 						int arg = (side == side.Line.Front ? 1 : 2);
 
@@ -4406,7 +4458,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					//check if the sector has floor slopes
 					foreach(Sidedef side in vg.Sector.Sector.Sidedefs) 
 					{
-						if(side.Line.Action != 181)	continue;
+						if(side.Line.Action != 700)	continue;
 
 						int arg = (side == side.Line.Front ? 1 : 2);
 
@@ -4473,7 +4525,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		{
 			if (!General.Map.UDMF)
 			{
-				General.Interface.DisplayStatus(StatusType.Warning, "Visual sloping is supported in UDMF only!");
+				General.ToastManager.ShowToast(ToastMessages.VISUALSLOPING, ToastType.WARNING, "Visual sloping", "Visual sloping is supported in UDMF only.");
+				return;
+			}
+			else if(!General.Map.Config.PlaneEquationSupport)
+			{
+				General.ToastManager.ShowToast(ToastMessages.VISUALSLOPING, ToastType.WARNING, "Visual sloping", "Visual sloping is not supported in this game configuration.");
 				return;
 			}
 
@@ -4499,7 +4556,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		{
 			if (!General.Map.UDMF)
 			{
-				General.Interface.DisplayStatus(StatusType.Warning, "Visual sloping is supported in UDMF only!");
+				General.ToastManager.ShowToast(ToastMessages.VISUALSLOPING, ToastType.WARNING, "Visual sloping", "Visual sloping is supported in UDMF only.");
+				return;
+			}
+			else if (!General.Map.Config.PlaneEquationSupport)
+			{
+				General.ToastManager.ShowToast(ToastMessages.VISUALSLOPING, ToastType.WARNING, "Visual sloping", "Visual sloping is not supported in this game configuration.");
 				return;
 			}
 
@@ -4525,7 +4587,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		{
 			if (!General.Map.UDMF)
 			{
-				General.Interface.DisplayStatus(StatusType.Warning, "Visual sloping is supported in UDMF only!");
+				General.ToastManager.ShowToast(ToastMessages.VISUALSLOPING, ToastType.WARNING, "Visual sloping", "Visual sloping is not supported in this game configuration.");
+				return;
+			}
+			else if (!General.Map.Config.PlaneEquationSupport)
+			{
+				General.ToastManager.ShowToast(ToastMessages.VISUALSLOPING, ToastType.WARNING, "Visual sloping", "Visual sloping is not supported in this game configuration.");
 				return;
 			}
 
@@ -4735,6 +4802,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			{
 				t.Rotate(General.Map.VisualCamera.AngleXY - Angle2D.PI);
 				t.SetPitch((int)Angle2D.RadToDeg(General.Map.VisualCamera.AngleZ - Angle2D.PI));
+				((BaseVisualThing)allthings[t]).Rebuild();
 			}
 		}
 
@@ -4776,8 +4844,9 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			if(start.GeometryType == VisualGeometryType.WALL_MIDDLE_3D) 
 			{
 				first.controlSide = start.GetControlLinedef().Front;
-				first.offsetx += first.controlSide.OffsetX;
-				ystartalign += first.controlSide.OffsetY;
+				//first.offsetx += first.controlSide.OffsetX;
+				//ystartalign += first.controlSide.OffsetY;
+				ystartalign = first.controlSide.OffsetY;
 			} 
 			else 
 			{
@@ -4821,8 +4890,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				if(j.forward) 
 				{
 					// Apply alignment
-					if(alignx) j.controlSide.OffsetX = (int)j.offsetx;
-					if(aligny) j.sidedef.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
+					//if(alignx) j.controlSide.OffsetX = (int)j.offsetx;
+					//if(aligny) j.sidedef.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
+					if (alignx) j.sidedef.OffsetX = (int)j.offsetx;
+					if (aligny) j.controlSide.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
 					int forwardoffset = (int)j.offsetx + (int)Math.Round(j.sidedef.Line.Length / scalex);
 					int backwardoffset = (int)j.offsetx;
 
@@ -4833,7 +4904,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					if(texture.IsImageLoaded && BuilderModesTools.SidedefTextureMatch(this, j.sidedef, texturehashes)) 
 					{
 						if(alignx) j.sidedef.OffsetX %= texture.Width;
-						if(aligny) j.sidedef.OffsetY %= texture.Height;
+						//if(aligny) j.sidedef.OffsetY %= texture.Height;
+						if(aligny) j.controlSide.OffsetY %= texture.Height;
 					}
 
 					// Add sidedefs backward (connected to the left vertex)
@@ -4847,8 +4919,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				else 
 				{
 					// Apply alignment
-					if(alignx) j.controlSide.OffsetX = (int)j.offsetx - (int)Math.Round(j.sidedef.Line.Length / scalex);
-					if(aligny) j.sidedef.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
+					//if(alignx) j.controlSide.OffsetX = (int)j.offsetx - (int)Math.Round(j.sidedef.Line.Length / scalex);
+					//if(aligny) j.sidedef.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
+					if (alignx) j.sidedef.OffsetX = (int)j.offsetx - (int)Math.Round(j.sidedef.Line.Length / scalex);
+					if (aligny) j.controlSide.OffsetY = (int)Math.Round((first.ceilingHeight - j.ceilingHeight) / scaley) + ystartalign;
 					int forwardoffset = (int)j.offsetx;
 					int backwardoffset = (int)j.offsetx - (int)Math.Round(j.sidedef.Line.Length / scalex);
 
@@ -4859,7 +4933,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					if(texture.IsImageLoaded && BuilderModesTools.SidedefTextureMatch(this, j.sidedef, texturehashes)) 
 					{
 						if(alignx) j.sidedef.OffsetX %= texture.Width;
-						if(aligny) j.sidedef.OffsetY %= texture.Height;
+						//if(aligny) j.sidedef.OffsetY %= texture.Height;
+						if (aligny) j.controlSide.OffsetY %= texture.Height;
 					}
 
 					// Add sidedefs forward (connected to the right vertex)

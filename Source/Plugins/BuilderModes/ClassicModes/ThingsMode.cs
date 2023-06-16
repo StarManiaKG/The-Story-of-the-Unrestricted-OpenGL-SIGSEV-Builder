@@ -62,7 +62,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		new private bool editpressed;
 		private bool thinginserted;
 		private bool awaitingMouseClick; //mxd
-		private bool selectionfromhighlight; //mxd
 
 		//mxd. Helper shapes
 		private List<Line3D> persistenteventlines;
@@ -76,6 +75,9 @@ namespace CodeImp.DoomBuilder.BuilderModes
 
 		// Stores sizes of the text for text labels so that they only have to be computed once
 		private Dictionary<string, float> textlabelsizecache;
+
+		// Things that will be edited
+		private ICollection<Thing> editthings;
 
 		#endregion
 
@@ -163,10 +165,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			General.Interface.AddButton(BuilderPlug.Me.MenusForm.AlignThingsToWall); //mxd
 
 			//mxd. Add radii buttons/items...
-			General.Interface.AddButton(BuilderPlug.Me.MenusForm.ButtonLightRadii, ToolbarSection.Helpers);
-			General.Interface.AddButton(BuilderPlug.Me.MenusForm.ButtonSoundRadii, ToolbarSection.Helpers);
-			General.Interface.AddMenu(BuilderPlug.Me.MenusForm.ItemLightRadii, MenuSection.ViewHelpers);
-			General.Interface.AddMenu(BuilderPlug.Me.MenusForm.ItemSoundRadii, MenuSection.ViewHelpers);
+			if (General.Map.Config.DynamicLightSupport) General.Interface.AddButton(BuilderPlug.Me.MenusForm.ButtonLightRadii, ToolbarSection.Helpers);
+			if (General.Map.Config.SoundSupport) General.Interface.AddButton(BuilderPlug.Me.MenusForm.ButtonSoundRadii, ToolbarSection.Helpers);
+			if (General.Map.Config.DynamicLightSupport) General.Interface.AddMenu(BuilderPlug.Me.MenusForm.ItemLightRadii, MenuSection.ViewHelpers);
+			if (General.Map.Config.SoundSupport) General.Interface.AddMenu(BuilderPlug.Me.MenusForm.ItemSoundRadii, MenuSection.ViewHelpers);
 			General.Interface.EndToolbarUpdate(); //mxd
 			
 			// Convert geometry selection to linedefs selection
@@ -194,10 +196,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.AlignThingsToWall); //mxd
 
 			//mxd. Remove radii buttons/items...
-			General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.ButtonLightRadii);
-			General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.ButtonSoundRadii);
-			General.Interface.RemoveMenu(BuilderPlug.Me.MenusForm.ItemLightRadii);
-			General.Interface.RemoveMenu(BuilderPlug.Me.MenusForm.ItemSoundRadii);
+			if (General.Map.Config.DynamicLightSupport) General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.ButtonLightRadii);
+			if (General.Map.Config.SoundSupport) General.Interface.RemoveButton(BuilderPlug.Me.MenusForm.ButtonSoundRadii);
+			if (General.Map.Config.DynamicLightSupport) General.Interface.RemoveMenu(BuilderPlug.Me.MenusForm.ItemLightRadii);
+			if (General.Map.Config.SoundSupport) General.Interface.RemoveMenu(BuilderPlug.Me.MenusForm.ItemSoundRadii);
 			General.Interface.EndToolbarUpdate(); //mxd
 
 			//mxd. Do some highlight management...
@@ -247,8 +249,9 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				float alpha = (General.Settings.FixedThingsScale ? Presentation.THINGS_ALPHA : General.Settings.ActiveThingsAlpha); //mxd
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, General.Settings.HiddenThingsAlpha);
 				renderer.RenderThingSet(General.Map.ThingsFilter.VisibleThings, alpha);
-				
-				if(highlighted != null && !highlighted.IsDisposed)
+				renderer.RenderSRB2Extras();
+
+				if (highlighted != null && !highlighted.IsDisposed)
 				{
 					renderer.RenderThing(highlighted, General.Colors.Highlight, alpha);
 					highlightasso.Render();
@@ -486,21 +489,26 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				editpressed = true;
 				
 				// Highlighted item not selected?
-				if(!highlighted.Selected && (BuilderPlug.Me.AutoClearSelection || (General.Map.Map.SelectedThingsCount == 0)))
+				if(!highlighted.Selected)
 				{
 					// Make this the only selection
-					selectionfromhighlight = true; //mxd
 					General.Map.Map.ClearSelectedThings();
-					highlighted.Selected = true;
+
+					editthings = new List<Thing> { highlighted };
+
 					UpdateSelectionInfo(); //mxd
 					General.Interface.RedrawDisplay();
+				}
+				else
+				{
+					editthings = General.Map.Map.GetSelectedThings(true);
 				}
 
 				// Update display
 				if(renderer.StartThings(false))
 				{
 					// Redraw highlight to show selection
-					renderer.RenderThing(highlighted, renderer.DetermineThingColor(highlighted), General.Settings.FixedThingsScale ? Presentation.THINGS_ALPHA : General.Settings.ActiveThingsAlpha);
+					renderer.RenderThing(highlighted, General.Colors.Highlight, General.Settings.FixedThingsScale ? Presentation.THINGS_ALPHA : General.Settings.ActiveThingsAlpha);
 					renderer.Finish();
 					renderer.Present();
 				}
@@ -522,7 +530,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				else 
 				{
 					General.Map.Map.ClearSelectedThings();
-					t.Selected = true;
+					General.Map.Map.ClearMarkedThings(false);
+					editthings = new List<Thing> { t };
 					Highlight(t);
 					General.Interface.RedrawDisplay();
 				}
@@ -537,9 +546,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			// Edit pressed in this mode?
 			if(editpressed)
 			{
-				// Anything selected?
-				ICollection<Thing> selected = General.Map.Map.GetSelectedThings(true);
-				if(selected.Count > 0)
+				if(editthings?.Count > 0)
 				{
 					if(General.Interface.IsActiveWindow)
 					{
@@ -548,18 +555,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						{
 							//mxd. Show realtime thing edit dialog
 							General.Interface.OnEditFormValuesChanged += thingEditForm_OnValuesChanged;
-							DialogResult result = General.Interface.ShowEditThings(selected);
+							DialogResult result = General.Interface.ShowEditThings(editthings);
 							General.Interface.OnEditFormValuesChanged -= thingEditForm_OnValuesChanged;
-
-							// When a single thing was selected, deselect it now
-							if(selected.Count == 1 && selectionfromhighlight) 
-							{
-								General.Map.Map.ClearSelectedThings();
-							} 
-							else if(result == DialogResult.Cancel) //mxd. Restore selection...
-							{ 
-								foreach(Thing t in selected) t.Selected = true;
-							}
 
 							//mxd. Update helper lines
 							UpdateHelperObjects();
@@ -575,7 +572,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			}
 
 			editpressed = false;
-			selectionfromhighlight = false; //mxd
 			base.OnEditEnd();
 		}
 
@@ -747,12 +743,19 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				// Anything highlighted?
 				if((highlighted != null) && !highlighted.IsDisposed)
 				{
+					ICollection<Thing> dragthings;
+
 					// Highlighted item not selected?
 					if(!highlighted.Selected)
 					{
 						// Select only this thing for dragging
 						General.Map.Map.ClearSelectedThings();
-						highlighted.Selected = true;
+						dragthings = new List<Thing> { highlighted };
+					}
+					else
+					{
+						// Add all selected things to the things we want to drag
+						dragthings = General.Map.Map.GetSelectedThings(true);
 					}
 
 					// Start dragging the selection
@@ -762,14 +765,14 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						bool thingscloned = false;
 						if(General.Interface.ShiftState) 
 						{
-							ICollection<Thing> selection = General.Map.Map.GetSelectedThings(true);
-							if(selection.Count > 0)
+							ICollection<Thing> clonedthings = new List<Thing>(dragthings.Count);
+							if(dragthings.Count > 0)
 							{
 								// Make undo
-								General.Map.UndoRedo.CreateUndo((selection.Count == 1 ? "Clone-drag thing" : "Clone-drag " + selection.Count + " things"));
+								General.Map.UndoRedo.CreateUndo((dragthings.Count == 1 ? "Clone-drag thing" : "Clone-drag " + dragthings.Count + " things"));
 
 								// Clone things
-								foreach(Thing t in selection)
+								foreach(Thing t in dragthings)
 								{
 									Thing clone = InsertThing(t.Position);
 									t.CopyPropertiesTo(clone);
@@ -798,15 +801,19 @@ namespace CodeImp.DoomBuilder.BuilderModes
 									}
 
 									t.Selected = false;
-									clone.Selected = true;
+
+									clonedthings.Add(clone);
 								}
 
 								// We'll want to skip creating additional Undo in DragThingsMode
 								thingscloned = true;
+
+								// All the cloned things are now the things we want to drag
+								dragthings = clonedthings;
 							}
 						}
 
-						General.Editing.ChangeMode(new DragThingsMode(new ThingsMode(), mousedownmappos, !thingscloned));
+						General.Editing.ChangeMode(new DragThingsMode(new ThingsMode(), mousedownmappos, dragthings, !thingscloned));
 					}
 				}
 			}
@@ -1048,13 +1055,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			{
 				// Dispose old labels
 				foreach(TextLabel l in labels.Values) l.Dispose();
-
-				// Don't show lables for selected-from-highlight item
-				if(selectionfromhighlight)
-				{
-					labels.Clear();
-					return;
-				}
 			}
 
 			// Make text labels for selected linedefs
@@ -1605,6 +1605,31 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				General.Map.Grid.SetGridOrigin(0, 0);
 				General.Map.GridVisibilityChanged();
 				General.Interface.RedrawDisplay();
+			}
+		}
+
+		[BeginAction("changemapelementindex")]
+		private void ChangeMapElementIndex()
+		{
+			// Make list of selected linedefs
+			List<Thing> selected = General.Map.Map.GetSelectedThings(true).ToList();
+			if ((selected.Count == 0) && (highlighted != null) && !highlighted.IsDisposed) selected.Add(highlighted);
+			if (selected.Count != 1)
+			{
+				General.ToastManager.ShowToast(ToastMessages.CHANGEMAPELEMENTINDEX, ToastType.WARNING, "Changing thing index failed", "You need to select or highlight exactly 1 thing.");
+				return;
+			}
+
+			ChangeMapElementIndexForm f = new ChangeMapElementIndexForm("thing", selected[0].Index, General.Map.Map.Things.Count - 1);
+			if (f.ShowDialog() == DialogResult.OK)
+			{
+				int newindex = f.GetNewIndex();
+				int oldindex = selected[0].Index;
+				General.Map.UndoRedo.CreateUndo("Change thing index");
+
+				selected[0].ChangeIndex(newindex);
+
+				General.ToastManager.ShowToast(ToastMessages.CHANGEMAPELEMENTINDEX, ToastType.INFO, "Successfully change thing index", $"Changed index of thing {oldindex} to {newindex}.");
 			}
 		}
 

@@ -161,11 +161,11 @@ namespace CodeImp.DoomBuilder
 		//internal const int SIF_ALL = SIF_RANGE + SIF_PAGE + SIF_POS + SIF_TRACKPOS;
 		
 		// Files and Folders
-		private const string LEGACY_SETTINGS_FILE = "GZBuilder.cfg"; // To make transision from GZDB* easier
-		private const string SETTINGS_FILE = "UDBuilder.cfg";
-		private const string DEFAULT_SETTINGS_FILE = "UDBuilder.default.cfg"; //mxd
+		private const string LEGACY_SETTINGS_FILE = "UDBuilder.cfg"; // To make transision from UDB easier
+		private const string SETTINGS_FILE = "UZBuilder.cfg";
+		private const string DEFAULT_SETTINGS_FILE = "UZBuilder.default.cfg"; //mxd
 		private const string SETTINGS_DIR = "Ultimate Zone Builder";
-		private const string LOG_FILE = "UDBuilder.log";
+		private const string LOG_FILE = "UZBuilder.log";
 		private const string GAME_CONFIGS_DIR = "Configurations";
 		private const string COMPILERS_DIR = "Compilers";
 		private const string PLUGINS_DIR = "Plugins";
@@ -231,9 +231,13 @@ namespace CodeImp.DoomBuilder
 		private static bool delaymainwindow;
 		private static bool nosettings;
 		private static bool portablemode; //mxd
+		private static bool debugrenderdevice;
 
 		//misc
 		private static readonly Random random = new Random(); //mxd
+
+		// Toasts
+		private static ToastManager toastmanager;
 
 		#endregion
 
@@ -275,9 +279,11 @@ namespace CodeImp.DoomBuilder
 		public static DataLocationList AutoLoadResources { get { return new DataLocationList(autoloadresources); } }
 		public static bool DelayMainWindow { get { return delaymainwindow; } }
 		public static bool NoSettings { get { return nosettings; } }
+		public static bool DebugRenderDevice { get { return debugrenderdevice; } }
 		public static EditingManager Editing { get { return editing; } }
 		public static ErrorLogger ErrorLogger { get { return errorlogger; } }
 		public static string CommitHash { get { return commithash; } } //mxd
+		public static ToastManager ToastManager { get => toastmanager; }
 
 		#endregion
 
@@ -606,7 +612,12 @@ namespace CodeImp.DoomBuilder
 
 			//mxd. Set CultureInfo
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-			
+
+			// biwa. If the default culture for threads is not set it'll screw with the culture
+			// in the FileSystemWatcher thread, which can result in incorrect string outputs
+			// See: https://github.com/jewalky/UltimateDoomBuilder/issues/858
+			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
 			// Set current thread name
 			Thread.CurrentThread.Name = "Main Application";
 
@@ -654,12 +665,12 @@ namespace CodeImp.DoomBuilder
 			// Remove the previous log file and start logging
 			if(File.Exists(logfile)) File.Delete(logfile);
             string platform = Environment.Is64BitProcess ? "x64" : "x86";
-			General.WriteLogLine("Ultimate Doom Builder R" + thisasm.GetName().Version.Revision + " (" + platform + ", " + commithash + ") startup"); //mxd
+			General.WriteLogLine("Ultimate Zone Builder v" + thisasm.GetName().Version + " (" + platform + ", " + commithash + ") startup"); //mxd
 			General.WriteLogLine("Application path:        \"" + apppath + "\"");
 			General.WriteLogLine("Temporary path:          \"" + temppath + "\"");
 			General.WriteLogLine("Local settings path:     \"" + settingspath + "\"");
 			General.WriteLogLine("Command-line arguments:  \"" + string.Join(" ", args) + "\""); //mxd
-			
+
 			// Load configuration
 			General.WriteLogLine("Loading program configuration...");
 			settings = new ProgramConfiguration();
@@ -698,11 +709,20 @@ namespace CodeImp.DoomBuilder
 					mainwindow.Show();
 					mainwindow.Update();
 				}
+
+				// Create the toast manager after the main windows, but before plugins are loaded,
+				// since the plugins can register toasts. Also register toasts for the core
+				toastmanager = new ToastManager(mainwindow.Display);
+				RegisterToasts();
 				
 				// Load plugin manager
 				General.WriteLogLine("Loading plugins...");
 				plugins = new PluginManager();
 				plugins.LoadAllPlugins();
+
+				// Register toasts from actions. This has to be done after all plugins are loaded
+				toastmanager.RegisterActions();
+				toastmanager.LoadSettings(settings.Config);
 				
 				// Load game configurations
 				General.WriteLogLine("Loading game configurations...");
@@ -798,6 +818,11 @@ namespace CodeImp.DoomBuilder
 			}
 		}
 
+		private static void RegisterToasts()
+		{
+			toastmanager.RegisterToast("resourcewarningsanderrors", "Resource warnings and errors", "When there are errors or warning while (re)loading the resources");
+		}
+
 		// This parses the command line arguments
 		private static void ParseCommandLineArgs(string[] args)
 		{
@@ -831,7 +856,7 @@ namespace CodeImp.DoomBuilder
 				else if(string.Compare(curarg, "-MAP", true) == 0)
 				{
 					// Store next arg as map name information
-					autoloadmap = argslist.Dequeue();
+					autoloadmap = argslist.Dequeue()?.ToUpperInvariant();
 				}
 				// Config name info?
 				else if((string.Compare(curarg, "-CFG", true) == 0) ||
@@ -955,6 +980,10 @@ namespace CodeImp.DoomBuilder
 					// Add resource to list
 					if(!string.IsNullOrEmpty(dl.location))
 						autoloadresources.Add(dl);
+				}
+				else if (string.Compare(curarg, "-DEBUGRENDERDEVICE", true) == 0)
+				{
+					debugrenderdevice = true;
 				}
 				// Every other arg
 				else
@@ -1496,7 +1525,12 @@ namespace CodeImp.DoomBuilder
 
 			// Show save as dialog
 			SaveFileDialog savefile = new SaveFileDialog();
+#if NO_WIN32
+			// No easy way to have case-insesitivity for non-Windows platforms
+			savefile.Filter = "Doom WAD Files (*.wad)|*.wad;*.Wad;*.wAd;*.WAd;*.waD;*.WaD;*.wAD;*.WAD";
+#else
 			savefile.Filter = "Doom WAD Files (*.wad)|*.wad";
+#endif
 			savefile.Title = "Save Map As";
 			savefile.AddExtension = true;
 			savefile.CheckPathExists = true;
@@ -1584,7 +1618,12 @@ namespace CodeImp.DoomBuilder
 
 			// Show save as dialog
 			SaveFileDialog savefile = new SaveFileDialog();
+#if NO_WIN32
+			// No easy way to have case-insesitivity for non-Windows platforms
+			savefile.Filter = "Doom WAD Files (*.wad)|*.wad;*.Wad;*.wAd;*.WAd;*.waD;*.WaD;*.wAD;*.WAD";
+#else
 			savefile.Filter = "Doom WAD Files (*.wad)|*.wad";
+#endif
 			savefile.Title = "Save Map Into";
 			savefile.AddExtension = true;
 			savefile.CheckPathExists = true;
@@ -1706,28 +1745,34 @@ namespace CodeImp.DoomBuilder
 		// This outputs log information
 		public static void WriteLogLine(string line)
 		{
+			lock (random)
+			{
 #if DEBUG
-			// Output to consoles
-			Console.WriteLine(line);
-			DebugConsole.WriteLine(DebugMessageType.LOG, line); //mxd
+				// Output to consoles
+				Console.WriteLine(line);
+				DebugConsole.WriteLine(DebugMessageType.LOG, line); //mxd
 #endif
-			// Write to log file
-			try { File.AppendAllText(logfile, line + Environment.NewLine); }
-			catch(Exception) { }
+				// Write to log file
+				try { File.AppendAllText(logfile, line + Environment.NewLine); }
+				catch (Exception) { }
+			}
 		}
 
 		// This outputs log information
 		public static void WriteLog(string text)
 		{
+			lock (random)
+			{
 #if DEBUG
-			// Output to consoles
-			Console.Write(text);
-			DebugConsole.Write(DebugMessageType.LOG, text);
+				// Output to consoles
+				Console.Write(text);
+				DebugConsole.Write(DebugMessageType.LOG, text);
 #endif
 
-			// Write to log file
-			try { File.AppendAllText(logfile, text); }
-			catch(Exception) { }
+				// Write to log file
+				try { File.AppendAllText(logfile, text); }
+				catch (Exception) { }
+			}
 		}
 		
 #endregion

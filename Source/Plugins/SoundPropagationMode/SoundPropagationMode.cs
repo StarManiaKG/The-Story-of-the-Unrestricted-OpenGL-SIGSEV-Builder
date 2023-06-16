@@ -37,6 +37,7 @@ namespace CodeImp.DoomBuilder.SoundPropagationMode
 			  ButtonGroup = "000_editing",
 			  UseByDefault = true,
 			  SafeStartMode = false,
+			  RequiredMapFeatures = new[] { "SoundSupport" },
 			  Volatile = false)]
 
 	public class SoundPropagationMode : ClassicMode

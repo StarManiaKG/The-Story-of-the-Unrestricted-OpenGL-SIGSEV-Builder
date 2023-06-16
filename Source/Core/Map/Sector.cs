@@ -409,7 +409,8 @@ namespace CodeImp.DoomBuilder.Map
 				General.Plugins.OnSectorCeilingSurfaceUpdate(this, ref updateinfo.ceilvertices);
 				updateinfo.floortexture = longfloortexname;
 				updateinfo.ceiltexture = longceiltexname;
-                updateinfo.desaturation = this.Desaturation;
+				updateinfo.hidden = IsFlagSet("hidden");
+				updateinfo.desaturation = this.Desaturation;
 
                 // Update surfaces
                 General.Map.CRenderer2D.Surfaces.UpdateSurfaces(surfaceentries, updateinfo);
@@ -429,7 +430,9 @@ namespace CodeImp.DoomBuilder.Map
 			flatvertices.CopyTo(updateinfo.floorvertices, 0);
 			General.Plugins.OnSectorFloorSurfaceUpdate(this, ref updateinfo.floorvertices);
 			updateinfo.floortexture = longfloortexname;
-			
+			updateinfo.hidden = IsFlagSet("hidden");
+			updateinfo.desaturation = this.Desaturation;
+
 			// Update entry
 			General.Map.CRenderer2D.Surfaces.UpdateSurfaces(surfaceentries, updateinfo);
 			General.Map.CRenderer2D.Surfaces.UnlockBuffers();
@@ -445,7 +448,8 @@ namespace CodeImp.DoomBuilder.Map
 			flatvertices.CopyTo(updateinfo.ceilvertices, 0);
 			General.Plugins.OnSectorCeilingSurfaceUpdate(this, ref updateinfo.ceilvertices);
 			updateinfo.ceiltexture = longceiltexname;
-            updateinfo.desaturation = this.Desaturation;
+			updateinfo.hidden = IsFlagSet("hidden");
+			updateinfo.desaturation = this.Desaturation;
 			
 			// Update entry
 			General.Map.CRenderer2D.Surfaces.UpdateSurfaces(surfaceentries, updateinfo);
@@ -516,6 +520,10 @@ namespace CodeImp.DoomBuilder.Map
 				BeforePropsChange();
 
 				flags[flagname] = value;
+
+				// [XA] TODO: de-hardcode this special case thing
+				if(flagname == "hidden")
+					updateneeded = true;
 			}
 		}
 
@@ -699,7 +707,7 @@ namespace CodeImp.DoomBuilder.Map
 			foreach(Sidedef side in s.sidedefs)
 			{
 				// Carbon copy of EffectLineSlope class here...
-				if(side.Line.Action == 181 && ((side.Line.Args[0] == 1 && side == side.Line.Front) || side.Line.Args[0] == 2) && side.Other != null)
+				if(side.Line.Action == 700 && ((side.Line.Args[0] == 1 && side == side.Line.Front) || side.Line.Args[0] == 2) && side.Other != null)
 				{
 					Linedef l = side.Line;
 					
@@ -779,7 +787,7 @@ namespace CodeImp.DoomBuilder.Map
 			foreach(Sidedef side in s.sidedefs) 
 			{
 				// Carbon copy of EffectLineSlope class here...
-				if(side.Line.Action == 181 && ((side.Line.Args[1] == 1 && side == side.Line.Front) || side.Line.Args[1] == 2) && side.Other != null) 
+				if(side.Line.Action == 700 && ((side.Line.Args[1] == 1 && side == side.Line.Front) || side.Line.Args[1] == 2) && side.Other != null) 
 				{
 					Linedef l = side.Line;
 
@@ -809,6 +817,16 @@ namespace CodeImp.DoomBuilder.Map
 
 			// Normal (flat) ceiling plane
 			return new Geometry.Plane(new Vector3D(0, 0, -1), s.CeilHeight);
+		}
+
+		/// <summary>
+		/// Changes the sector's index to a new index.
+		/// </summary>
+		/// <param name="newindex">The new index to set</param>
+		public void ChangeIndex(int newindex)
+		{
+			General.Map.UndoRedo.RecIndexSector(Index, newindex);
+			map?.ChangeSectorIndex(Index, newindex);
 		}
 
 		// String representation

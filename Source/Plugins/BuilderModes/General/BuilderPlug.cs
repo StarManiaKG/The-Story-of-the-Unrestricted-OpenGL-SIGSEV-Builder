@@ -42,6 +42,12 @@ using System.Runtime.CompilerServices;
 
 namespace CodeImp.DoomBuilder.BuilderModes
 {
+	internal class ToastMessages
+	{
+		public static readonly string VISUALSLOPING = "visualsloping";
+		public static readonly string CHANGEMAPELEMENTINDEX = "changemapelementindex";
+	}
+
 	public class BuilderPlug : Plug
 	{
 		#region ================== API Declarations
@@ -149,7 +155,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 
 		#region ================== Properties
 
-		public override string Name { get { return "Ultimate Doom Builder"; } } //mxd
+		public override string Name { get { return "Ultimate Zone Builder"; } } //mxd
 		public static BuilderPlug Me { get { return me; } }
 
 		//mxd. BuilderModes.dll revision should always match the main module revision
@@ -249,8 +255,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 
 			//mxd
 			General.Actions.BindMethods(this);
+
+			// Register toasts
+			General.ToastManager.RegisterToast(ToastMessages.VISUALSLOPING, "Visual sloping", "Toasts related to visual sloping");
+			General.ToastManager.RegisterToast(ToastMessages.CHANGEMAPELEMENTINDEX, "Change map element index", "Toasts related to changing the index of map elements");
 		}
-		
+
 		// Disposer
 		public override void Dispose()
 		{

@@ -124,13 +124,23 @@ namespace CodeImp.DoomBuilder.Map
 		public bool IsDirectional { get { return directional; } } //mxd
 		public bool Highlighted { get { return highlighted; } set { highlighted = value; } } //mxd
         internal int LastProcessed { get { return lastProcessed; } set { lastProcessed = value; } }
+		public bool Flip { get { return General.Map.UDMF && IsFlagSet("flip"); } }
+		public bool AbsoluteZ { get { return General.Map.UDMF && IsFlagSet("absolutez"); } }
+		public bool IsFlipped
+		{
+			get
+			{
+				ThingTypeInfo ti = General.Map.Data.GetThingInfo(Type);
+				return ti.Hangs ^ Flip;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region ================== Constructor / Disposer
+		#region ================== Constructor / Disposer
 
-        // Constructor
-        internal Thing(MapSet map, int listindex, bool recordundo = true)
+		// Constructor
+		internal Thing(MapSet map, int listindex, bool recordundo = true)
 		{
 			// Initialize
 			this.elementtype = MapElementType.THING; //mxd
@@ -739,6 +749,16 @@ namespace CodeImp.DoomBuilder.Map
 		public double DistanceTo(Vector2D p)
 		{
 			return Vector2D.Distance(p, pos);
+		}
+
+		/// <summary>
+		/// Changes the thing's index to a new index.
+		/// </summary>
+		/// <param name="newindex">The new index to set</param>
+		public void ChangeIndex(int newindex)
+		{
+			General.Map.UndoRedo.RecIndexThing(Index, newindex);
+			map?.ChangeThingIndex(Index, newindex);
 		}
 
 		#endregion

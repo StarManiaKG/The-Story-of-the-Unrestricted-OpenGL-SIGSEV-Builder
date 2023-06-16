@@ -40,6 +40,7 @@ namespace CodeImp.DoomBuilder.SoundPropagationMode
 			  UseByDefault = true,
 			  SafeStartMode = false,
 			  SupportedMapFormats = new[] { "UniversalMapSetIO" }, //mxd
+			  RequiredMapFeatures = new[] { "SoundSupport" },
 			  Volatile = false)]
 
 	public class SoundEnvironmentMode : ClassicMode
@@ -219,9 +220,20 @@ namespace CodeImp.DoomBuilder.SoundPropagationMode
 			}
 		}
 
+		protected override void OnEditBegin()
+		{
+			base.OnEditBegin();
+
+			editpressed = true;
+		}
+
 		//mxd. Show Reverb selector dialog or add a new sound environment thing
 		protected override void OnEditEnd()
 		{
+			// Edit pressed in this mode?
+			if (!editpressed)
+				return;
+
 			if(highlightedthing != null)
 			{
 				ReverbsPickerForm form = new ReverbsPickerForm(highlightedthing);

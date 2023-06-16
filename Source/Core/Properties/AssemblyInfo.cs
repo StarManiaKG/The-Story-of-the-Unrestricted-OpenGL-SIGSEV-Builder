@@ -6,12 +6,12 @@ using CodeImp.DoomBuilder;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Ultimate Doom Builder")]
-[assembly: AssemblyDescription("ZDoom, GZDoom and Zandronum map editor (can be used for Vanilla/Boom mapping too!)")]
+[assembly: AssemblyTitle("Ultimate Zone Builder")]
+[assembly: AssemblyDescription("SRB2 UDMF map editor, based on Ultimate Doom Builder")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CodeImp, MaxED, ZZYZX, boris, dpJudas and others")]
-[assembly: AssemblyProduct("Ultimate Doom Builder")]
-[assembly: AssemblyCopyright("Copyright © 2007, 2016, 2017-2019")]
+[assembly: AssemblyCompany("Sonic Team Junior")]
+[assembly: AssemblyProduct("Ultimate Zone Builder")]
+[assembly: AssemblyCopyright("Copyright © 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -30,6 +30,5 @@ using CodeImp.DoomBuilder;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("3.0.0.3274")]
+[assembly: AssemblyVersion("0.2.0.4060")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
-[assembly: AssemblyHash("cbe8abb")]

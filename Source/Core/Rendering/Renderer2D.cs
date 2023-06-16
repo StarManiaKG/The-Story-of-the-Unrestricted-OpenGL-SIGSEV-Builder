@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Net;
+using System.Threading.Tasks;
 using CodeImp.DoomBuilder.Map;
 using CodeImp.DoomBuilder.Geometry;
 using CodeImp.DoomBuilder.Data;
@@ -27,6 +27,8 @@ using CodeImp.DoomBuilder.Editing;
 using CodeImp.DoomBuilder.GZBuilder.Data; //mxd
 using CodeImp.DoomBuilder.Config; //mxd
 using CodeImp.DoomBuilder.GZBuilder;
+using System.Linq;
+
 
 #endregion
 
@@ -49,7 +51,7 @@ namespace CodeImp.DoomBuilder.Rendering
 		//private const float THING_CIRCLE_SIZE = 1f;
 		private const float THING_SPRITE_SHRINK = 2f;
 		private const int THING_BUFFER_SIZE = 100;
-		private const float MINIMUM_THING_RADIUS = 1.5f; //mxd
+		private const float MINIMUM_THING_RADIUS = 0.5f; //mxd
 		private const float MINIMUM_SPRITE_RADIUS = 8.0f; //mxd
 		internal const float FIXED_THING_SIZE = 48.0f; //mxd
 
@@ -109,7 +111,7 @@ namespace CodeImp.DoomBuilder.Rendering
 
         // Presentation
         private Presentation present;
-		
+
 		#endregion
 
 		#region ================== Properties
@@ -125,10 +127,22 @@ namespace CodeImp.DoomBuilder.Rendering
 		public SurfaceManager Surfaces { get { return surfaces; } }
 		public RectangleF Viewport { get { return viewport; } } //mxd
 
+		private bool ShouldRenderVertices
+		{
+			get
+			{
+				if (!(General.Editing.Mode is ClassicMode mode))
+				{
+					return true;
+				}
+				return mode.AlwaysShowVertices || General.Settings.AlwaysShowVertices;
+			}
+		}
+
 		#endregion
 
 		#region ================== Constructor / Disposer
-		
+
 		// Constructor
 		internal Renderer2D(RenderDevice graphics) : base(graphics)
 		{
@@ -137,7 +151,7 @@ namespace CodeImp.DoomBuilder.Rendering
 
 			// Create rendertargets
 			CreateRendertargets();
-			
+
 			// We have no destructor
 			GC.SuppressFinalize(this);
 		}
@@ -544,16 +558,46 @@ namespace CodeImp.DoomBuilder.Rendering
 					return new PixelColor(255, (byte)t.Args[1], (byte)t.Args[2], (byte)t.Args[3]);
 				if (t.DynamicLightType.LightType == GZGeneral.LightType.SPOT)
 				{
+					PixelColor color;
+
 					if (t.Fields.ContainsKey("arg0str"))
 					{
-						PixelColor pc;
-						ZDoom.ZDTextParser.GetColorFromString(t.Fields["arg0str"].Value.ToString(), out pc);
-						pc.a = 255;
-						return pc;
+						
+						ZDoom.ZDTextParser.GetColorFromString(t.Fields["arg0str"].Value.ToString(), out color);
+						color.a = 255;
+						
 					}
-					return new PixelColor(255, (byte)((t.Args[0] & 0xFF0000) >> 16), (byte)((t.Args[0] & 0x00FF00) >> 8), (byte)((t.Args[0] & 0x0000FF)));
+					else 
+						color = new PixelColor(255, (byte)((t.Args[0] & 0xFF0000) >> 16), (byte)((t.Args[0] & 0x00FF00) >> 8), (byte)((t.Args[0] & 0x0000FF)));
+
+					// ZDRay static lights have an intensity that's set through the thing's alpha value
+					if (t.DynamicLightType.LightDef == GZGeneral.LightDef.SPOT_STATIC)
+					{
+						double intensity = t.Fields.GetValue("alpha", 1.0);
+						if (intensity != 1.0)
+						{
+							byte r = (byte)General.Clamp(color.r * intensity, 0.0, 255.0);
+							byte g = (byte)General.Clamp(color.g * intensity, 0.0, 255.0);
+							byte b = (byte)General.Clamp(color.b * intensity, 0.0, 255.0);
+							color = new PixelColor(255, r, g, b);
+						}
+					}
+
+					return color;
 				}
-				return new PixelColor(255, (byte)t.Args[0], (byte)t.Args[1], (byte)t.Args[2]);
+
+				// Point light
+				if (t.DynamicLightType.LightDef == GZGeneral.LightDef.POINT_STATIC)
+				{
+					// ZDRay static lights have an intensity that's set through the thing's alpha value
+					double intensity = t.Fields.GetValue("alpha", 1.0);
+					byte r = (byte)General.Clamp(t.Args[0] * intensity, 0.0, 255.0);
+					byte g = (byte)General.Clamp(t.Args[1] * intensity, 0.0, 255.0);
+					byte b = (byte)General.Clamp(t.Args[2] * intensity, 0.0, 255.0);
+					return new PixelColor(255, r, g, b);
+				}
+				else
+					return new PixelColor(255, (byte)t.Args[0], (byte)t.Args[1], (byte)t.Args[2]);
 			}
 
 			return t.Color;
@@ -1502,7 +1546,12 @@ namespace CodeImp.DoomBuilder.Rendering
 							Matrix modelscale = Matrix.Scaling((float)sx, (float)sx, (float)sy);
 							Matrix rotation = Matrix.RotationY((float)-t.RollRad) * Matrix.RotationX((float)-t.PitchRad) * Matrix.RotationZ((float)t.Angle);
 							Matrix position = Matrix.Translation((float)screenpos.x, (float)screenpos.y, 0.0f);
-							Matrix world = General.Map.Data.ModeldefEntries[t.Type].Transform * modelscale * rotation * viewscale * position;
+							Matrix world;
+
+							if (General.Map.Data.ModeldefEntries[t.Type].UseRotationCenter)
+								world = General.Map.Data.ModeldefEntries[t.Type].Transform * modelscale * Matrix.Translation(-General.Map.Data.ModeldefEntries[t.Type].RotationCenter) * rotation * Matrix.Translation(General.Map.Data.ModeldefEntries[t.Type].RotationCenter) * viewscale * position;
+							else
+								world = General.Map.Data.ModeldefEntries[t.Type].Transform * modelscale * rotation * viewscale * position;
 
 							SetThings2DTransformSettings(world);
 
@@ -1516,7 +1565,7 @@ namespace CodeImp.DoomBuilder.Rendering
 				}
 
 				//mxd. Render thing boxes
-				RenderArrows(bboxes, false);
+				RenderArrows(bboxes, false, true);
 			}
 		}
 		
@@ -1532,8 +1581,14 @@ namespace CodeImp.DoomBuilder.Rendering
 		public void RenderThingSet(ICollection<Thing> things, float alpha)
 		{
 			RenderThingsBatch(things, alpha, false, new PixelColor());
+			RenderSRB2Extras();
 		}
-		
+
+		public void RenderSRB2Extras()
+		{
+			RenderArrows(LinksCollector.GetSRB2Lines(), true, false);
+		}
+
 		#endregion
 
 		#region ================== Surface
@@ -1563,24 +1618,25 @@ namespace CodeImp.DoomBuilder.Rendering
 				graphics.SetAlphaBlendEnable(false);
 				graphics.SetAlphaTestEnable(false);
 				graphics.SetUniform(UniformName.texturefactor, new Color4(1f, 1f, 1f, 1f));
-                SetWorldTransformation(true);
+				graphics.SetUniform(UniformName.desaturation, 0.0f);
+				SetWorldTransformation(true);
 				SetDisplay2DSettings(1f, 1f, 0f, 1f, General.Settings.ClassicBilinear);
 					
 				// Prepare for rendering
 				switch(viewmode)
 				{
 					case ViewMode.Brightness:
-						surfaces.RenderSectorBrightness(yviewport);
+						surfaces.RenderSectorBrightness(yviewport, present.SkipHiddenSectors);
 						surfaces.RenderSectorSurfaces(graphics);
 						break;
 							
 					case ViewMode.FloorTextures:
-						surfaces.RenderSectorFloors(yviewport);
+						surfaces.RenderSectorFloors(yviewport, present.SkipHiddenSectors);
 						surfaces.RenderSectorSurfaces(graphics);
 						break;
 							
 					case ViewMode.CeilingTextures:
-						surfaces.RenderSectorCeilings(yviewport);
+						surfaces.RenderSectorCeilings(yviewport, present.SkipHiddenSectors);
 						surfaces.RenderSectorSurfaces(graphics);
 						break;
 				}
@@ -1836,8 +1892,8 @@ namespace CodeImp.DoomBuilder.Rendering
 		}
 
 		//mxd
-		public void RenderArrows(ICollection<Line3D> lines) { RenderArrows(lines, true); }
-		public void RenderArrows(ICollection<Line3D> lines, bool transformcoords) 
+		public void RenderArrows(ICollection<Line3D> lines) { RenderArrows(lines, true, true); }
+		public void RenderArrows(ICollection<Line3D> lines, bool transformcoords, bool sizecheck) 
 		{
 			if(lines.Count == 0) return;
 			int pointscount = 0;
@@ -1858,7 +1914,7 @@ namespace CodeImp.DoomBuilder.Rendering
 				float miny = (float)Math.Min(line.Start2D.y, line.End2D.y);
 
 				// Too small / not on screen?
-				if(((line.End2D - line.Start2D).GetLengthSq() < MINIMUM_SPRITE_RADIUS) || ((maxx <= 0.0f) || (minx >= windowsize.Width) || (maxy <= 0.0f) || (miny >= windowsize.Height)))
+				if(((line.End2D - line.Start2D).GetLengthSq() < MINIMUM_SPRITE_RADIUS && sizecheck) || ((maxx <= 0.0f && sizecheck) || (minx >= windowsize.Width) || (maxy <= 0.0f && sizecheck) || (miny >= windowsize.Height)))
 				{
 					line.SkipRendering = true;
 				}
@@ -2081,43 +2137,87 @@ namespace CodeImp.DoomBuilder.Rendering
 		// This renders a set of linedefs
 		public void PlotLinedefSet(ICollection<Linedef> linedefs)
 		{
-			// Go for all linedefs
-			foreach(Linedef l in linedefs)
+			// biwa. Code duplication because the performance hit from the overhead of calling PlotLinedef in a loop causes reduced FPS.
+			// Telling the compiler to agressively inline PlotLinedef seems to mostly alleviate the problem, but I'm not sure how reliable that is
+			if (General.Settings.ParallelizedLinedefPlotting)
 			{
-				// Transform vertex coordinates
-				Vector2D v1 = l.Start.Position.GetTransformed(translatex, translatey, scale, -scale);
-				Vector2D v2 = l.End.Position.GetTransformed(translatex, translatey, scale, -scale);
+				// Go for all linedefs
+				Parallel.ForEach(linedefs, l =>
+				{
+					// Transform vertex coordinates
+					Vector2D v1 = l.Start.Position.GetTransformed(translatex, translatey, scale, -scale);
+					Vector2D v2 = l.End.Position.GetTransformed(translatex, translatey, scale, -scale);
 
-				//mxd. Should we bother?
-				double lengthsq = (v2 - v1).GetLengthSq();
-				if(lengthsq < minlinelength) continue; //mxd
+					//mxd. Should we bother?
+					double lengthsq = (v2 - v1).GetLengthSq();
+					if (lengthsq < minlinelength) return; //mxd
 
-				// Determine color
-				PixelColor c = DetermineLinedefColor(l);
+					// Determine color
+					PixelColor c = DetermineLinedefColor(l);
 
-				// Draw line. mxd: added 3d-floor indication
-				if(l.ExtraFloorFlag && General.Settings.GZMarkExtraFloors)
-					plotter.DrawLine3DFloor((int)v1.x, TransformY((int)v1.y), (int)v2.x, TransformY((int)v2.y), ref c, General.Colors.ThreeDFloor);
-				else
-					plotter.DrawLineSolid((int)v1.x, TransformY((int)v1.y), (int)v2.x, TransformY((int)v2.y), ref c);
+					// Draw line. mxd: added 3d-floor indication
+					if (l.ExtraFloorFlag && General.Settings.GZMarkExtraFloors)
+						plotter.DrawLine3DFloor((int)v1.x, TransformY((int)v1.y), (int)v2.x, TransformY((int)v2.y), ref c, General.Colors.ThreeDFloor);
+					else
+						plotter.DrawLineSolid((int)v1.x, TransformY((int)v1.y), (int)v2.x, TransformY((int)v2.y), ref c);
 
-				//mxd. Should we bother?
-				if(lengthsq < minlinenormallength) continue; //mxd
+					//mxd. Should we bother?
+					if (lengthsq < minlinenormallength) return; //mxd
 
-				// Calculate normal indicator
-				double mx = (v2.x - v1.x) * 0.5f;
-				double my = (v2.y - v1.y) * 0.5f;
+					// Calculate normal indicator
+					double mx = (v2.x - v1.x) * 0.5f;
+					double my = (v2.y - v1.y) * 0.5f;
 
-				// Draw normal indicator
-				plotter.DrawLineSolid((int)(v1.x + mx), TransformY((int)(v1.y + my)),
-									  (int)((v1.x + mx) - (my * l.LengthInv) * linenormalsize),
-									  TransformY((int)((v1.y + my) + (mx * l.LengthInv) * linenormalsize)), ref c);
+					// Draw normal indicator
+					plotter.DrawLineSolid((int)(v1.x + mx), TransformY((int)(v1.y + my)),
+										 (int)((v1.x + mx) - (my * l.LengthInv) * linenormalsize),
+										 TransformY((int)((v1.y + my) + (mx * l.LengthInv) * linenormalsize)), ref c);
+				});
+			}
+			else
+			{
+				// Go for all linedefs
+				foreach (Linedef l in linedefs)
+				{
+					// Transform vertex coordinates
+					Vector2D v1 = l.Start.Position.GetTransformed(translatex, translatey, scale, -scale);
+					Vector2D v2 = l.End.Position.GetTransformed(translatex, translatey, scale, -scale);
+
+					//mxd. Should we bother?
+					double lengthsq = (v2 - v1).GetLengthSq();
+					if (lengthsq < minlinelength) continue; //mxd
+
+					// Determine color
+					PixelColor c = DetermineLinedefColor(l);
+
+					// Draw line. mxd: added 3d-floor indication
+					if (l.ExtraFloorFlag && General.Settings.GZMarkExtraFloors)
+						plotter.DrawLine3DFloor((int)v1.x, TransformY((int)v1.y), (int)v2.x, TransformY((int)v2.y), ref c, General.Colors.ThreeDFloor);
+					else
+						plotter.DrawLineSolid((int)v1.x, TransformY((int)v1.y), (int)v2.x, TransformY((int)v2.y), ref c);
+
+					//mxd. Should we bother?
+					if (lengthsq < minlinenormallength) continue; //mxd
+
+					// Calculate normal indicator
+					double mx = (v2.x - v1.x) * 0.5f;
+					double my = (v2.y - v1.y) * 0.5f;
+
+					// Draw normal indicator
+					plotter.DrawLineSolid((int)(v1.x + mx), TransformY((int)(v1.y + my)),
+										  (int)((v1.x + mx) - (my * l.LengthInv) * linenormalsize),
+										  TransformY((int)((v1.y + my) + (mx * l.LengthInv) * linenormalsize)), ref c);
+				}
 			}
 		}
 
 		// This renders a single vertex
-		public void PlotVertex(Vertex v, int colorindex)
+		public void PlotVertex(Vertex v, int colorindex, bool checkMode = true)
 		{
+			if (checkMode && !ShouldRenderVertices)
+			{
+				return;
+			}
 			// Transform vertex coordinates
 			Vector2D nv = v.Position.GetTransformed(translatex, translatey, scale, -scale);
 
@@ -2126,20 +2226,58 @@ namespace CodeImp.DoomBuilder.Rendering
 		}
 
 		// This renders a single vertex at specified coordinates
-		public void PlotVertexAt(Vector2D v, int colorindex)
+		public void PlotVertexAt(Vector2D v, int colorindex, bool checkMode = true)
 		{
+			if (checkMode && !ShouldRenderVertices)
+			{
+				return;
+			}
+			
 			// Transform vertex coordinates
 			Vector2D nv = v.GetTransformed(translatex, translatey, scale, -scale);
 
 			// Draw pixel here
 			plotter.DrawVertexSolid((int)nv.x, TransformY((int)nv.y), vertexsize, ref General.Colors.Colors[colorindex], ref General.Colors.BrightColors[colorindex], ref General.Colors.DarkColors[colorindex]);
 		}
-		
+
 		// This renders a set of vertices
-		public void PlotVerticesSet(ICollection<Vertex> vertices)
+		public void PlotVerticesSet(ICollection<Vertex> vertices, bool checkMode = true)
 		{
-			// Go for all vertices
-			foreach(Vertex v in vertices) PlotVertex(v, DetermineVertexColor(v));
+			if (checkMode && !ShouldRenderVertices)
+			{
+				return;
+			}
+
+			// biwa. Code duplication because the performance hit from the overhead of calling PlotLinedef in a loop causes reduced FPS.
+			// Telling the compiler to agressively inline PlotLinedef seems to mostly alleviate the problem, but I'm not sure how reliable that is
+			if (General.Settings.ParallelizedVertexPlotting)
+			{
+				// Go for all vertices
+				Parallel.ForEach(vertices, v =>
+				{
+					// Transform vertex coordinates
+					Vector2D nv = v.Position.GetTransformed(translatex, translatey, scale, -scale);
+
+					int colorindex = DetermineVertexColor(v);
+
+					// Draw pixel here
+					plotter.DrawVertexSolid((int)nv.x, TransformY((int)nv.y), vertexsize, ref General.Colors.Colors[colorindex], ref General.Colors.BrightColors[colorindex], ref General.Colors.DarkColors[colorindex]);
+				});
+			}
+			else
+			{
+				// Go for all vertices
+				foreach (Vertex v in vertices)
+				{
+					// Transform vertex coordinates
+					Vector2D nv = v.Position.GetTransformed(translatex, translatey, scale, -scale);
+
+					int colorindex = DetermineVertexColor(v);
+
+					// Draw pixel here
+					plotter.DrawVertexSolid((int)nv.x, TransformY((int)nv.y), vertexsize, ref General.Colors.Colors[colorindex], ref General.Colors.BrightColors[colorindex], ref General.Colors.DarkColors[colorindex]);
+				}
+			}
 		}
 
 		#endregion

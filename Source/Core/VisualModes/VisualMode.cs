@@ -223,7 +223,7 @@ namespace CodeImp.DoomBuilder.VisualModes
 					if(nearestsector != null)
 					{
 						int sectorheight = nearestsector.CeilHeight - nearestsector.FloorHeight;
-						if(sectorheight < 41)
+						if(sectorheight < 48)
 							posz = nearestsector.FloorHeight + Math.Max(16, sectorheight / 2);
 						else if(General.Map.VisualCamera.Position.z < nearestsector.FloorHeight + 41)
 							posz = nearestsector.FloorHeight + 41; // same as in doom
@@ -360,7 +360,7 @@ namespace CodeImp.DoomBuilder.VisualModes
 				}
 
 				//41 = player's height in Doom. Is that so in all other games as well?
-				if(s.CeilHeight - s.FloorHeight < 41) 
+				if(s.CeilHeight - s.FloorHeight < 48) 
 				{
 					General.MainWindow.DisplayStatus(StatusType.Warning, "Can't test from current position: sector is too low!");
 					return false;
@@ -1382,7 +1382,16 @@ namespace CodeImp.DoomBuilder.VisualModes
 		public void ToggleHighlight()
 		{
 			General.Settings.UseHighlight = !General.Settings.UseHighlight;
-			General.Interface.DisplayStatus(StatusType.Action, "Highlight is now " + (General.Settings.UseHighlight ? "ON" : "OFF") + ".");
+
+			string shorttext = "Highlight is now " + (General.Settings.UseHighlight ? "ON" : "OFF") + ".";
+			string text = shorttext;
+
+			string key = Actions.Action.GetShortcutKeyDesc(General.Actions.Current.ShortcutKey);
+
+			if (!string.IsNullOrEmpty(key))
+				text += $" Press '{key}' to toggle.";
+
+			General.ToastManager.ShowToast("togglehighlight", ToastType.INFO, "Changed highlight", text, shorttext);
 		}
 
 		#endregion

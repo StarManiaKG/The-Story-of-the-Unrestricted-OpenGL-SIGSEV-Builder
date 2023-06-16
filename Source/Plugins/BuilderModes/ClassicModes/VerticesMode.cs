@@ -55,16 +55,20 @@ namespace CodeImp.DoomBuilder.BuilderModes
 
 		// Interface
 		new private bool editpressed;
-		private bool selectionfromhighlight; //mxd
 
 		// The blockmap makes is used to make finding lines faster
 		BlockMap<BlockEntry> blockmap;
+
+		// Vertices that will be edited
+		ICollection<Vertex> editvertices;
 
 		#endregion
 
 		#region ================== Properties
 
 		public override object HighlightedObject { get { return highlighted; } }
+
+		public override bool AlwaysShowVertices { get { return true;  } }
 
 		#endregion
 
@@ -179,6 +183,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			{
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, General.Settings.HiddenThingsAlpha);
 				renderer.RenderThingSet(General.Map.ThingsFilter.VisibleThings, General.Settings.ActiveThingsAlpha);
+				renderer.RenderSRB2Extras();
 				renderer.Finish();
 			}
 
@@ -285,22 +290,30 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				// Edit pressed in this mode
 				editpressed = true;
 
+				// We use the marks to determine what to edit/drag, so clear it first
+				General.Map.Map.ClearMarkedVertices(false);
+
 				// Highlighted item not selected?
-				if(!highlighted.Selected && (BuilderPlug.Me.AutoClearSelection || (General.Map.Map.SelectedVerticessCount == 0)))
+				if(!highlighted.Selected)
 				{
 					// Make this the only selection
-					selectionfromhighlight = true; //mxd
 					General.Map.Map.ClearSelectedVertices();
-					highlighted.Selected = true;
+
+					editvertices = new List<Vertex> { highlighted };
+
 					UpdateSelectionInfo(); //mxd
 					General.Interface.RedrawDisplay();
+				}
+				else
+				{
+					editvertices = General.Map.Map.GetSelectedVertices(true);
 				}
 
 				// Update display
 				if(renderer.StartPlotter(false))
 				{
 					// Redraw highlight to show selection
-					renderer.PlotVertex(highlighted, renderer.DetermineVertexColor(highlighted));
+					renderer.PlotVertex(highlighted, ColorCollection.HIGHLIGHT);
 					renderer.Finish();
 					renderer.Present();
 				}
@@ -308,7 +321,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			else if(!selecting) //mxd. We don't want to do this stuff while multiselecting
 			{
 				// Find the nearest linedef within highlight range
-				Linedef l = MapSet.NearestLinedefRange(blockmap, mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
+				Linedef l = General.Map.Map.NearestLinedefRange(mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
 				if(l != null)
 				{
 					// Create undo
@@ -393,26 +406,14 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			// Edit pressed in this mode?
 			if(editpressed)
 			{
-				// Anything selected?
-				ICollection<Vertex> selected = General.Map.Map.GetSelectedVertices(true);
-				if(selected.Count > 0)
+				if(editvertices?.Count > 0)
 				{
 					if(General.Interface.IsActiveWindow)
 					{
 						//mxd. Show realtime vertex edit dialog
 						General.Interface.OnEditFormValuesChanged += vertexEditForm_OnValuesChanged;
-						DialogResult result = General.Interface.ShowEditVertices(selected);
+						DialogResult result = General.Interface.ShowEditVertices(editvertices);
 						General.Interface.OnEditFormValuesChanged -= vertexEditForm_OnValuesChanged;
-
-						// When a single vertex was selected, deselect it now
-						if(selected.Count == 1 && selectionfromhighlight) 
-						{
-							General.Map.Map.ClearSelectedVertices();
-						} 
-						else if(result == DialogResult.Cancel) //mxd. Restore selection...
-						{ 
-							foreach(Vertex v in selected) v.Selected = true;
-						}
 
 						// Update entire display
 						UpdateSelectionInfo(); //mxd
@@ -422,7 +423,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			}
 
 			editpressed = false;
-			selectionfromhighlight = false; //mxd
 			base.OnEditEnd();
 		}
 
@@ -488,7 +488,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			else if(e.Button == MouseButtons.None) // Not holding any buttons?
 			{
 				//mxd. Render insert vertex preview
-				Linedef l = MapSet.NearestLinedefRange(blockmap, mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
+				Linedef l = General.Map.Map.NearestLinedefRange(mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
 
 				if(l != null) 
 				{
@@ -638,17 +638,24 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				// Anything highlighted?
 				if((highlighted != null) && !highlighted.IsDisposed)
 				{
+					ICollection<Vertex> dragvertices;
+
 					// Highlighted item not selected?
 					if(!highlighted.Selected)
 					{
 						// Select only this vertex for dragging
 						General.Map.Map.ClearSelectedVertices();
-						highlighted.Selected = true;
+						dragvertices = new List<Vertex> { highlighted };
+					}
+					else
+					{
+						// Add all selected vertices to the vertices we want to drag
+						dragvertices = General.Map.Map.GetSelectedVertices(true);
 					}
 
 					// Start dragging the selection
 					if(!BuilderPlug.Me.DontMoveGeometryOutsideMapBoundary || CanDrag()) //mxd
-						General.Editing.ChangeMode(new DragVerticesMode(mousedownmappos));
+						General.Editing.ChangeMode(new DragVerticesMode(mousedownmappos, dragvertices));
 				}
 			}
 		}
@@ -759,7 +766,17 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			
 			return base.OnCopyBegin();
 		}
-		
+
+		/// <summary>
+		/// If map elements have changed the blockmap needs to be recreated.
+		/// </summary>
+		public override void OnMapElementsChanged()
+		{
+			base.OnMapElementsChanged();
+
+			CreateBlockmap();
+		}
+
 		#endregion
 
 		#region ================== Actions
@@ -892,7 +909,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				General.Map.UndoRedo.CreateUndo("Insert vertex");
 
 				// Snap to geometry?
-				Linedef l = MapSet.NearestLinedefRange(blockmap, mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
+				Linedef l = General.Map.Map.NearestLinedefRange(mousemappos, BuilderPlug.Me.SplitLinedefsRange / renderer.Scale);
 				if(snaptonearest && (l != null))
 				{
 					// Snip to grid also?
@@ -1203,11 +1220,36 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			}
 		}
 
+		[BeginAction("changemapelementindex")]
+		private void ChangeMapElementIndex()
+		{
+			// Make list of selected linedefs
+			List<Vertex> selected = General.Map.Map.GetSelectedVertices(true).ToList();
+			if ((selected.Count == 0) && (highlighted != null) && !highlighted.IsDisposed) selected.Add(highlighted);
+			if (selected.Count != 1)
+			{
+				General.ToastManager.ShowToast(ToastMessages.CHANGEMAPELEMENTINDEX, ToastType.WARNING, "Changing vertex index failed", "You need to select or highlight exactly 1 vertex.");
+				return;
+			}
+
+			ChangeMapElementIndexForm f = new ChangeMapElementIndexForm("vertex", selected[0].Index, General.Map.Map.Vertices.Count - 1);
+			if (f.ShowDialog() == DialogResult.OK)
+			{
+				int newindex = f.GetNewIndex();
+				int oldindex = selected[0].Index;
+				General.Map.UndoRedo.CreateUndo("Change vertex index");
+
+				selected[0].ChangeIndex(newindex);
+
+				General.ToastManager.ShowToast(ToastMessages.CHANGEMAPELEMENTINDEX, ToastType.INFO, "Successfully change vertex index", $"Changed index of vertex {oldindex} to {newindex}.");
+			}
+		}
+
 		#endregion
 
 		#region ================== Action assist (mxd)
 
-			//mxd
+		//mxd
 		private static void MergeLines(ICollection<Vertex> selected, Linedef ld1, Linedef ld2, Vertex v) 
 		{
 			Vertex v1 = (ld1.Start == v) ? ld1.End : ld1.Start;

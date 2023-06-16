@@ -162,21 +162,21 @@ namespace CodeImp.DoomBuilder.Windows
 			this.toggleGeometry = new System.Windows.Forms.ToolStripMenuItem();
 			this.toggleTesting = new System.Windows.Forms.ToolStripMenuItem();
 			this.toggleRendering = new System.Windows.Forms.ToolStripMenuItem();
-			this.buttonnewmap = new System.Windows.Forms.ToolStripButton();
-			this.buttonopenmap = new System.Windows.Forms.ToolStripButton();
-			this.buttonsavemap = new System.Windows.Forms.ToolStripButton();
-			this.buttonscripteditor = new System.Windows.Forms.ToolStripButton();
-			this.buttonundo = new System.Windows.Forms.ToolStripButton();
-			this.buttonredo = new System.Windows.Forms.ToolStripButton();
-			this.buttoncut = new System.Windows.Forms.ToolStripButton();
-			this.buttoncopy = new System.Windows.Forms.ToolStripButton();
-			this.buttonpaste = new System.Windows.Forms.ToolStripButton();
-			this.buttoninsertprefabfile = new System.Windows.Forms.ToolStripButton();
-			this.buttoninsertpreviousprefab = new System.Windows.Forms.ToolStripButton();
-			this.buttonthingsfilter = new System.Windows.Forms.ToolStripButton();
+			this.buttonnewmap = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonopenmap = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonsavemap = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonscripteditor = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonundo = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonredo = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttoncut = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttoncopy = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonpaste = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttoninsertprefabfile = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttoninsertpreviousprefab = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonthingsfilter = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.thingfilters = new System.Windows.Forms.ToolStripDropDownButton();
 			this.separatorlinecolors = new System.Windows.Forms.ToolStripSeparator();
-			this.buttonlinededfcolors = new System.Windows.Forms.ToolStripButton();
+			this.buttonlinededfcolors = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.linedefcolorpresets = new System.Windows.Forms.ToolStripDropDownButton();
 			this.separatorfilters = new System.Windows.Forms.ToolStripSeparator();
 			this.separatorrendering = new System.Windows.Forms.ToolStripSeparator();
@@ -194,25 +194,25 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemtoggleclassicrendering = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemtoggleeventlines = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemtogglevisualverts = new System.Windows.Forms.ToolStripMenuItem();
-			this.buttonfullbrightness = new System.Windows.Forms.ToolStripButton();
-			this.buttontogglegrid = new System.Windows.Forms.ToolStripButton();
-			this.buttontoggledynamicgrid = new System.Windows.Forms.ToolStripButton();
+			this.buttonfullbrightness = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontogglegrid = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontoggledynamicgrid = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.separatorfullbrightness = new System.Windows.Forms.ToolStripSeparator();
-			this.buttonviewnormal = new System.Windows.Forms.ToolStripButton();
-			this.buttonviewbrightness = new System.Windows.Forms.ToolStripButton();
-			this.buttonviewfloors = new System.Windows.Forms.ToolStripButton();
-			this.buttonviewceilings = new System.Windows.Forms.ToolStripButton();
+			this.buttonviewnormal = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonviewbrightness = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonviewfloors = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonviewceilings = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.separatorgeomergemodes = new System.Windows.Forms.ToolStripSeparator();
-			this.buttonmergegeoclassic = new System.Windows.Forms.ToolStripButton();
-			this.buttonmergegeo = new System.Windows.Forms.ToolStripButton();
-			this.buttonplacegeo = new System.Windows.Forms.ToolStripButton();
+			this.buttonmergegeoclassic = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonmergegeo = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonplacegeo = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.seperatorviews = new System.Windows.Forms.ToolStripSeparator();
-			this.buttontogglecomments = new System.Windows.Forms.ToolStripButton();
-			this.buttontogglefixedthingsscale = new System.Windows.Forms.ToolStripButton();
-			this.buttonsnaptogrid = new System.Windows.Forms.ToolStripButton();
-			this.buttonautomerge = new System.Windows.Forms.ToolStripButton();
-			this.buttonsplitjoinedsectors = new System.Windows.Forms.ToolStripButton();
-			this.buttonautoclearsidetextures = new System.Windows.Forms.ToolStripButton();
+			this.buttontogglecomments = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontogglefixedthingsscale = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonsnaptogrid = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonautomerge = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonsplitjoinedsectors = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonautoclearsidetextures = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.seperatorgeometry = new System.Windows.Forms.ToolStripSeparator();
 			this.dynamiclightmode = new System.Windows.Forms.ToolStripSplitButton();
 			this.sightsdontshow = new System.Windows.Forms.ToolStripMenuItem();
@@ -223,11 +223,11 @@ namespace CodeImp.DoomBuilder.Windows
 			this.modelsshowselection = new System.Windows.Forms.ToolStripMenuItem();
 			this.modelsshowfiltered = new System.Windows.Forms.ToolStripMenuItem();
 			this.modelsshowall = new System.Windows.Forms.ToolStripMenuItem();
-			this.buttontogglefog = new System.Windows.Forms.ToolStripButton();
-			this.buttontogglesky = new System.Windows.Forms.ToolStripButton();
-			this.buttontoggleclassicrendering = new System.Windows.Forms.ToolStripButton();
-			this.buttontoggleeventlines = new System.Windows.Forms.ToolStripButton();
-			this.buttontogglevisualvertices = new System.Windows.Forms.ToolStripButton();
+			this.buttontogglefog = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontogglesky = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontoggleclassicrendering = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontoggleeventlines = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontogglevisualvertices = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.separatorgzmodes = new System.Windows.Forms.ToolStripSeparator();
 			this.buttontest = new System.Windows.Forms.ToolStripSplitButton();
 			this.seperatortesting = new System.Windows.Forms.ToolStripSeparator();
@@ -288,10 +288,19 @@ namespace CodeImp.DoomBuilder.Windows
 			this.modecontrolsloolbar = new System.Windows.Forms.ToolStrip();
 			this.itemtogglecomments = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemtogglefixedthingsscale = new System.Windows.Forms.ToolStripMenuItem();
+			this.itemtogglealwaysshowvertices = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemdynamicgridsize = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemaligngridtolinedef = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemsetgridorigintovertex = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemresetgrid = new System.Windows.Forms.ToolStripMenuItem();
+			this.buttontogglerendernights = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontogglerenderzoomtubes = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttontogglerenderpolyobjects = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.itemtogglerendernights = new System.Windows.Forms.ToolStripMenuItem();
+			this.itemtogglerenderzoomtubes = new System.Windows.Forms.ToolStripMenuItem();
+			this.itemtogglerenderpolyobjects = new System.Windows.Forms.ToolStripMenuItem();
+			this.seperatorviewsrb2 = new System.Windows.Forms.ToolStripSeparator();
+			this.separatorsrb2 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -791,10 +800,15 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemviewfloors,
 			this.itemviewceilings,
 			this.seperatorviewviews,
+			this.itemtogglerendernights,
+			this.itemtogglerenderzoomtubes,
+			this.itemtogglerenderpolyobjects,
+			this.seperatorviewsrb2,
 			this.itemfullbrightness,
 			this.itemtogglegrid,
 			this.itemtogglecomments,
 			this.itemtogglefixedthingsscale,
+			this.itemtogglealwaysshowvertices,
 			this.separatorrendering,
 			this.itemdynlightmodes,
 			this.itemmodelmodes,
@@ -1317,6 +1331,8 @@ namespace CodeImp.DoomBuilder.Windows
 			// 
 			// itemhelpcheckupdates
 			// 
+			this.itemhelpcheckupdates.Enabled = false;
+			this.itemhelpcheckupdates.Visible = false;
 			this.itemhelpcheckupdates.Image = global::CodeImp.DoomBuilder.Properties.Resources.Update;
 			this.itemhelpcheckupdates.Name = "itemhelpcheckupdates";
 			this.itemhelpcheckupdates.Size = new System.Drawing.Size(232, 22);
@@ -1331,18 +1347,18 @@ namespace CodeImp.DoomBuilder.Windows
 			// 
 			// itemhelpissues
 			// 
-			this.itemhelpissues.Image = global::CodeImp.DoomBuilder.Properties.Resources.Github;
+			this.itemhelpissues.Image = global::CodeImp.DoomBuilder.Properties.Resources.GitLab;
 			this.itemhelpissues.Name = "itemhelpissues";
 			this.itemhelpissues.Size = new System.Drawing.Size(232, 22);
-			this.itemhelpissues.Text = "&GitHub issues tracker";
+			this.itemhelpissues.Text = "&GitLab issues tracker";
 			this.itemhelpissues.Click += new System.EventHandler(this.itemhelpissues_Click);
 			// 
 			// itemhelpabout
 			// 
-			this.itemhelpabout.Image = global::CodeImp.DoomBuilder.Properties.Resources.About;
+			this.itemhelpabout.Image = global::CodeImp.DoomBuilder.Properties.Resources.UZB16;
 			this.itemhelpabout.Name = "itemhelpabout";
 			this.itemhelpabout.Size = new System.Drawing.Size(232, 22);
-			this.itemhelpabout.Text = "&About Ultimate Doom Builder...";
+			this.itemhelpabout.Text = "&About Ultimate Zone Builder...";
 			this.itemhelpabout.Click += new System.EventHandler(this.itemhelpabout_Click);
 			// 
 			// toolbar
@@ -1383,6 +1399,10 @@ namespace CodeImp.DoomBuilder.Windows
 			this.buttonviewbrightness,
 			this.buttonviewfloors,
 			this.buttonviewceilings,
+			this.separatorsrb2,
+			this.buttontogglerendernights,
+			this.buttontogglerenderzoomtubes,
+			this.buttontogglerenderpolyobjects,
 			this.separatorgeomergemodes,
 			this.buttonmergegeoclassic,
 			this.buttonmergegeo,
@@ -1640,7 +1660,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.thingfilters.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.thingfilters.Margin = new System.Windows.Forms.Padding(1, 1, 0, 2);
 			this.thingfilters.Name = "thingfilters";
-			this.thingfilters.Size = new System.Drawing.Size((int)(120 * MainForm.DPIScaler.Width), (int)(22 * MainForm.DPIScaler.Height));
+			this.thingfilters.Size = new System.Drawing.Size(120, 22);
 			this.thingfilters.Text = "(show all)";
 			this.thingfilters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.thingfilters.DropDownClosed += new System.EventHandler(this.LoseFocus);
@@ -1670,7 +1690,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.linedefcolorpresets.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.linedefcolorpresets.Margin = new System.Windows.Forms.Padding(1, 1, 0, 2);
 			this.linedefcolorpresets.Name = "linedefcolorpresets";
-			this.linedefcolorpresets.Size = new System.Drawing.Size((int)(120 * MainForm.DPIScaler.Width), (int)(22 * MainForm.DPIScaler.Height));
+			this.linedefcolorpresets.Size = new System.Drawing.Size(120, 22);
 			this.linedefcolorpresets.Text = "No presets";
 			this.linedefcolorpresets.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.linedefcolorpresets.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.linedefcolorpresets_DropDownItemClicked);
@@ -2282,7 +2302,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.configlabel.AutoSize = false;
 			this.configlabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.configlabel.Name = "configlabel";
-			this.configlabel.Size = new System.Drawing.Size((int)(280 * MainForm.DPIScaler.Width), (int)(18 * MainForm.DPIScaler.Height));
+			this.configlabel.Size = new System.Drawing.Size(280, 18);
 			this.configlabel.Text = "ZDoom (Doom in Hexen Format)";
 			this.configlabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.configlabel.ToolTipText = "Current Game Configuration";
@@ -2831,6 +2851,17 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemtogglefixedthingsscale.Text = "Fixed Things Scale";
 			this.itemtogglefixedthingsscale.Click += new System.EventHandler(this.InvokeTaggedAction);
 			// 
+			// itemtogglealwaysshowvertices
+			// 
+			this.itemtogglealwaysshowvertices.Checked = true;
+			this.itemtogglealwaysshowvertices.CheckOnClick = true;
+			this.itemtogglealwaysshowvertices.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.itemtogglealwaysshowvertices.Name = "itemtogglealwaysshowvertices";
+			this.itemtogglealwaysshowvertices.Size = new System.Drawing.Size(215, 22);
+			this.itemtogglealwaysshowvertices.Tag = "builder_togglealwaysshowvertices";
+			this.itemtogglealwaysshowvertices.Text = "Always Show Vertices";
+			this.itemtogglealwaysshowvertices.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
 			// itemdynamicgridsize
 			// 
 			this.itemdynamicgridsize.Checked = true;
@@ -2842,6 +2873,83 @@ namespace CodeImp.DoomBuilder.Windows
 			this.itemdynamicgridsize.Tag = "builder_toggledynamicgrid";
 			this.itemdynamicgridsize.Text = "Dynamic Grid Size";
 			this.itemdynamicgridsize.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// buttontogglerendernights
+			// 
+			this.buttontogglerendernights.CheckOnClick = true;
+			this.buttontogglerendernights.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.buttontogglerendernights.Image = global::CodeImp.DoomBuilder.Properties.Resources.NiGHTSAxis;
+			this.buttontogglerendernights.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttontogglerendernights.Name = "buttontogglerendernights";
+			this.buttontogglerendernights.Size = new System.Drawing.Size(23, 20);
+			this.buttontogglerendernights.Tag = "builder_srb2togglenights";
+			this.buttontogglerendernights.Text = "Render NiGHTS track";
+			this.buttontogglerendernights.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// buttontogglerenderzoomtubes
+			// 
+			this.buttontogglerenderzoomtubes.CheckOnClick = true;
+			this.buttontogglerenderzoomtubes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.buttontogglerenderzoomtubes.Image = global::CodeImp.DoomBuilder.Properties.Resources.ZoomTube;
+			this.buttontogglerenderzoomtubes.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttontogglerenderzoomtubes.Name = "buttontogglerenderzoomtubes";
+			this.buttontogglerenderzoomtubes.Size = new System.Drawing.Size(23, 20);
+			this.buttontogglerenderzoomtubes.Tag = "builder_srb2togglezoomtubes";
+			this.buttontogglerenderzoomtubes.Text = "Render zoom tube waypoints";
+			this.buttontogglerenderzoomtubes.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// buttontogglerenderpolyobjects
+			// 
+			this.buttontogglerenderpolyobjects.CheckOnClick = true;
+			this.buttontogglerenderpolyobjects.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.buttontogglerenderpolyobjects.Image = global::CodeImp.DoomBuilder.Properties.Resources.Polyobject;
+			this.buttontogglerenderpolyobjects.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttontogglerenderpolyobjects.Name = "buttontogglerenderpolyobjects";
+			this.buttontogglerenderpolyobjects.Size = new System.Drawing.Size(23, 20);
+			this.buttontogglerenderpolyobjects.Tag = "builder_srb2togglepolyobjects";
+			this.buttontogglerenderpolyobjects.Text = "Render polyobjects";
+			this.buttontogglerenderpolyobjects.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// itemtogglerendernights
+			// 
+			this.itemtogglerendernights.CheckOnClick = true;
+			this.itemtogglerendernights.Image = global::CodeImp.DoomBuilder.Properties.Resources.NiGHTSAxis;
+			this.itemtogglerendernights.Name = "itemtogglerendernights";
+			this.itemtogglerendernights.Size = new System.Drawing.Size(273, 22);
+			this.itemtogglerendernights.Tag = "builder_srb2togglenights";
+			this.itemtogglerendernights.Text = "Render NiGHTS track";
+			this.itemtogglerendernights.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// itemtogglerenderzoomtubes
+			// 
+			this.itemtogglerenderzoomtubes.CheckOnClick = true;
+			this.itemtogglerenderzoomtubes.Image = global::CodeImp.DoomBuilder.Properties.Resources.ZoomTube;
+			this.itemtogglerenderzoomtubes.Name = "itemtogglerenderzoomtubes";
+			this.itemtogglerenderzoomtubes.Size = new System.Drawing.Size(273, 22);
+			this.itemtogglerenderzoomtubes.Tag = "builder_srb2togglezoomtubes";
+			this.itemtogglerenderzoomtubes.Text = "Render zoom tube waypoints";
+			this.itemtogglerenderzoomtubes.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// itemtogglerenderpolyobjects
+			// 
+			this.itemtogglerenderpolyobjects.CheckOnClick = true;
+			this.itemtogglerenderpolyobjects.Image = global::CodeImp.DoomBuilder.Properties.Resources.Polyobject;
+			this.itemtogglerenderpolyobjects.Name = "itemtogglerenderpolyobjects";
+			this.itemtogglerenderpolyobjects.Size = new System.Drawing.Size(273, 22);
+			this.itemtogglerenderpolyobjects.Tag = "builder_srb2togglepolyobjects";
+			this.itemtogglerenderpolyobjects.Text = "Render polyobjects";
+			this.itemtogglerenderpolyobjects.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// seperatorviewsrb2
+			// 
+			this.seperatorviewsrb2.Name = "seperatorviewsrb2";
+			this.seperatorviewsrb2.Size = new System.Drawing.Size(212, 6);
+			// 
+			// separatorsrb2
+			// 
+			this.separatorsrb2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+			this.separatorsrb2.Name = "separatorsrb2";
+			this.separatorsrb2.Size = new System.Drawing.Size(6, 25);
 			// 
 			// MainForm
 			// 
@@ -2907,9 +3015,9 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripMenuItem itemnorecent;
 		private System.Windows.Forms.ToolStripStatusLabel xposlabel;
 		private System.Windows.Forms.ToolStripStatusLabel yposlabel;
-		private System.Windows.Forms.ToolStripButton buttonnewmap;
-		private System.Windows.Forms.ToolStripButton buttonopenmap;
-		private System.Windows.Forms.ToolStripButton buttonsavemap;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonnewmap;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonopenmap;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonsavemap;
 		private System.Windows.Forms.ToolStripStatusLabel zoomlabel;
 		private System.Windows.Forms.ToolStripDropDownButton buttonzoom;
 		private System.Windows.Forms.ToolStripMenuItem itemzoomfittoscreen;
@@ -2929,7 +3037,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private CodeImp.DoomBuilder.Controls.VertexInfoPanel vertexinfo;
 		private CodeImp.DoomBuilder.Controls.SectorInfoPanel sectorinfo;
 		private CodeImp.DoomBuilder.Controls.ThingInfoPanel thinginfo;
-		private System.Windows.Forms.ToolStripButton buttonthingsfilter;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonthingsfilter;
 		private System.Windows.Forms.ToolStripSeparator seperatorviews;
 		private System.Windows.Forms.ToolStripStatusLabel gridlabel;
 		private System.Windows.Forms.ToolStripDropDownButton buttongrid;
@@ -2946,13 +3054,13 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripStatusLabel poscommalabel;
 		private System.Windows.Forms.ToolStripMenuItem itemundo;
 		private System.Windows.Forms.ToolStripMenuItem itemredo;
-		private System.Windows.Forms.ToolStripButton buttonundo;
-		private System.Windows.Forms.ToolStripButton buttonredo;
-		private System.Windows.Forms.ToolStripButton buttonsnaptogrid;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonundo;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonredo;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonsnaptogrid;
 		private System.Windows.Forms.ToolStripMenuItem itemsnaptogrid;
-		private System.Windows.Forms.ToolStripButton buttonautomerge;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonautomerge;
 		private System.Windows.Forms.ToolStripMenuItem itemautomerge;
-		private System.Windows.Forms.ToolStripButton buttonsplitjoinedsectors;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonsplitjoinedsectors;
 		private System.Windows.Forms.ToolStripMenuItem itemsplitjoinedsectors;
 		private System.Windows.Forms.Timer processor;
 		private System.Windows.Forms.ToolStripSeparator separatorgzmodes;
@@ -2964,25 +3072,25 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripMenuItem itemgridsetup;
 		private System.Windows.Forms.Timer statusflasher;
 		private System.Windows.Forms.ToolStripSplitButton buttontest;
-		private System.Windows.Forms.ToolStripButton buttoncut;
-		private System.Windows.Forms.ToolStripButton buttoncopy;
-		private System.Windows.Forms.ToolStripButton buttonpaste;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttoncut;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttoncopy;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonpaste;
 		private System.Windows.Forms.ToolStripSeparator seperatoreditundo;
 		private System.Windows.Forms.ToolStripMenuItem itemcut;
 		private System.Windows.Forms.ToolStripMenuItem itemcopy;
 		private System.Windows.Forms.ToolStripMenuItem itempaste;
 		private System.Windows.Forms.ToolStripStatusLabel configlabel;
 		private System.Windows.Forms.ToolStripMenuItem menumode;
-		private System.Windows.Forms.ToolStripButton buttonviewnormal;
-		private System.Windows.Forms.ToolStripButton buttonviewbrightness;
-		private System.Windows.Forms.ToolStripButton buttonviewfloors;
-		private System.Windows.Forms.ToolStripButton buttonviewceilings;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonviewnormal;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonviewbrightness;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonviewfloors;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonviewceilings;
 		private System.Windows.Forms.ToolStripSeparator separatorgeomergemodes;
-		private System.Windows.Forms.ToolStripButton buttonmergegeoclassic;
-		private System.Windows.Forms.ToolStripButton buttonmergegeo;
-		private System.Windows.Forms.ToolStripButton buttonplacegeo;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonmergegeoclassic;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonmergegeo;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonplacegeo;
 		private System.Windows.Forms.ToolStripSeparator seperatortoolsresources;
-		private System.Windows.Forms.ToolStripButton buttonscripteditor;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonscripteditor;
 		private System.Windows.Forms.ToolStripMenuItem menuview;
 		private System.Windows.Forms.ToolStripMenuItem itemthingsfilter;
 		private System.Windows.Forms.ToolStripSeparator seperatorviewthings;
@@ -3003,8 +3111,8 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripSeparator seperatorprefabsinsert;
 		private System.Windows.Forms.ToolStripMenuItem iteminsertprefabfile;
 		private System.Windows.Forms.ToolStripMenuItem iteminsertpreviousprefab;
-		private System.Windows.Forms.ToolStripButton buttoninsertprefabfile;
-		private System.Windows.Forms.ToolStripButton buttoninsertpreviousprefab;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttoninsertprefabfile;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttoninsertpreviousprefab;
 		private System.Windows.Forms.Button buttontoggleinfo;
 		private System.Windows.Forms.Label labelcollapsedinfo;
 		private System.Windows.Forms.Timer statusresetter;
@@ -3037,15 +3145,15 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripSeparator seperatoreditgrid;
 		private System.Windows.Forms.ToolStripSeparator seperatoreditcopypaste;
 		private System.Windows.Forms.ToolStripSeparator seperatorgeometry;
-		private System.Windows.Forms.ToolStripButton buttontogglefog;
-		private System.Windows.Forms.ToolStripButton buttontogglesky;
-		private System.Windows.Forms.ToolStripButton buttontoggleclassicrendering;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglefog;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglesky;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontoggleclassicrendering;
 		private System.Windows.Forms.ToolStripStatusLabel warnsLabel;
 		private System.Windows.Forms.ToolStripMenuItem itemReloadModedef;
 		private System.Windows.Forms.ToolStripMenuItem itemReloadGldefs;
 		private System.Windows.Forms.ToolStripSeparator separatorDrawModes;
-		private System.Windows.Forms.ToolStripButton buttontoggleeventlines;
-		private System.Windows.Forms.ToolStripButton buttontogglevisualvertices;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontoggleeventlines;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglevisualvertices;
 		private System.Windows.Forms.ToolStripMenuItem itemviewusedtags;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
 		private System.Windows.Forms.ToolStripMenuItem addToGroup;
@@ -3075,7 +3183,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripMenuItem itemzoom400;
 		private System.Windows.Forms.Label modename;
 		private System.Windows.Forms.ToolStripMenuItem itemautoclearsidetextures;
-		private System.Windows.Forms.ToolStripButton buttonautoclearsidetextures;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonautoclearsidetextures;
 		private System.Windows.Forms.ToolStripMenuItem itemgotocoords;
 		private System.Windows.Forms.ToolStripSeparator separatorTransformModes;
 		private System.Windows.Forms.ToolStripMenuItem itemdosnaptogrid;
@@ -3084,7 +3192,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStrip modecontrolsloolbar;
 		private System.Windows.Forms.ToolStripMenuItem itemfullbrightness;
 		private System.Windows.Forms.ToolStripSeparator separatorhelpers;
-		private System.Windows.Forms.ToolStripButton buttonfullbrightness;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonfullbrightness;
 		private System.Windows.Forms.ToolStripSeparator separatorfullbrightness;
 		private System.Windows.Forms.ToolStripSeparator separatorfilters;
 		private System.Windows.Forms.ToolStripSeparator separatorrendering;
@@ -3102,6 +3210,14 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripMenuItem itemtoggleclassicrendering;
 		private System.Windows.Forms.ToolStripMenuItem itemtoggleeventlines;
 		private System.Windows.Forms.ToolStripMenuItem itemtogglevisualverts;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglerendernights;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglerenderzoomtubes;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttontogglerenderpolyobjects;
+		private System.Windows.Forms.ToolStripMenuItem itemtogglerendernights;
+		private System.Windows.Forms.ToolStripMenuItem itemtogglerenderzoomtubes;
+		private System.Windows.Forms.ToolStripMenuItem itemtogglerenderpolyobjects;
+		private System.Windows.Forms.ToolStripSeparator seperatorviewsrb2;
+		private System.Windows.Forms.ToolStripSeparator separatorsrb2;
 		private ToolStripMenuItem itemimport;
 		private ToolStripMenuItem itemexport;
 		private ToolStripSeparator separatorio;
@@ -3136,5 +3252,6 @@ namespace CodeImp.DoomBuilder.Windows
 		private ToolStripMenuItem itemdynamicgridsize;
 		private ToolStripMenuItem itemtogglecomments;
 		private ToolStripMenuItem itemtogglefixedthingsscale;
+		private ToolStripMenuItem itemtogglealwaysshowvertices;
 	}
 }

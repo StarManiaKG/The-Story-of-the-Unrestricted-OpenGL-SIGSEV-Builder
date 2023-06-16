@@ -48,17 +48,23 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		#endregion
 
 		#region ================== Properties
-		
+
+		public override bool AlwaysShowVertices
+		{
+			get { return true; }
+		}
+
 		#endregion
 
 		#region ================== Constructor / Disposer
 
 		// Constructor to start dragging immediately
-		public DragVerticesMode(Vector2D dragstartmappos)
+		public DragVerticesMode(Vector2D dragstartmappos, ICollection<Vertex> vertices)
 		{
 			// Mark what we are dragging
 			General.Map.Map.ClearAllMarks(false);
-			General.Map.Map.MarkSelectedVertices(true, true);
+			foreach (Vertex v in vertices)
+				v.Marked = true;
 
 			// Initialize
 			base.StartDrag(dragstartmappos);
@@ -85,24 +91,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 
 		#region ================== Methods
 		
-		// Disenagaging
-		public override void OnDisengage()
-		{
-			// Select vertices from marks
-			General.Map.Map.ClearSelectedVertices();
-			General.Map.Map.SelectMarkedVertices(true, true);
-
-			// Perform normal disengage
-			base.OnDisengage();
-			
-			// When not cancelled
-			if(!cancelled)
-			{
-				// If only a single vertex was selected, deselect it now
-				if(selectedverts.Count == 1) General.Map.Map.ClearSelectedVertices();
-			}
-		}
-
 		// This redraws the display
 		public override void OnRedrawDisplay()
 		{
@@ -118,6 +106,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				if(renderer.StartThings(true))
 				{
 					renderer.RenderThingSet(General.Map.Map.Things, General.Settings.ActiveThingsAlpha);
+					renderer.RenderSRB2Extras();
 					renderer.Finish();
 				}
 			}
@@ -151,6 +140,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, General.Settings.HiddenThingsAlpha);
 				renderer.RenderThingSet(unselectedthings, General.Settings.ActiveThingsAlpha);
 				renderer.RenderThingSet(selectedthings, General.Settings.ActiveThingsAlpha);
+				renderer.RenderSRB2Extras();
 				renderer.Finish();
 			}
 

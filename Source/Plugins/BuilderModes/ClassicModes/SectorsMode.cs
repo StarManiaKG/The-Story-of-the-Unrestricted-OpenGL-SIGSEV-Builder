@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.Concurrent;
@@ -61,7 +62,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 
 		// Interface
 		new private bool editpressed;
-		private bool selectionfromhighlight; //mxd
 
 		// Labels
 		private Dictionary<Sector, TextLabel[]> labels;
@@ -83,6 +83,9 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		private Dictionary<string, float> textlabelsizecache;
 
 		private ConcurrentDictionary<Thing, bool> determinedsectorthings;
+
+		// Sectors that will be edited
+		private ICollection<Sector> editsectors;
 
 		#endregion
 
@@ -185,7 +188,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		// This updates the overlay
 		private void UpdateOverlay()
 		{
-			if(renderer.StartOverlay(true))
+			if(General.Map.Map.IsSafeToAccess && renderer.StartOverlay(true))
 			{
 				// Go for all selected sectors
 				ICollection<Sector> orderedselection = General.Map.Map.GetSelectedSectors(true);
@@ -631,9 +634,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		// This updates labels from the selected sectors
 		private void UpdateSelectedLabels()
 		{
-			// Don't show lables for selected-from-highlight item
-			if(selectionfromhighlight) return;
-			
 			// Go for all labels in all selected sectors
 			ICollection<Sector> orderedselection = General.Map.Map.GetSelectedSectors(true);
 			PixelColor c = (General.Settings.UseHighlight ? General.Colors.Highlight : General.Colors.Selection); //mxd
@@ -952,6 +952,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			{
 				renderer.RenderThingSet(General.Map.ThingsFilter.HiddenThings, General.Settings.HiddenThingsAlpha);
 				renderer.RenderThingSet(General.Map.ThingsFilter.VisibleThings, General.Settings.ActiveThingsAlpha);
+				renderer.RenderSRB2Extras();
 				renderer.Finish();
 			}
 
@@ -1061,24 +1062,29 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				editpressed = true;
 
 				// Highlighted item not selected?
-				if(!highlighted.Selected && (BuilderPlug.Me.AutoClearSelection || (General.Map.Map.SelectedSectorsCount == 0)))
+				if (!highlighted.Selected)
 				{
 					// Make this the only selection
-					selectionfromhighlight = true; //mxd
 					General.Map.Map.ClearSelectedSectors();
 					General.Map.Map.ClearSelectedLinedefs();
-					SelectSector(highlighted, true, false);
+
+					editsectors = new List<Sector> { highlighted };
+
 					UpdateSelectedLabels(); //mxd
 					UpdateOverlaySurfaces(); //mxd
 					UpdateSelectionInfo(); //mxd
 					General.Interface.RedrawDisplay();
+				}
+				else // Highlight is selected, so take all selected sectors
+				{
+					editsectors = General.Map.Map.GetSelectedSectors(true);
 				}
 
 				// Update display
 				if(renderer.StartPlotter(false))
 				{
 					// Redraw highlight to show selection
-					renderer.PlotSector(highlighted);
+					renderer.PlotSector(highlighted, General.Colors.Highlight);
 					renderer.Finish();
 					renderer.Present();
 				}
@@ -1106,40 +1112,18 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			// Edit pressed in this mode?
 			if(editpressed)
 			{
-				// Anything selected?
-				ICollection<Sector> selected = General.Map.Map.GetSelectedSectors(true);
-				if(selected.Count > 0)
+				if(editsectors?.Count > 0)
 				{
 					if(General.Interface.IsActiveWindow)
 					{
 						//mxd. Show realtime vertex edit dialog
 						General.Interface.OnEditFormValuesChanged += sectorEditForm_OnValuesChanged;
-						DialogResult result = General.Interface.ShowEditSectors(selected);
+						DialogResult result = General.Interface.ShowEditSectors(editsectors);
 						General.Interface.OnEditFormValuesChanged -= sectorEditForm_OnValuesChanged;
 
 						General.Map.Renderer2D.UpdateExtraFloorFlag(); //mxd
 
-						// When a single sector was selected, deselect it now
-						if(selected.Count == 1 && selectionfromhighlight) 
-						{
-							General.Map.Map.ClearSelectedSectors();
-							General.Map.Map.ClearSelectedLinedefs();
-
-							//mxd. Also deselect things?
-							if(BuilderPlug.Me.SyncronizeThingEdit)
-							{
-								Sector s = General.GetByIndex(selected, 0);
-								foreach(Thing t in General.Map.Map.Things)
-									if(t.Sector == s && t.Selected) t.Selected = false;
-							}
-
-							UpdateEffectLabels(); //mxd
-						} 
-						else if(result == DialogResult.Cancel) //mxd. Restore selection...
-						{ 
-							foreach(Sector s in selected) SelectSector(s, true, false);
-							UpdateSelectedLabels(); //mxd
-						}
+						UpdateEffectLabels();
 
 						UpdateOverlaySurfaces(); //mxd
 						General.Interface.RedrawDisplay();
@@ -1150,7 +1134,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			}
 
 			editpressed = false;
-			selectionfromhighlight = false; //mxd
 			base.OnEditEnd();
 		}
 
@@ -1190,7 +1173,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				}
 
 				// Find the nearest linedef within highlight range
-				Linedef l = MapSet.NearestLinedefRange(blockmap, mousemappos, BuilderPlug.Me.HighlightRange / renderer.Scale);
+				Linedef l = General.Map.Map.NearestLinedefRange(mousemappos, BuilderPlug.Me.HighlightRange / renderer.Scale);
 				Sector s = null;
 
 				if(l != null) 
@@ -1335,18 +1318,24 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				// Anything highlighted?
 				if((highlighted != null) && !highlighted.IsDisposed)
 				{
+					ICollection<Sector> dragsectors;
+
 					// Highlighted item not selected?
-					if(!highlighted.Selected)
+					if (!highlighted.Selected)
 					{
 						// Select only this sector for dragging
 						General.Map.Map.ClearSelectedSectors();
-						SelectSector(highlighted, true, true);
+						dragsectors = new List<Sector> { highlighted };
 						UpdateOverlaySurfaces(); //mxd
+					}
+					else
+					{
+						dragsectors = General.Map.Map.GetSelectedSectors(true);
 					}
 
 					// Start dragging the selection
 					if(!BuilderPlug.Me.DontMoveGeometryOutsideMapBoundary || CanDrag()) //mxd
-						General.Editing.ChangeMode(new DragSectorsMode(mousedownmappos));
+						General.Editing.ChangeMode(new DragSectorsMode(mousedownmappos, dragsectors));
 				}
 			}
 		}
@@ -1596,10 +1585,20 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			General.Interface.RedrawDisplay();
 		}
 
+		/// <summary>
+		/// If map elements have changed the blockmap needs to be recreated.
+		/// </summary>
+		public override void OnMapElementsChanged()
+		{
+			base.OnMapElementsChanged();
+
+			CreateBlockmap();
+		}
+
 		//mxd
 		public override void OnViewSelectionNumbersChanged(bool enabled)
 		{
-			if(enabled) UpdateSelectedLabels();
+			UpdateSelectedLabels();
 		}
 
 		//mxd
@@ -1935,7 +1934,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			}
 			else //mxd
 			{
-				General.Interface.DisplayStatus(StatusType.Warning, "This action requires a highlight or selection!");
+				General.ToastManager.ShowToast("makedoor", ToastType.WARNING, "Couldn't create door", "You need to highlight or select at least one sector to create a door.");
 			}
 		}
 		
@@ -2839,6 +2838,31 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			General.Map.Grid.SetGridOrigin(0, 0);
 			General.Map.GridVisibilityChanged();
 			General.Interface.RedrawDisplay();
+		}
+
+		[BeginAction("changemapelementindex")]
+		private void ChangeMapElementIndex()
+		{
+			// Make list of selected linedefs
+			List<Sector> selected = General.Map.Map.GetSelectedSectors(true).ToList();
+			if ((selected.Count == 0) && (highlighted != null) && !highlighted.IsDisposed) selected.Add(highlighted);
+			if (selected.Count != 1)
+			{
+				General.ToastManager.ShowToast(ToastMessages.CHANGEMAPELEMENTINDEX, ToastType.WARNING, "Changing sector index failed", "You need to select or highlight exactly 1 sector.");
+				return;
+			}
+
+			ChangeMapElementIndexForm f = new ChangeMapElementIndexForm("sector", selected[0].Index, General.Map.Map.Sectors.Count - 1);
+			if (f.ShowDialog() == DialogResult.OK)
+			{
+				int newindex = f.GetNewIndex();
+				int oldindex = selected[0].Index;
+				General.Map.UndoRedo.CreateUndo("Change sector index");
+
+				selected[0].ChangeIndex(newindex);
+
+				General.ToastManager.ShowToast(ToastMessages.CHANGEMAPELEMENTINDEX, ToastType.INFO, "Successfully change sector index", $"Changed index of sector {oldindex} to {newindex}.");
+			}
 		}
 
 		#endregion

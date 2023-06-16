@@ -77,6 +77,8 @@ namespace CodeImp.DoomBuilder.Config
 		private readonly string upperunpeggedflag;
 		private readonly string lowerunpeggedflag;
 		private readonly string pegmidtextureflag;
+		private readonly string slopeskewflag;
+		private readonly string nomidtextureskewflag;
 		private readonly bool mixtexturesflats;
 		private readonly bool generalizedactions;
 		private readonly bool generalizedeffects;
@@ -113,8 +115,14 @@ namespace CodeImp.DoomBuilder.Config
 		private readonly bool planeequationsupport;
 		private readonly bool distinctfloorandceilingbrightness;
 		private readonly bool distinctwallbrightness;
+		private readonly bool distinctsidedefpartbrightness;
+		private readonly bool sectormultitag;
 		private readonly int maxcolormapalpha;
 		private readonly int numbrightnesslevels;
+		private readonly bool soundsupport;
+		private readonly bool automapsupport;
+		private readonly bool dynamiclightsupport;
+		private readonly bool modelrendersupport;
 
 		// Skills
 		private readonly List<SkillInfo> skills;
@@ -200,6 +208,9 @@ namespace CodeImp.DoomBuilder.Config
 		//mxd. Stuff to ignore
 		private HashSet<string> ignoreddirectories;
 		private HashSet<string> ignoredextensions;
+
+		// [ZZ] This implements error message if GZDoom.pk3 is required but not loaded
+		private List<RequiredArchive> requiredarchives;
 		
 		// Defaults
 		private readonly List<DefinedTextureSet> texturesets;
@@ -240,6 +251,8 @@ namespace CodeImp.DoomBuilder.Config
 		public string UpperUnpeggedFlag { get { return upperunpeggedflag; } }
 		public string LowerUnpeggedFlag { get { return lowerunpeggedflag; } }
 		public string PegMidtextureFlag { get { return pegmidtextureflag; } }
+		public string SlopeSkewFlag { get { return slopeskewflag; } }
+		public string NoMidtextureSkewFlag { get { return nomidtextureskewflag; } }
 		public bool MixTexturesFlats { get { return mixtexturesflats; } }
 		public bool GeneralizedActions { get { return generalizedactions; } }
 		public bool GeneralizedEffects { get { return generalizedeffects; } }
@@ -294,8 +307,14 @@ namespace CodeImp.DoomBuilder.Config
 		public bool PlaneEquationSupport { get { return planeequationsupport; } }
 		public bool DistinctFloorAndCeilingBrightness { get { return distinctfloorandceilingbrightness; } }
 		public bool DistinctWallBrightness { get { return distinctwallbrightness; } }
+		public bool DistinctSidedefPartBrightness { get { return distinctsidedefpartbrightness; } }
+		public bool SectorMultiTag { get { return sectormultitag; } }
 		public int MaxColormapAlpha { get { return maxcolormapalpha; } }
 		public int NumBrightnessLevels { get { return numbrightnesslevels; } }
+		public bool SoundSupport { get { return soundsupport; } }
+		public bool AutomapSupport { get { return automapsupport; } }
+		public bool DynamicLightSupport { get { return dynamiclightsupport; } }
+		public bool ModelRenderSupport { get { return modelrendersupport; } }
 
 		// Texture/flat/voxel sources
 		public IDictionary TextureRanges { get { return textureranges; } }
@@ -361,6 +380,9 @@ namespace CodeImp.DoomBuilder.Config
 		//mxd. Stuff to ignore
 		internal HashSet<string> IgnoredFileExtensions { get { return ignoredextensions; } }
 		internal HashSet<string> IgnoredDirectoryNames { get { return ignoreddirectories; } }
+
+		// [ZZ] This implements error message if GZDoom.pk3 is required but not loaded
+		internal List<RequiredArchive> RequiredArchives { get { return requiredarchives; } }
 
 		// Defaults
 		internal List<DefinedTextureSet> TextureSets { get { return texturesets; } }
@@ -477,9 +499,16 @@ namespace CodeImp.DoomBuilder.Config
 			planeequationsupport = cfg.ReadSetting("planeequationsupport", false);
 			distinctfloorandceilingbrightness = cfg.ReadSetting("distinctfloorandceilingbrightness", false);
 			distinctwallbrightness = cfg.ReadSetting("distinctwallbrightness", false);
+			distinctsidedefpartbrightness = cfg.ReadSetting("distinctsidedefpartbrightness", false);
+			sectormultitag = cfg.ReadSetting("sectormultitag", false);
+			for (int i = 0; i < Linedef.NUM_ARGS; i++) makedoorargs[i] = cfg.ReadSetting("makedoorarg" + i.ToString(CultureInfo.InvariantCulture), 0);
 			maxcolormapalpha = cfg.ReadSetting("maxcolormapalpha", 25);
 			numbrightnesslevels = cfg.ReadSetting("numbrightnesslevels", 32);
 			for (int i = 0; i < makedoorargs.Length; i++) makedoorargs[i] = cfg.ReadSetting("makedoorarg" + i.ToString(CultureInfo.InvariantCulture), 0);
+			soundsupport = cfg.ReadSetting("soundsupport", true);
+			automapsupport = cfg.ReadSetting("automapsupport", true);
+			dynamiclightsupport = cfg.ReadSetting("dynamiclightsupport", false);
+			modelrendersupport = cfg.ReadSetting("modelrendersupport", false);
 
 			//mxd. Update map format flags
 			universalmapformat = (formatinterface == "UniversalMapSetIO");
@@ -518,6 +547,10 @@ namespace CodeImp.DoomBuilder.Config
 				pegmidtextureflag = ((int)obj == 0) ? lowerunpeggedflag : ((int)obj).ToString(CultureInfo.InvariantCulture);
 			else
 				pegmidtextureflag = obj.ToString();
+			obj = cfg.ReadSettingObject("slopeskewflag", 0);
+			if (obj is int) slopeskewflag = ((int)obj).ToString(CultureInfo.InvariantCulture); else slopeskewflag = obj.ToString();
+			obj = cfg.ReadSettingObject("nomidtextureskewflag", 0);
+			if (obj is int) nomidtextureskewflag = ((int)obj).ToString(CultureInfo.InvariantCulture); else nomidtextureskewflag = obj.ToString();
 
 			// Get texture and flat sources
 			textureranges = cfg.ReadSetting("textures", new Hashtable());
@@ -546,6 +579,25 @@ namespace CodeImp.DoomBuilder.Config
 			//mxd. Load stuff to ignore
 			ignoreddirectories = new HashSet<string>(cfg.ReadSetting("ignoreddirectories", string.Empty).Split(splitter, StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase);
 			ignoredextensions = new HashSet<string>(cfg.ReadSetting("ignoredextensions", string.Empty).Split(splitter, StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase);
+
+			// [ZZ]
+			IDictionary requiredArchives = cfg.ReadSetting("requiredarchives", new Hashtable());
+			requiredarchives = new List<RequiredArchive>();
+			foreach (DictionaryEntry cde in requiredArchives)
+            {
+				string filename = cfg.ReadSetting("requiredarchives." + cde.Key + ".filename", "gzdoom.pk3");
+				bool exclude = cfg.ReadSetting("requiredarchives." + cde.Key + ".need_exclude", true);
+				IDictionary entries = cfg.ReadSetting("requiredarchives." + cde.Key, new Hashtable());
+				List<RequiredArchiveEntry> reqEntries = new List<RequiredArchiveEntry>();
+				foreach (DictionaryEntry cde2 in entries)
+                {
+					if ((string)cde2.Key == "filename") continue;
+					string lumpname = cfg.ReadSetting("requiredarchives." + cde.Key + "." + cde2.Key + ".lump", (string)null);
+					string classname = cfg.ReadSetting("requiredarchives." + cde.Key + "." + cde2.Key + ".class", (string)null);
+					reqEntries.Add(new RequiredArchiveEntry(classname, lumpname));
+                }
+				requiredarchives.Add(new RequiredArchive((string)cde.Key, filename, exclude, reqEntries));
+            }
 
 			// Things
 			LoadThingFlags();

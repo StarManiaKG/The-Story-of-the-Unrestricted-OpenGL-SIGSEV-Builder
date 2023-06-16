@@ -31,6 +31,8 @@ namespace CodeImp.DoomBuilder.UDBScript.Wrapper
 {
 	internal struct Angle2DWrapper
 	{
+		#region ================== Methods
+
 		/// <summary>
 		/// Converts a Doom angle (where 0° is east) to a real world angle (where 0° is north).
 		/// </summary>
@@ -62,7 +64,7 @@ namespace CodeImp.DoomBuilder.UDBScript.Wrapper
 		}
 
 		/// <summary>
-		/// Converts a real world  angle (where 0° is north) to a Doom angle (where 0° is east) in radians.
+		/// Converts a real world angle (where 0° is north) to a Doom angle (where 0° is east) in radians.
 		/// </summary>
 		/// <param name="realangle">Real world angle in radians</param>
 		/// <returns>Doom angle in degrees</returns>
@@ -124,9 +126,9 @@ namespace CodeImp.DoomBuilder.UDBScript.Wrapper
 		{
 			try
 			{
-				Vector2D v1 = (Vector2D)BuilderPlug.Me.GetVectorFromObject(p1, false);
-				Vector2D v2 = (Vector2D)BuilderPlug.Me.GetVectorFromObject(p2, false);
-				Vector2D v3 = (Vector2D)BuilderPlug.Me.GetVectorFromObject(p3, false);
+				Vector2D v1 = BuilderPlug.Me.GetVector3DFromObject(p1);
+				Vector2D v2 = BuilderPlug.Me.GetVector3DFromObject(p2);
+				Vector2D v3 = BuilderPlug.Me.GetVector3DFromObject(p3);
 
 				return Angle2D.RadToDeg(Angle2D.GetAngle(v1, v2, v3));
 			}
@@ -147,9 +149,9 @@ namespace CodeImp.DoomBuilder.UDBScript.Wrapper
 		{
 			try
 			{
-				Vector2D v1 = (Vector2D)BuilderPlug.Me.GetVectorFromObject(p1, false);
-				Vector2D v2 = (Vector2D)BuilderPlug.Me.GetVectorFromObject(p2, false);
-				Vector2D v3 = (Vector2D)BuilderPlug.Me.GetVectorFromObject(p3, false);
+				Vector2D v1 = BuilderPlug.Me.GetVector3DFromObject(p1);
+				Vector2D v2 = BuilderPlug.Me.GetVector3DFromObject(p2);
+				Vector2D v3 = BuilderPlug.Me.GetVector3DFromObject(p3);
 
 				return Angle2D.GetAngle(v1, v2, v3);
 			}
@@ -158,5 +160,7 @@ namespace CodeImp.DoomBuilder.UDBScript.Wrapper
 				throw BuilderPlug.Me.ScriptRunner.CreateRuntimeException(e.Message);
 			}
 		}
+
+		#endregion
 	}
 }

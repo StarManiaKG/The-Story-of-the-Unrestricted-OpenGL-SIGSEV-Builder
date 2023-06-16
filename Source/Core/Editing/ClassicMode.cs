@@ -89,6 +89,9 @@ namespace CodeImp.DoomBuilder.Editing
 
 		#region ================== Properties
 		
+		// If false, then vertices will not be drawn if "hide vertices outside vertex mode" is enabled
+		public virtual bool AlwaysShowVertices { get { return false;  } }
+		
 		// Mouse status
 		public Vector2D MousePos { get { return mousepos; } }
 		public Vector2D MouseLastPos { get { return mouselastpos; } }
@@ -788,7 +791,7 @@ namespace CodeImp.DoomBuilder.Editing
 				playerStartPosition = start.Position;
 
 				//everything should be valid, let's move player start here
-				start.Move(new Vector3D(mousemappos.x, mousemappos.y, s.FloorHeight));
+				start.Move(new Vector3D(mousemappos.x, mousemappos.y, 0));
 
 				General.Map.UndoRedo.IgnorePropChanges = oldignorepropchanges;
 			}
@@ -1058,7 +1061,15 @@ namespace CodeImp.DoomBuilder.Editing
 		protected virtual void ToggleHighlight()
 		{
 			General.Settings.UseHighlight = !General.Settings.UseHighlight;
-			General.Interface.DisplayStatus(StatusType.Action, "Highlight is now " + (General.Settings.UseHighlight ? "ON" : "OFF") + ".");
+
+			string shortmessage = "Highlight is now " + (General.Settings.UseHighlight ? "ON" : "OFF") + ".";
+			string message = "Highlight is now " + (General.Settings.UseHighlight ? "ON" : "OFF") + ".";
+			string key = Actions.Action.GetShortcutKeyDesc(General.Actions.Current.ShortcutKey);
+
+			if (!string.IsNullOrEmpty(key))
+				message += $" Press '{key}' to toggle.";
+
+			General.ToastManager.ShowToast("togglehighlight", ToastType.INFO, "Changed highlight", message, new StatusInfo(StatusType.Action, shortmessage));
 
 			// Redraw display to show changes
 			General.Interface.RedrawDisplay();

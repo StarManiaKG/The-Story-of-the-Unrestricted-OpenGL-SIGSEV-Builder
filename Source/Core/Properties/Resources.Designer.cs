@@ -19,7 +19,7 @@ namespace CodeImp.DoomBuilder.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -543,6 +543,16 @@ namespace CodeImp.DoomBuilder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap GitLab {
+            get {
+                object obj = ResourceManager.GetObject("GitLab", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Grid2 {
             get {
                 object obj = ResourceManager.GetObject("Grid2", resourceCulture);
@@ -813,6 +823,16 @@ namespace CodeImp.DoomBuilder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Loader {
+            get {
+                object obj = ResourceManager.GetObject("Loader", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Marine {
             get {
                 object obj = ResourceManager.GetObject("Marine", resourceCulture);
@@ -993,6 +1013,16 @@ namespace CodeImp.DoomBuilder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NiGHTSAxis {
+            get {
+                object obj = ResourceManager.GetObject("NiGHTSAxis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap OpenMap {
             get {
                 object obj = ResourceManager.GetObject("OpenMap", resourceCulture);
@@ -1036,6 +1066,16 @@ namespace CodeImp.DoomBuilder.Properties {
         internal static System.Drawing.Bitmap Pin {
             get {
                 object obj = ResourceManager.GetObject("Pin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Polyobject {
+            get {
+                object obj = ResourceManager.GetObject("Polyobject", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1611,6 +1651,36 @@ namespace CodeImp.DoomBuilder.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon UZB {
+            get {
+                object obj = ResourceManager.GetObject("UZB", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UZB_Splash {
+            get {
+                object obj = ResourceManager.GetObject("UZB_Splash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UZB16 {
+            get {
+                object obj = ResourceManager.GetObject("UZB16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap ViewBrightness {
@@ -1736,6 +1806,16 @@ namespace CodeImp.DoomBuilder.Properties {
         internal static System.Drawing.Bitmap Zoom_arrowup {
             get {
                 object obj = ResourceManager.GetObject("Zoom_arrowup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ZoomTube {
+            get {
+                object obj = ResourceManager.GetObject("ZoomTube", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

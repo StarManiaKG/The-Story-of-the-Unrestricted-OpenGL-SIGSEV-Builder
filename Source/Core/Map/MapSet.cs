@@ -813,7 +813,43 @@ namespace CodeImp.DoomBuilder.Map
 		{
 			RemoveItem(ref things, index, ref numthings);
 		}		
-		
+
+		private void ChangeItemIndex<T>(ref T[] array, int oldindex, int newindex, int counter) where T : MapElement
+		{
+			if (oldindex == newindex || oldindex < 0 || newindex < 0 || oldindex >= array.Length || newindex >= array.Length)
+				return;
+
+			T item = array[oldindex];
+
+			if (oldindex > newindex) // Shift everything right
+			{
+				for (int i = oldindex; i > newindex; i--)
+				{
+					array[i] = array[i - 1];
+					array[i].Index++;
+				}
+			}
+			else // Shift everything left
+			{
+				for (int i = oldindex; i < newindex; i++)
+				{
+					array[i] = array[i + 1];
+					array[i].Index--;
+				}
+			}
+
+			array[newindex] = item;
+			array[newindex].Index = newindex;
+		}
+
+		internal void ChangeLindefIndex(int oldindex, int newindex) => ChangeItemIndex(ref linedefs, oldindex, newindex, numlinedefs);
+
+		internal void ChangeThingIndex(int oldindex, int newindex) => ChangeItemIndex(ref things, oldindex, newindex, numthings);
+
+		internal void ChangeSectorIndex(int oldindex, int newindex) => ChangeItemIndex(ref sectors, oldindex, newindex, numsectors);
+
+		internal void ChangeVertexIndex(int oldindex, int newindex) => ChangeItemIndex(ref vertices, oldindex, newindex, numvertices);
+
 		#endregion
 
 		#region ================== Serialization
@@ -2182,8 +2218,9 @@ namespace CodeImp.DoomBuilder.Map
 				return false;
 			}
 
-            // Split non-moving lines with selected vertices
-            fixedlines = new HashSet<Linedef>(fixedlines.Where(fixedline => !fixedline.IsDisposed));
+			// Split non-moving lines with selected vertices
+			fixedlines = new HashSet<Linedef>(fixedlines.Where(fixedline => !fixedline.IsDisposed));
+			fixedlines = FilterByArea(fixedlines, ref editarea);
 			if (!SplitLinesByVertices(fixedlines, movingverts, STITCH_DISTANCE, movinglines, mergemode))
 			{
 				EndAddRemove(); // Unfreeze arrays before returning
@@ -3710,7 +3747,7 @@ namespace CodeImp.DoomBuilder.Map
 			// Return result
 			return closest;
 		}
-		
+
 		#endregion
 
 		#region ================== Tools
@@ -4172,7 +4209,7 @@ namespace CodeImp.DoomBuilder.Map
 			// Return result
 			return closest;
 		}
-		
+
 		// This performs sidedefs compression
 		// Note: Only use this for saving, because this messes up the expected data structure horribly.
 		internal void CompressSidedefs()

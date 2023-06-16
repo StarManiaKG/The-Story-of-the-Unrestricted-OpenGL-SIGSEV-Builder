@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using CodeImp.DoomBuilder.Config;
 using CodeImp.DoomBuilder.Controls;
@@ -224,7 +225,7 @@ namespace CodeImp.DoomBuilder.Windows
 			floatbobphase.Text = ft.Fields.GetValue("floatbobphase", -1).ToString();
 			gravity.Text = ft.Fields.GetValue("gravity", 1.0).ToString();
 			score.Text = ft.Fields.GetValue("score", 0).ToString();
-			health.Text = ft.Fields.GetValue("health", 1).ToString();
+			health.Text = ft.Fields.GetValue("health", 1.0).ToString();
 			alpha.Text = ft.Fields.GetValue("alpha", 1.0).ToString();
 			color.SetValueFrom(ft.Fields, true);
 			scale.SetValues(ft.ScaleX, ft.ScaleY, true);
@@ -312,7 +313,7 @@ namespace CodeImp.DoomBuilder.Windows
 				if(t.Fields.GetValue("floatbobphase", -1).ToString() != floatbobphase.Text) floatbobphase.Text = "";
 				if(t.Fields.GetValue("gravity", 1.0).ToString() != gravity.Text) gravity.Text = "";
 				if(t.Fields.GetValue("score", 0).ToString() != score.Text) score.Text = "";
-				if(t.Fields.GetValue("health", 1).ToString() != health.Text) health.Text = "";
+				if(t.Fields.GetValue("health", 1.0).ToString() != health.Text) health.Text = "";
 				if(t.Fields.GetValue("alpha", 1.0).ToString() != alpha.Text) alpha.Text = "";
 
 				scale.SetValues(t.ScaleX, t.ScaleY, false);
@@ -327,6 +328,18 @@ namespace CodeImp.DoomBuilder.Windows
 
 				//mxd. Store initial properties
 				thingprops.Add(new ThingProperties(t));
+			}
+
+			// Remove unused thing type specific fields
+			foreach(UniversalFieldInfo ufi in  General.Map.Config.ThingFields)
+			{
+				if (!ufi.ThingTypeSpecific)
+					continue;
+
+				if(!things.Any(t => { ThingTypeInfo tti = General.Map.Data.GetThingInfoEx(t.Type); return (tti != null && tti.HasAddUniversalField(ufi.Name)); }))
+				{
+					fieldslist.RemoveField(ufi.Name);
+				}
 			}
 
 			preventchanges = false;
@@ -562,7 +575,7 @@ namespace CodeImp.DoomBuilder.Windows
 				if(!string.IsNullOrEmpty(gravity.Text))
 					UniFields.SetFloat(t.Fields, "gravity", gravity.GetResultFloat(t.Fields.GetValue("gravity", 1.0)), 1.0);
 				if(!string.IsNullOrEmpty(health.Text))
-					UniFields.SetInteger(t.Fields, "health", health.GetResult(t.Fields.GetValue("health", 1)), 1);
+					UniFields.SetFloat(t.Fields, "health", health.GetResultFloat(t.Fields.GetValue("health", 1.0)), 1.0);
 				if(!string.IsNullOrEmpty(score.Text))
 					UniFields.SetInteger(t.Fields, "score", score.GetResult(t.Fields.GetValue("score", 0)), 0);
 
@@ -571,9 +584,10 @@ namespace CodeImp.DoomBuilder.Windows
 				if (ti != null && ti.Actor != null)
 				{
 					Dictionary<string, UniversalType> uservars = ti.Actor.GetAllUserVars();
+					Dictionary<string, object> uservardefaults = ti.Actor.GetAllUserVarDefaults();
 
 					if(uservars.Count > 0)
-						fieldslist.ApplyUserVars(uservars, t.Fields);
+						fieldslist.ApplyUserVars(uservars, uservardefaults, t.Fields);
 				}
 
 				color.ApplyTo(t.Fields, t.Fields.GetValue("fillcolor", 0));
@@ -801,6 +815,21 @@ namespace CodeImp.DoomBuilder.Windows
 				t.UpdateConfiguration();
 			}
 
+			// Remove user vars (that have their default value) that do not belong to any selected thing
+			fieldslist.RemoveUserVarsWithDefaultValue();
+
+			// Set the user vars for the new thing
+			Thing ft = things.First();
+			ThingTypeInfo fti = General.Map.Data.GetThingInfoEx(ft.Type);
+			if (fti != null && fti.Actor != null)
+			{
+				Dictionary<string, UniversalType> uservars = fti.Actor.GetAllUserVars();
+				Dictionary<string, object> uservardefaults = fti.Actor.GetAllUserVarDefaults();
+
+				if (uservars.Count > 0)
+					fieldslist.SetUserVars(uservars, uservardefaults, ft.Fields, true);
+			}
+
 			UpdateFlagNames(); //mxd
 
 			General.Map.IsChanged = true;
@@ -982,7 +1011,10 @@ namespace CodeImp.DoomBuilder.Windows
 			{
 				foreach(Thing t in things)
 				{
-					double value = General.Clamp(alpha.GetResultFloat(t.Fields.GetValue("alpha", 1.0)), 0.0, 1.0);
+					// ZDRay static lights uses the alpha value for intensity, which can go higher than 1.0, so don't clamp the upper value.
+					// It doesn't look like UDB or GZDoom have problems with "normal" things having an alpha > 1.0
+					// TODO: clamp based on thing type info?
+					double value = General.Clamp(alpha.GetResultFloat(t.Fields.GetValue("alpha", 1.0)), 0.0, double.MaxValue);
 					UniFields.SetFloat(t.Fields, "alpha", value, 1.0);
 				}
 			}

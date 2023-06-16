@@ -98,6 +98,8 @@ namespace CodeImp.DoomBuilder.Config
 		private bool showfps;
 		private int[] colordialogcustomcolors;
 		private bool autolaunchontest;
+		private bool parallelizedlinedefplotting;
+		private bool parallelizedvertexplotting;
 
 		//mxd. Script editor settings
 		private string scriptfontname;
@@ -148,7 +150,14 @@ namespace CodeImp.DoomBuilder.Config
 		
 		//volte
 		private bool classicRendering;
-		
+		private bool flatShadeVertices;
+		private bool alwaysShowVertices;
+
+		// SRB2
+		private bool srb2rendernights;
+		private bool srb2renderzoomtubes;
+		private bool srb2renderpolyobjects;
+
 		// These are not stored in the configuration, only used at runtime
 		private int defaultbrightness;
 		private int defaultfloorheight;
@@ -212,6 +221,8 @@ namespace CodeImp.DoomBuilder.Config
 		public bool ShowFPS { get { return showfps; } internal set { showfps = value; } }
 		public int[] ColorDialogCustomColors { get { return colordialogcustomcolors; } internal set { colordialogcustomcolors = value; } }
 		public bool AutoLaunchOnTest { get { return autolaunchontest; } internal set { autolaunchontest = value; } }
+		public bool ParallelizedLinedefPlotting { get { return parallelizedlinedefplotting; } internal set { parallelizedlinedefplotting = value; } }
+		public bool ParallelizedVertexPlotting { get { return parallelizedvertexplotting; } internal set { parallelizedvertexplotting = value; } }
 
 		//mxd. Highlight mode
 		public bool UseHighlight
@@ -277,6 +288,15 @@ namespace CodeImp.DoomBuilder.Config
 		//volte
 		public bool ClassicRendering { get { return classicRendering; } internal set { classicRendering = value; } }
 
+		public bool FlatShadeVertices {  get { return flatShadeVertices; } internal set { flatShadeVertices = value;  } }
+
+		public bool AlwaysShowVertices {  get { return alwaysShowVertices; } internal set { alwaysShowVertices = value; } }
+
+		//SRB2
+		public bool SRB2RenderNiGHTS { get { return srb2rendernights; } internal set { srb2rendernights = value; } }
+		public bool SRB2RenderZoomTubes { get { return srb2renderzoomtubes; } internal set { srb2renderzoomtubes = value; } }
+		public bool SRB2RenderPolyobjects { get { return srb2renderpolyobjects; } internal set { srb2renderpolyobjects = value; } }
+
 		//mxd. Left here for compatibility reasons...
 		public string DefaultTexture { get { return General.Map != null ? General.Map.Options.DefaultWallTexture : "-"; } set { if(General.Map != null) General.Map.Options.DefaultWallTexture = value; } }
 		public string DefaultFloorTexture { get { return General.Map != null ? General.Map.Options.DefaultFloorTexture : "-"; } set { if(General.Map != null) General.Map.Options.DefaultFloorTexture = value; } }
@@ -313,10 +333,10 @@ namespace CodeImp.DoomBuilder.Config
 			{
 				// Read the cache variables
 				blackbrowsers = cfg.ReadSetting("blackbrowsers", true);
-				visualfov = cfg.ReadSetting("visualfov", 80);
+				visualfov = cfg.ReadSetting("visualfov", 90);
 				visualmousesensx = cfg.ReadSetting("visualmousesensx", 40f);
 				visualmousesensy = cfg.ReadSetting("visualmousesensy", 40f);
-				imagebrightness = cfg.ReadSetting("imagebrightness", 3);
+				imagebrightness = cfg.ReadSetting("imagebrightness", 0);
 				doublesidedalpha = cfg.ReadSetting("doublesidedalpha", 0.4f);
 				doublesidedalphabyte = (byte)(doublesidedalpha * 255f);
 				activethingsalpha = cfg.ReadSetting("activethingsalpha", Presentation.THINGS_ALPHA); //mxd
@@ -363,6 +383,8 @@ namespace CodeImp.DoomBuilder.Config
 				switchviewmodes = cfg.ReadSetting("switchviewmodes", false); //mxd
 				showfps = cfg.ReadSetting("showfps", false);
 				autolaunchontest = cfg.ReadSetting("autolaunchontest", false);
+				parallelizedlinedefplotting = cfg.ReadSetting("parallelizedlinedefplotting", true);
+				parallelizedvertexplotting = cfg.ReadSetting("parallelizedvertexplotting", false);
 
 				//mxd. Script editor
 				scriptfontname = cfg.ReadSetting("scriptfontname", "Courier New");
@@ -393,7 +415,7 @@ namespace CodeImp.DoomBuilder.Config
 				gzShowEventLines = cfg.ReadSetting("gzshoweventlines", true);
 				gzOldHighlightMode = cfg.ReadSetting("gzoldhighlightmode", false);
 				gzMaxDynamicLights = cfg.ReadSetting("gzmaxdynamiclights", 16);
-				gzStretchView = cfg.ReadSetting("gzstretchview", true);
+				gzStretchView = cfg.ReadSetting("gzstretchview", false);
 				gzVertexScale2D = cfg.ReadSetting("gzvertexscale2d", 1.0f);
 				gzShowVisualVertices = cfg.ReadSetting("gzshowvisualvertices", true);
 				gzVertexScale3D = cfg.ReadSetting("gzvertexscale3d", 1.0f);
@@ -403,7 +425,8 @@ namespace CodeImp.DoomBuilder.Config
 				maxRecentFiles = cfg.ReadSetting("maxrecentfiles", 8);
 				autoClearSideTextures = cfg.ReadSetting("autoclearsidetextures", true);
 				storeSelectedEditTab = cfg.ReadSetting("storeselectededittab", true);
-				checkforupdates = cfg.ReadSetting("checkforupdates", true); //mxd
+				//checkforupdates = cfg.ReadSetting("checkforupdates", true); //mxd
+				checkforupdates = false;
 				rendercomments = cfg.ReadSetting("rendercomments", true); //mxd
 				fixedthingsscale = cfg.ReadSetting("fixedthingsscale", false); //mxd
 				rendergrid = cfg.ReadSetting("rendergrid", true); //mxd
@@ -412,7 +435,14 @@ namespace CodeImp.DoomBuilder.Config
 
 				// volte
 				classicRendering = cfg.ReadSetting("classicrendering", false);
-				
+				alwaysShowVertices = cfg.ReadSetting("alwaysshowvertices", true);
+				flatShadeVertices = cfg.ReadSetting("flatshadevertices", false);
+
+				// SRB2
+				srb2rendernights = cfg.ReadSetting("srb2rendernights", true);
+				srb2renderpolyobjects = cfg.ReadSetting("srb2renderpolyobjects", true);
+				srb2renderzoomtubes = cfg.ReadSetting("srb2renderzoomtubes", true);
+
 				//mxd. Sector defaults
 				defaultceilheight = cfg.ReadSetting("defaultceilheight", 128);
 				defaultfloorheight = cfg.ReadSetting("defaultfloorheight", 0);
@@ -555,6 +585,16 @@ namespace CodeImp.DoomBuilder.Config
 
 			//volte
 			cfg.WriteSetting("classicrendering", classicRendering);
+			cfg.WriteSetting("alwaysshowvertices", alwaysShowVertices);
+			cfg.WriteSetting("flatshadevertices", flatShadeVertices);
+
+			//SRB2
+			cfg.WriteSetting("srb2rendernights", srb2rendernights);
+			cfg.WriteSetting("srb2renderzoomtubes", srb2renderzoomtubes);
+			cfg.WriteSetting("srb2renderpolyobjects", srb2renderpolyobjects);
+
+			// Toasts
+			General.ToastManager.WriteSettings(cfg);
 			
 			//mxd. Sector defaults
 			cfg.WriteSetting("defaultceilheight", defaultceilheight);
@@ -736,6 +776,21 @@ namespace CodeImp.DoomBuilder.Config
 			{
 				for (int i = 0; i < t.Args.Length; i++)
 					t.Args[i] = (int)tti.Args[i].DefaultValue;
+
+				// Add user vars
+				if (tti.Actor != null)
+				{
+					Dictionary<string, UniversalType> uservars = tti.Actor.GetAllUserVars();
+					Dictionary<string, object> uservardefaults = tti.Actor.GetAllUserVarDefaults();
+
+					t.BeforeFieldsChange();
+
+					foreach (string fname in uservars.Keys)
+					{
+						if (uservardefaults.ContainsKey(fname))
+							t.Fields[fname] = new UniValue(uservars[fname], uservardefaults[fname]);
+					}
+				}
 			}
 		}
 
@@ -763,6 +818,21 @@ namespace CodeImp.DoomBuilder.Config
 			{
 				for (int i = 0; i < t.Args.Length; i++)
 					t.Args[i] = (int)tti.Args[i].DefaultValue;
+
+				// Add user vars
+				if (tti.Actor != null)
+				{
+					Dictionary<string, UniversalType> uservars = tti.Actor.GetAllUserVars();
+					Dictionary<string, object> uservardefaults = tti.Actor.GetAllUserVarDefaults();
+
+					t.BeforeFieldsChange();
+
+					foreach (string fname in uservars.Keys)
+					{
+						if (uservardefaults.ContainsKey(fname))
+							t.Fields[fname] = new UniValue(uservars[fname], uservardefaults[fname]);
+					}
+				}
 			}
 		}
 

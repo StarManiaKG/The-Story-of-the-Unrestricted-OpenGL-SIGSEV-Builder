@@ -574,8 +574,8 @@ namespace CodeImp.DoomBuilder.VisualModes
 				}
 				else
 				{
-					float top = position_v3.Z + thing.Height;
-					float bottom = position_v3.Z;
+					float top = position_v3.Z + (info.CenterHitbox ? thing.Height / 2 : thing.Height);
+					float bottom = position_v3.Z - (info.CenterHitbox ? thing.Height / 2 : 0);
 
 					WorldVertex v0 = new WorldVertex(-thing.Size + position_v3.X, -thing.Size + position_v3.Y, bottom);
 					WorldVertex v1 = new WorldVertex(-thing.Size + position_v3.X, thing.Size + position_v3.Y, bottom);
@@ -606,7 +606,7 @@ namespace CodeImp.DoomBuilder.VisualModes
 				{
 					Matrix transform = Matrix.Scaling(thing.Size, thing.Size, thing.Size)
 						* (Matrix.RotationY((float)-Thing.RollRad) * Matrix.RotationX((float)-Thing.PitchRad) * Matrix.RotationZ((float)Thing.Angle))
-						* (sizeless ? position : position * Matrix.Translation(0.0f, 0.0f, thingheight / 2f));
+						* ((sizeless || info.CenterHitbox) ? position : position * Matrix.Translation(0.0f, 0.0f, thingheight / 2f));
 
 					WorldVertex a0 = new WorldVertex(Vector3D.Transform(0.0f, 0.0f, 0.0f, transform)); //start
 					WorldVertex a1 = new WorldVertex(Vector3D.Transform(0.0f, -1.5f, 0.0f, transform)); //end
@@ -668,7 +668,7 @@ namespace CodeImp.DoomBuilder.VisualModes
 		public void UpdateLight()
 		{
             lightType = thing.DynamicLightType;
-            if (lightType == null)
+            if (lightType == null || lightType.LightType == GZGeneral.LightType.SUN)
                 return;
             GZGeneral.LightData ld = lightType;
 			if (ld.LightDef != GZGeneral.LightDef.VAVOOM_GENERIC &&
@@ -678,11 +678,14 @@ namespace CodeImp.DoomBuilder.VisualModes
                 {
                     if (ld.LightDef != GZGeneral.LightDef.POINT_SUBTRACTIVE) // normal, additive, attenuated
                     {
+						// ZDRay static lights have an intensity that's set through the thing's alpha value
+						float intensity = ld.LightRenderStyle == GZGeneral.LightRenderStyle.STATIC ? (float)thing.Fields.GetValue("alpha", 1.0) : 1.0f;
+
                         //lightColor.Alpha used in shader to perform some calculations based on light type
                         lightColor = new Color4(
-                            thing.Args[0] / DYNLIGHT_INTENSITY_SCALER,
-                            thing.Args[1] / DYNLIGHT_INTENSITY_SCALER,
-                            thing.Args[2] / DYNLIGHT_INTENSITY_SCALER,
+                            thing.Args[0] / DYNLIGHT_INTENSITY_SCALER * intensity,
+                            thing.Args[1] / DYNLIGHT_INTENSITY_SCALER * intensity,
+                            thing.Args[2] / DYNLIGHT_INTENSITY_SCALER * intensity,
                             (float)ld.LightRenderStyle / 100.0f);
                     }
                     else // negative
@@ -714,10 +717,13 @@ namespace CodeImp.DoomBuilder.VisualModes
 
                     if (ld.LightDef != GZGeneral.LightDef.SPOT_SUBTRACTIVE)
                     {
-                        lightColor = new Color4(
-                            c1 / DYNLIGHT_INTENSITY_SCALER,
-                            c2 / DYNLIGHT_INTENSITY_SCALER,
-                            c3 / DYNLIGHT_INTENSITY_SCALER,
+						// ZDRay static lights have an intensity that's set through the thing's alpha value
+						float intensity = ld.LightRenderStyle == GZGeneral.LightRenderStyle.STATIC ? (float)thing.Fields.GetValue("alpha", 1.0) : 1.0f;
+
+						lightColor = new Color4(
+                            c1 / DYNLIGHT_INTENSITY_SCALER * intensity,
+                            c2 / DYNLIGHT_INTENSITY_SCALER * intensity,
+                            c3 / DYNLIGHT_INTENSITY_SCALER * intensity,
                             (float)ld.LightRenderStyle / 100.0f);
                     }
                     else
