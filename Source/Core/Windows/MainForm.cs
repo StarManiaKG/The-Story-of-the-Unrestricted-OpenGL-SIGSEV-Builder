@@ -3232,6 +3232,10 @@ namespace CodeImp.DoomBuilder.Windows
 			itemtogglerenderzoomtubes.Checked = General.Settings.SRB2RenderZoomTubes;
 			itemtogglerenderpolyobjects.Checked = General.Settings.SRB2RenderPolyobjects;
 
+			// Can't read config parameters yet, so hardcoded disabling is required for SRB2
+			itemmodelmodes.Visible = false; // General.Map.Config.ModelRenderSupport
+			itemdynlightmodes.Visible = false; // General.Map.Config.DynamicLightSupport
+
 			// Update Model Rendering Mode items...
 			foreach (ToolStripMenuItem item in itemmodelmodes.DropDownItems)
 			{
