@@ -35,6 +35,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		private bool doom = true;
 		private bool hexen = true;
 		private bool udmf = true;
+		private bool srb2 = true;
 		private string description = "Unnamed field";
 		private string fieldname1;
 		private string fieldname2;
@@ -42,6 +43,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		public bool DOOM { get { return doom; } set { doom = value; } }
 		public bool HEXEN { get { return hexen; } set { hexen = value; } }
 		public bool UDMF { get { return udmf; } set { udmf = value; } }
+		public bool SRB2 { get { return srb2; } set { srb2 = value; } }
 		public string Description { get { return description; } set { description = value; } }
 		public string Field1 { get { return fieldname1; } set { fieldname1 = value; } }
 		public string Field2 { get { return fieldname2; } set { fieldname2 = value; } }
@@ -51,8 +53,8 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			get
 			{
 				if(General.Map == null) return false;
-				if(!string.IsNullOrEmpty(fieldname1) || !string.IsNullOrEmpty(fieldname2)) return General.Map.UDMF;
-				return (General.Map.DOOM && doom || General.Map.HEXEN && hexen || General.Map.UDMF && udmf);
+				//if(!string.IsNullOrEmpty(fieldname1) || !string.IsNullOrEmpty(fieldname2)) return General.Map.UDMF;
+				return (General.Map.DOOM && doom || General.Map.HEXEN && hexen || (General.Map.UDMF && udmf && srb2));
 			}
 		}
 	}
@@ -241,16 +243,16 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[FieldDescription(Description = "Ceiling texture rotation", Field1 = "rotationceiling")]
 		public bool CeilingTextureRotation = true;
 
-		[FieldDescription(Description = "Floor alpha", Field1 = "alphafloor")]
+		[FieldDescription(Description = "Floor alpha", Field1 = "alphafloor", SRB2 = false)]
 		public bool FloorAlpha = true;
 
-		[FieldDescription(Description = "Ceiling alpha", Field1 = "alphaceiling")]
+		[FieldDescription(Description = "Ceiling alpha", Field1 = "alphaceiling", SRB2 = false)]
 		public bool CeilingAlpha = true;
 
-		[FieldDescription(Description = "Floor portal alpha", Field1 = "portal_floor_alpha")]
+		[FieldDescription(Description = "Floor portal alpha", Field1 = "portal_floor_alpha", SRB2 = false)]
 		public bool FloorPortalAlpha = true;
 
-		[FieldDescription(Description = "Ceiling portal alpha", Field1 = "portal_ceil_alpha")]
+		[FieldDescription(Description = "Ceiling portal alpha", Field1 = "portal_ceil_alpha", SRB2 = false)]
 		public bool CeilingPortalAlpha = true;
 
 		[FieldDescription(Description = "Sector brightness")]
@@ -262,16 +264,16 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[FieldDescription(Description = "Ceiling brightness", Field1 = "lightceiling", Field2 = "lightceilingabsolute")]
 		public bool CeilingBrightness = true;
 
-		[FieldDescription(Description = "Floor render style", Field1 = "renderstylefloor")]
+		[FieldDescription(Description = "Floor render style", Field1 = "renderstylefloor", SRB2 = false)]
 		public bool FloorRenderStyle = true;
 
-		[FieldDescription(Description = "Ceiling render style", Field1 = "renderstyleceiling")]
+		[FieldDescription(Description = "Ceiling render style", Field1 = "renderstyleceiling", SRB2 = false)]
 		public bool CeilingRenderStyle = true;
 
-		[FieldDescription(Description = "Floor portal render style", Field1 = "portal_floor_overlaytype")]
+		[FieldDescription(Description = "Floor portal	 render style", Field1 = "portal_floor_overlaytype")]
 		public bool FloorPortalRenderStyle = true;
 
-		[FieldDescription(Description = "Ceiling portal render style", Field1 = "portal_ceil_overlaytype")]
+		[FieldDescription(Description = "Ceiling portal render style", Field1 = "portal_ceil_overlaytype", SRB2 = false)]
 		public bool CeilingPortalRenderStyle = true;
 		
 		[FieldDescription(Description = "Floor slope", DOOM = false, HEXEN = false)]
@@ -280,10 +282,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[FieldDescription(Description = "Ceiling slope", DOOM = false, HEXEN = false)]
 		public bool CeilingSlope = true;
 
-		[FieldDescription(Description = "Floor terrain", Field1 = "floorterrain")]
+		[FieldDescription(Description = "Floor terrain", Field1 = "floorterrain", SRB2 = false)]
 		public bool FloorTerrain = true;
 
-		[FieldDescription(Description = "Ceiling terrain", Field1 = "ceilingterrain")]
+		[FieldDescription(Description = "Ceiling terrain", Field1 = "ceilingterrain", SRB2 = false)]
 		public bool CeilingTerrain = true;
 		
 		[FieldDescription(Description = "Tags")]
@@ -298,54 +300,75 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[FieldDescription(Description = "Light color", Field1 = "lightcolor")]
 		public bool LightColor = true;
 
+		[FieldDescription(Description = "Light alpha", Field1 = "lightalpha")]
+		public bool LightAlpha = true;
+
 		[FieldDescription(Description = "Fade color", Field1 = "fadecolor")]
 		public bool FadeColor = true;
 
-		[FieldDescription(Description = "Floor color", Field1 = "color_floor")]
+		[FieldDescription(Description = "Fade alpha", Field1 = "fadealpha")]
+		public bool FadeAlpha = true;
+
+		[FieldDescription(Description = "Fade start", Field1 = "fadestart")]
+		public bool FadeStart = true;
+
+		[FieldDescription(Description = "Fade end", Field1 = "fadeend")]
+		public bool Fade = true;
+
+		[FieldDescription(Description = "Floor color", Field1 = "color_floor", SRB2 = false)]
 		public bool FloorColor = true;
 
-		[FieldDescription(Description = "Ceiling color", Field1 = "color_ceiling")]
+		[FieldDescription(Description = "Ceiling color", Field1 = "color_ceiling", SRB2 = false)]
 		public bool CeilingColor = true;
 
-		[FieldDescription(Description = "Top wall color", Field1 = "color_walltop")]
+		[FieldDescription(Description = "Top wall color", Field1 = "color_walltop", SRB2 = false)]
 		public bool TopWallColor = true;
 
-		[FieldDescription(Description = "Bottom wall color", Field1 = "color_wallbottom")]
+		[FieldDescription(Description = "Bottom wall color", Field1 = "color_wallbottom", SRB2 = false)]
 		public bool BottomWallColor = true;
 
-		[FieldDescription(Description = "Sprites color", Field1 = "color_sprites")]
+		[FieldDescription(Description = "Sprites color", Field1 = "color_sprites", SRB2 = false)]
 		public bool SpritesColor = true;
 
-		[FieldDescription(Description = "Floor glow", Field1 = "floorglowcolor", Field2 = "floorglowheight")]
+		[FieldDescription(Description = "Floor glow", Field1 = "floorglowcolor", Field2 = "floorglowheight", SRB2 = false)]
 		public bool FloorGlow = true;
 
-		[FieldDescription(Description = "Ceiling glow", Field1 = "ceilingglowcolor", Field2 = "ceilingglowheight")]
+		[FieldDescription(Description = "Ceiling glow", Field1 = "ceilingglowcolor", Field2 = "ceilingglowheight", SRB2 = false)]
 		public bool CeilingGlow = true;
 
-		[FieldDescription(Description = "Fog density", Field1 = "fogdensity")]
+		[FieldDescription(Description = "Fog density", Field1 = "fogdensity", SRB2 = false)]
 		public bool FogDensity = true;
 
-		[FieldDescription(Description = "Desaturation", Field1 = "desaturation")]
+		[FieldDescription(Description = "Desaturation", Field1 = "desaturation", SRB2 = false)]
 		public bool Desaturation = true;
 
 		[FieldDescription(Description = "Damage type", Field1 = "damagetype")]
 		public bool DamageType = true;
 
-		[FieldDescription(Description = "Damage amount", Field1 = "damageamount")]
+		[FieldDescription(Description = "Damage amount", Field1 = "damageamount", SRB2 = false)]
 		public bool DamageAmount = true;
 
-		[FieldDescription(Description = "Damage interval", Field1 = "damageinterval")]
+		[FieldDescription(Description = "Damage interval", Field1 = "damageinterval", SRB2 = false)]
 		public bool DamageInterval = true;
 
-		[FieldDescription(Description = "Damage leakiness", Field1 = "leakiness")]
+		[FieldDescription(Description = "Damage leakiness", Field1 = "leakiness", SRB2 = false)]
 		public bool DamageLeakiness = true;
 
-		[FieldDescription(Description = "Sound sequence", Field1 = "soundsequence")]
+		[FieldDescription(Description = "Sound sequence", Field1 = "soundsequence", SRB2 = false)]
 		public bool SoundSequence = true;
 
 		[FieldDescription(Description = "Gravity", Field1 = "gravity")]
 		public bool Gravity = true;
-		
+
+		[FieldDescription(Description = "Friction", Field1 = "friction")]
+		public bool Friction = true;
+
+		[FieldDescription(Description = "Trigger tag", Field1 = "triggertag")]
+		public bool TriggerTag = true;
+
+		[FieldDescription(Description = "Triggerer", Field1 = "triggerer")]
+		public bool Triggerer = true;
+
 		[FieldDescription(Description = "Custom fields", DOOM = false, HEXEN = false)]
 		public bool Fields = true;
 
@@ -482,8 +505,11 @@ namespace CodeImp.DoomBuilder.BuilderModes
 
 		[FieldDescription(Description = "Brightness", Field1 = "light", Field2 = "lightabsolute")]
 		public bool Brightness = true;
-		
-		[FieldDescription(Description = "Flags", DOOM = false, HEXEN = false)]
+
+		[FieldDescription(Description = "Texture repeats", Field1 = "repeatcnt")]
+		public bool TextureRepeats = true;
+
+		[FieldDescription(Description = "Flags", DOOM = false, HEXEN = false, SRB2 = false)]
 		public bool Flags = true;
 		
 		[FieldDescription(Description = "Custom fields", DOOM = false, HEXEN = false)]
@@ -565,7 +591,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		
 		[FieldDescription(Description = "Action arguments", DOOM = false)]
 		public bool Arguments = true;
-		
+
 		[FieldDescription(Description = "Activation", DOOM = false, UDMF = false)]
 		public bool Activation = true;
 		
@@ -581,9 +607,12 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[FieldDescription(Description = "Render style", Field1 = "renderstyle")]
 		public bool RenderStyle = true;
 
-		[FieldDescription(Description = "Lock number", Field1 = "locknumber")]
+		[FieldDescription(Description = "Lock number", Field1 = "locknumber", SRB2 = false)]
 		public bool LockNumber = true;
-		
+
+		[FieldDescription(Description = "Executor delay", Field1 = "executordelay")]
+		public bool ExecutorDelay = true;
+
 		[FieldDescription(Description = "Custom fields", DOOM = false, HEXEN = false)]
 		public bool Fields = true;
 
@@ -716,10 +745,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[FieldDescription(Description = "Scale", DOOM = false, HEXEN = false)]
 		public bool Scale = true;
 		
-		[FieldDescription(Description = "Action", DOOM = false)]
+		[FieldDescription(Description = "Action", DOOM = false, SRB2 = false)]
 		public bool Action = true;
 		
-		[FieldDescription(Description = "Action arguments", DOOM = false)]
+		[FieldDescription(Description = "Arguments", DOOM = false)]
 		public bool Arguments = true;
 		
 		[FieldDescription(Description = "Tag", DOOM = false)]
@@ -728,28 +757,28 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[FieldDescription(Description = "Flags")]
 		public bool Flags = true;
 
-		[FieldDescription(Description = "Conversation ID", Field1 = "conversation")]
+		[FieldDescription(Description = "Conversation ID", Field1 = "conversation", SRB2 = false)]
 		public bool Conversation = true;
 
-		[FieldDescription(Description = "Gravity", Field1 = "gravity")]
+		[FieldDescription(Description = "Gravity", Field1 = "gravity", SRB2 = false)]
 		public bool Gravity = true;
 
-		[FieldDescription(Description = "Health multiplier", Field1 = "health")]
+		[FieldDescription(Description = "Health multiplier", Field1 = "health", SRB2 = false)]
 		public bool Health = true;
 
-		[FieldDescription(Description = "Score", Field1 = "score")]
+		[FieldDescription(Description = "Score", Field1 = "score", SRB2 = false)]
 		public bool Score = true;
 
-		[FieldDescription(Description = "Float bob phase", Field1 = "floatbobphase")]
+		[FieldDescription(Description = "Float bob phase", Field1 = "floatbobphase", SRB2 = false)]
 		public bool FloatBobPhase = true;
 
-		[FieldDescription(Description = "Alpha", Field1 = "alpha")]
+		[FieldDescription(Description = "Alpha", Field1 = "alpha", SRB2 = false)]
 		public bool Alpha = true;
 
-		[FieldDescription(Description = "Fill color", Field1 = "fillcolor")]
+		[FieldDescription(Description = "Fill color", Field1 = "fillcolor", SRB2 = false)]
 		public bool FillColor = true;
 
-		[FieldDescription(Description = "Render style", Field1 = "renderstyle")]
+		[FieldDescription(Description = "Render style", Field1 = "renderstyle", SRB2 = false)]
 		public bool RenderStyle = true;
 		
 		[FieldDescription(Description = "Custom fields", DOOM = false, HEXEN = false)]
@@ -936,8 +965,11 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				for(int i = 0; i < source.Args.Length; i++)
 					if(source.Args[i] != target.Args[i]) return false;
 
+				for (int i = 0; i < source.Args.Length; i++)
+					if (source.Args[i] != target.Args[i]) return false;
+
 				// String args
-				if(General.Map.UDMF)
+				if (General.Map.UDMF)
 				{
 					if(!UniFields.ValuesMatch("arg0str", source, target)) return false;
 					if(!UniFields.ValuesMatch("arg1str", source, target)) return false;
