@@ -120,28 +120,34 @@ namespace CodeImp.DoomBuilder.Controls
 				if(General.Map.UDMF)
 				{
 					// Hijack activation labels to show lock numer...
-					activationlabel.Text = "Lock:";
+					// For SRB2, hijack to show executor delay
+					activationlabel.Text = "Exec. delay:";
 					activationlabel.Visible = true;
 					activation.Visible = true;
 
-					int locknum = l.Fields.GetValue("locknumber", 0);
+					activationlabel.Size = new Size(100, 14);
+					activationlabel.Location = new Point(78, 34);
+					activation.Location = new Point(180, 34);
+
+					int locknum = l.Fields.GetValue("executordelay", 0);
 					if(locknum != 0)
 					{
 						activationlabel.Enabled = true;
 						activation.Enabled = true;
 
-						if(General.Map.Config.Enums.ContainsKey("keys"))
-						{
-							foreach(EnumItem item in General.Map.Config.Enums["keys"])
-							{
-								if(item.GetIntValue() == locknum)
-								{
-									activation.Text = locknum + " - " + item.Title;
-									break;
-								}
-							}
-						}
-						else
+
+						//if(General.Map.Config.Enums.ContainsKey("keys"))
+						//{
+						//	foreach(EnumItem item in General.Map.Config.Enums["keys"])
+						//	{
+						//		if(item.GetIntValue() == locknum)
+						//		{
+						//			activation.Text = locknum + " - " + item.Title;
+						//			break;
+						//		}
+						//	}
+						//}
+						//else
 						{
 							activation.Text = locknum.ToString();
 						}
