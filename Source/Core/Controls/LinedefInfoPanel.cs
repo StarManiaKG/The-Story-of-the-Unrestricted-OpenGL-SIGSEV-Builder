@@ -50,8 +50,8 @@ namespace CodeImp.DoomBuilder.Controls
 			hexenformatwidth = infopanel.Width;
 			doomformatwidth = infopanel.Width - 190;
 
-			arglabels = new Label[] { arglbl1, arglbl2, arglbl3, arglbl4, arglbl5 };
-			args = new Label[] { arg1, arg2, arg3, arg4, arg5 };
+			arglabels = new Label[] { arglbl1, arglbl2, arglbl3, arglbl4, arglbl5, arglbl6, arglbl7, arglbl8, arglbl9, arglbl10 };
+			args = new Label[] { arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10 };
 
 			// We have to set the parernt (and subsequently the new location relative to the parent) here since
 			// we can't set the parent in the designer. And if the parent is not set to the ConfigurablePictureBox
