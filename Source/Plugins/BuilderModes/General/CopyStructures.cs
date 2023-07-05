@@ -270,7 +270,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[FieldDescription(Description = "Ceiling render style", Field1 = "renderstyleceiling", SRB2 = false)]
 		public bool CeilingRenderStyle = true;
 
-		[FieldDescription(Description = "Floor portal	 render style", Field1 = "portal_floor_overlaytype")]
+		[FieldDescription(Description = "Floor portal render style", Field1 = "portal_floor_overlaytype", SRB2 = false)]
 		public bool FloorPortalRenderStyle = true;
 
 		[FieldDescription(Description = "Ceiling portal render style", Field1 = "portal_ceil_overlaytype", SRB2 = false)]
