@@ -293,7 +293,10 @@ namespace CodeImp.DoomBuilder.Windows
 			executordelay.Text = UniFields.GetInteger(fl.Fields, "executordelay", 0).ToString();
 
 			// Action
-			action.Value = fl.Action;
+			if (action.Value != fl.Action)
+				action.Value = fl.Action;
+			else
+				action_ValueChanges(action, EventArgs.Empty);
 
 			//mxd. Args
 			argscontrol.SetValue(fl, true);
