@@ -68,11 +68,11 @@ namespace CodeImp.DoomBuilder.Controls
 			int sheight = s.CeilHeight - s.FloorHeight;
 
 			// Lookup effect description in config
-			string effectinfo = s.Effect + " - " + General.Map.Config.GetSectorEffectInfo(s.Effect).Title; //mxd
+			//string effectinfo = s.Effect + " - " + General.Map.Config.GetSectorEffectInfo(s.Effect).Title; //mxd
 
 			// Sector info
 			sectorinfo.Text = " Sector " + s.Index + " (" + (s.Sidedefs == null ? "no" : s.Sidedefs.Count.ToString()) + " sidedefs)"; //mxd
-			effect.Text = effectinfo;
+			effect.Text = s.Fields.GetValue("damagetype", "None"); // SRB2 hack
 			ceiling.Text = s.CeilHeight.ToString();
 			floor.Text = s.FloorHeight.ToString();
 			height.Text = sheight.ToString();
@@ -99,8 +99,8 @@ namespace CodeImp.DoomBuilder.Controls
 			}
 
 			//mxd
-			effect.Enabled = (s.Effect != 0);
-			effectlabel.Enabled = (s.Effect != 0);
+			effect.Enabled = s.Fields.GetValue("damagetype", "None") != "None";
+			effectlabel.Enabled = s.Fields.GetValue("damagetype", "None") != "None";
 
 			//mxd. Texture size
 			if(s.LongFloorTexture == MapSet.EmptyLongName)
@@ -345,8 +345,12 @@ namespace CodeImp.DoomBuilder.Controls
 					flagsPanel.Width = flags.Width + flags.Left * 2;
 				}
 
+				triggertag.Text = s.Fields.GetValue("triggertag", 0).ToString();
+				triggerer.Text = s.Fields.GetValue("triggerer", "Player");
+				triggerPanel.Visible = triggertag.Text != "0";
+
 				//mxd. Toggle visibility
-				foreach(Label label in floorinfolabels) label.Visible = showExtededFloorInfo;
+				foreach (Label label in floorinfolabels) label.Visible = showExtededFloorInfo;
 				foreach(Label label in floorlabels) label.Visible = showExtededFloorInfo;
 				foreach(Label label in ceilinfolabels) label.Visible = showExtededCeilingInfo;
 				foreach(Label label in ceillabels) label.Visible = showExtededCeilingInfo;
