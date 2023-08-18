@@ -72,6 +72,11 @@ namespace CodeImp.DoomBuilder.Controls
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.flagsPanel = new System.Windows.Forms.GroupBox();
 			this.flags = new CodeImp.DoomBuilder.Controls.TransparentListView();
+			this.triggerPanel = new System.Windows.Forms.GroupBox();
+			this.triggertag = new System.Windows.Forms.Label();
+			this.triggertaglabel = new System.Windows.Forms.Label();
+			this.triggerer = new System.Windows.Forms.Label();
+			this.triggererlabel = new System.Windows.Forms.Label();
 			label13 = new System.Windows.Forms.Label();
 			label5 = new System.Windows.Forms.Label();
 			this.sectorinfo.SuspendLayout();
@@ -81,6 +86,7 @@ namespace CodeImp.DoomBuilder.Controls
 			((System.ComponentModel.ISupportInitialize)(this.floortex)).BeginInit();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.flagsPanel.SuspendLayout();
+			this.triggerPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label13
@@ -130,11 +136,11 @@ namespace CodeImp.DoomBuilder.Controls
 			// 
 			// effectlabel
 			// 
-			this.effectlabel.Location = new System.Drawing.Point(8, 19);
+			this.effectlabel.Location = new System.Drawing.Point(2, 19);
 			this.effectlabel.Name = "effectlabel";
-			this.effectlabel.Size = new System.Drawing.Size(44, 14);
+			this.effectlabel.Size = new System.Drawing.Size(50, 14);
 			this.effectlabel.TabIndex = 0;
-			this.effectlabel.Text = "Effect:";
+			this.effectlabel.Text = "Damage:";
 			this.effectlabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// ceilingLightLabel
@@ -316,7 +322,7 @@ namespace CodeImp.DoomBuilder.Controls
 			this.effect.Name = "effect";
 			this.effect.Size = new System.Drawing.Size(123, 13);
 			this.effect.TabIndex = 1;
-			this.effect.Text = "0 - Whacky Pool of Fluid";
+			this.effect.Text = "None";
 			// 
 			// ceilingLight
 			// 
@@ -515,6 +521,7 @@ namespace CodeImp.DoomBuilder.Controls
 			this.flowLayoutPanel1.Controls.Add(this.sectorinfo);
 			this.flowLayoutPanel1.Controls.Add(this.floorpanel);
 			this.flowLayoutPanel1.Controls.Add(this.ceilingpanel);
+			this.flowLayoutPanel1.Controls.Add(this.triggerPanel);
 			this.flowLayoutPanel1.Controls.Add(this.flagsPanel);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -523,6 +530,56 @@ namespace CodeImp.DoomBuilder.Controls
 			this.flowLayoutPanel1.Size = new System.Drawing.Size(1400, 100);
 			this.flowLayoutPanel1.TabIndex = 5;
 			this.flowLayoutPanel1.WrapContents = false;
+			// 
+			// triggerPanel
+			// 
+			this.triggerPanel.Controls.Add(this.triggertag);
+			this.triggerPanel.Controls.Add(this.triggertaglabel);
+			this.triggerPanel.Controls.Add(this.triggerer);
+			this.triggerPanel.Controls.Add(this.triggererlabel);
+			this.triggerPanel.Location = new System.Drawing.Point(709, 0);
+			this.triggerPanel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+			this.triggerPanel.Name = "triggerPanel";
+			this.triggerPanel.Size = new System.Drawing.Size(125, 100);
+			this.triggerPanel.TabIndex = 7;
+			this.triggerPanel.TabStop = false;
+			this.triggerPanel.Text = " Trigger";
+			// 
+			// triggertag
+			// 
+			this.triggertag.AutoSize = true;
+			this.triggertag.Location = new System.Drawing.Point(70, 19);
+			this.triggertag.Name = "triggertag";
+			this.triggertag.Size = new System.Drawing.Size(50, 13);
+			this.triggertag.TabIndex = 0;
+			this.triggertag.Text = "0";
+			// 
+			// triggertaglabel
+			// 
+			this.triggertaglabel.Location = new System.Drawing.Point(2, 19);
+			this.triggertaglabel.Name = "triggertaglabel";
+			this.triggertaglabel.Size = new System.Drawing.Size(65, 14);
+			this.triggertaglabel.TabIndex = 0;
+			this.triggertaglabel.Text = "Trigger tag:";
+			this.triggertaglabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// triggerer
+			// 
+			this.triggerer.AutoSize = true;
+			this.triggerer.Location = new System.Drawing.Point(70, 34);
+			this.triggerer.Name = "triggerer";
+			this.triggerer.Size = new System.Drawing.Size(50, 13);
+			this.triggerer.TabIndex = 0;
+			this.triggerer.Text = "Player";
+			// 
+			// triggererlabel
+			// 
+			this.triggererlabel.Location = new System.Drawing.Point(2, 34);
+			this.triggererlabel.Name = "triggererlabel";
+			this.triggererlabel.Size = new System.Drawing.Size(65, 14);
+			this.triggererlabel.TabIndex = 0;
+			this.triggererlabel.Text = "Triggerer:";
+			this.triggererlabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// flagsPanel
 			// 
@@ -569,6 +626,7 @@ namespace CodeImp.DoomBuilder.Controls
 			((System.ComponentModel.ISupportInitialize)(this.floortex)).EndInit();
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.flagsPanel.ResumeLayout(false);
+			this.triggerPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -611,6 +669,11 @@ namespace CodeImp.DoomBuilder.Controls
 		private System.Windows.Forms.Label labelLight;
 		private System.Windows.Forms.GroupBox flagsPanel;
 		private CodeImp.DoomBuilder.Controls.TransparentListView flags;
+		private System.Windows.Forms.GroupBox triggerPanel;
+		private System.Windows.Forms.Label triggertag;
+		private System.Windows.Forms.Label triggertaglabel;
+		private System.Windows.Forms.Label triggerer;
+		private System.Windows.Forms.Label triggererlabel;
 		private System.Windows.Forms.Label taglabel;
 		private System.Windows.Forms.Label effectlabel;
 		private System.Windows.Forms.Label labelfloor;

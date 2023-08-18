@@ -110,6 +110,16 @@ namespace CodeImp.DoomBuilder.Controls
 			this.backhightex = new CodeImp.DoomBuilder.Controls.ConfigurablePictureBox();
 			this.backmidtex = new CodeImp.DoomBuilder.Controls.ConfigurablePictureBox();
 			this.backlowtex = new CodeImp.DoomBuilder.Controls.ConfigurablePictureBox();
+			this.arglbl6 = new System.Windows.Forms.Label();
+			this.arglbl7 = new System.Windows.Forms.Label();
+			this.arglbl8 = new System.Windows.Forms.Label();
+			this.arglbl9 = new System.Windows.Forms.Label();
+			this.arglbl10 = new System.Windows.Forms.Label();
+			this.arg6 = new System.Windows.Forms.Label();
+			this.arg7 = new System.Windows.Forms.Label();
+			this.arg8 = new System.Windows.Forms.Label();
+			this.arg9 = new System.Windows.Forms.Label();
+			this.arg10 = new System.Windows.Forms.Label();
 			this.infopanel.SuspendLayout();
 			this.frontpanel.SuspendLayout();
 			this.flowLayoutPanelFront.SuspendLayout();
@@ -204,10 +214,20 @@ namespace CodeImp.DoomBuilder.Controls
 			this.infopanel.Controls.Add(this.lengthlabel);
 			this.infopanel.Controls.Add(this.action);
 			this.infopanel.Controls.Add(this.actionlabel);
+			this.infopanel.Controls.Add(this.arglbl6);
+			this.infopanel.Controls.Add(this.arglbl7);
+			this.infopanel.Controls.Add(this.arglbl8);
+			this.infopanel.Controls.Add(this.arglbl9);
+			this.infopanel.Controls.Add(this.arglbl10);
+			this.infopanel.Controls.Add(this.arg6);
+			this.infopanel.Controls.Add(this.arg7);
+			this.infopanel.Controls.Add(this.arg8);
+			this.infopanel.Controls.Add(this.arg9);
+			this.infopanel.Controls.Add(this.arg10);
 			this.infopanel.Location = new System.Drawing.Point(0, 0);
 			this.infopanel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
 			this.infopanel.Name = "infopanel";
-			this.infopanel.Size = new System.Drawing.Size(461, 100);
+			this.infopanel.Size = new System.Drawing.Size(650, 100);
 			this.infopanel.TabIndex = 1;
 			this.infopanel.TabStop = false;
 			this.infopanel.Text = " Linedef ";
@@ -247,7 +267,7 @@ namespace CodeImp.DoomBuilder.Controls
 			this.arg5.AutoEllipsis = true;
 			this.arg5.Location = new System.Drawing.Point(373, 79);
 			this.arg5.Name = "arg5";
-			this.arg5.Size = new System.Drawing.Size(83, 14);
+			this.arg5.Size = new System.Drawing.Size(73, 14);
 			this.arg5.TabIndex = 27;
 			this.arg5.Text = "Arg 1:";
 			this.arg5.UseMnemonic = false;
@@ -281,7 +301,7 @@ namespace CodeImp.DoomBuilder.Controls
 			this.arg4.AutoEllipsis = true;
 			this.arg4.Location = new System.Drawing.Point(373, 64);
 			this.arg4.Name = "arg4";
-			this.arg4.Size = new System.Drawing.Size(83, 14);
+			this.arg4.Size = new System.Drawing.Size(73, 14);
 			this.arg4.TabIndex = 26;
 			this.arg4.Text = "Arg 1:";
 			this.arg4.UseMnemonic = false;
@@ -315,7 +335,7 @@ namespace CodeImp.DoomBuilder.Controls
 			this.arg3.AutoEllipsis = true;
 			this.arg3.Location = new System.Drawing.Point(373, 49);
 			this.arg3.Name = "arg3";
-			this.arg3.Size = new System.Drawing.Size(83, 14);
+			this.arg3.Size = new System.Drawing.Size(73, 14);
 			this.arg3.TabIndex = 25;
 			this.arg3.Text = "Arg 1:";
 			this.arg3.UseMnemonic = false;
@@ -337,7 +357,7 @@ namespace CodeImp.DoomBuilder.Controls
 			this.arg2.AutoEllipsis = true;
 			this.arg2.Location = new System.Drawing.Point(373, 34);
 			this.arg2.Name = "arg2";
-			this.arg2.Size = new System.Drawing.Size(83, 14);
+			this.arg2.Size = new System.Drawing.Size(73, 14);
 			this.arg2.TabIndex = 24;
 			this.arg2.Text = "Arg 1:";
 			this.arg2.UseMnemonic = false;
@@ -356,7 +376,7 @@ namespace CodeImp.DoomBuilder.Controls
 			this.arg1.AutoEllipsis = true;
 			this.arg1.Location = new System.Drawing.Point(373, 19);
 			this.arg1.Name = "arg1";
-			this.arg1.Size = new System.Drawing.Size(83, 14);
+			this.arg1.Size = new System.Drawing.Size(73, 14);
 			this.arg1.TabIndex = 23;
 			this.arg1.Text = "Arg 1:";
 			this.arg1.UseMnemonic = false;
@@ -1064,6 +1084,116 @@ namespace CodeImp.DoomBuilder.Controls
 			this.backlowtex.TabIndex = 14;
 			this.backlowtex.TabStop = false;
 			// 
+			// arglbl6
+			// 
+			this.arglbl6.AutoEllipsis = true;
+			this.arglbl6.BackColor = System.Drawing.Color.Transparent;
+			this.arglbl6.Location = new System.Drawing.Point(436, 19);
+			this.arglbl6.Name = "arglbl6";
+			this.arglbl6.Size = new System.Drawing.Size(121, 14);
+			this.arglbl6.TabIndex = 22;
+			this.arglbl6.Text = "Arg 1:";
+			this.arglbl6.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.arglbl6.UseMnemonic = false;
+			// 
+			// arglbl7
+			// 
+			this.arglbl7.AutoEllipsis = true;
+			this.arglbl7.BackColor = System.Drawing.Color.Transparent;
+			this.arglbl7.Location = new System.Drawing.Point(436, 34);
+			this.arglbl7.Name = "arglbl7";
+			this.arglbl7.Size = new System.Drawing.Size(121, 14);
+			this.arglbl7.TabIndex = 22;
+			this.arglbl7.Text = "Arg 1:";
+			this.arglbl7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.arglbl7.UseMnemonic = false;
+			// 
+			// arglbl8
+			// 
+			this.arglbl8.AutoEllipsis = true;
+			this.arglbl8.BackColor = System.Drawing.Color.Transparent;
+			this.arglbl8.Location = new System.Drawing.Point(436, 49);
+			this.arglbl8.Name = "arglbl8";
+			this.arglbl8.Size = new System.Drawing.Size(121, 14);
+			this.arglbl8.TabIndex = 22;
+			this.arglbl8.Text = "Arg 1:";
+			this.arglbl8.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.arglbl8.UseMnemonic = false;
+			// 
+			// arglbl9
+			// 
+			this.arglbl9.AutoEllipsis = true;
+			this.arglbl9.BackColor = System.Drawing.Color.Transparent;
+			this.arglbl9.Location = new System.Drawing.Point(436, 64);
+			this.arglbl9.Name = "arglbl9";
+			this.arglbl9.Size = new System.Drawing.Size(121, 14);
+			this.arglbl9.TabIndex = 22;
+			this.arglbl9.Text = "Arg 1:";
+			this.arglbl9.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.arglbl9.UseMnemonic = false;
+			// 
+			// arglbl10
+			// 
+			this.arglbl10.AutoEllipsis = true;
+			this.arglbl10.BackColor = System.Drawing.Color.Transparent;
+			this.arglbl10.Location = new System.Drawing.Point(436, 79);
+			this.arglbl10.Name = "arglbl10";
+			this.arglbl10.Size = new System.Drawing.Size(121, 14);
+			this.arglbl10.TabIndex = 22;
+			this.arglbl10.Text = "Arg 1:";
+			this.arglbl10.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.arglbl10.UseMnemonic = false;
+			// 
+			// arg6
+			// 
+			this.arg6.AutoEllipsis = true;
+			this.arg6.Location = new System.Drawing.Point(562, 19);
+			this.arg6.Name = "arg6";
+			this.arg6.Size = new System.Drawing.Size(73, 14);
+			this.arg6.TabIndex = 27;
+			this.arg6.Text = "Arg 1:";
+			this.arg6.UseMnemonic = false;
+			// 
+			// arg7
+			// 
+			this.arg7.AutoEllipsis = true;
+			this.arg7.Location = new System.Drawing.Point(562, 34);
+			this.arg7.Name = "arg7";
+			this.arg7.Size = new System.Drawing.Size(73, 14);
+			this.arg7.TabIndex = 27;
+			this.arg7.Text = "Arg 1:";
+			this.arg7.UseMnemonic = false;
+			// 
+			// arg8
+			// 
+			this.arg8.AutoEllipsis = true;
+			this.arg8.Location = new System.Drawing.Point(562, 49);
+			this.arg8.Name = "arg8";
+			this.arg8.Size = new System.Drawing.Size(73, 14);
+			this.arg8.TabIndex = 27;
+			this.arg8.Text = "Arg 1:";
+			this.arg8.UseMnemonic = false;
+			// 
+			// arg9
+			// 
+			this.arg9.AutoEllipsis = true;
+			this.arg9.Location = new System.Drawing.Point(562, 64);
+			this.arg9.Name = "arg9";
+			this.arg9.Size = new System.Drawing.Size(73, 14);
+			this.arg9.TabIndex = 27;
+			this.arg9.Text = "Arg 1:";
+			this.arg9.UseMnemonic = false;
+			// 
+			// arg10
+			// 
+			this.arg10.AutoEllipsis = true;
+			this.arg10.Location = new System.Drawing.Point(562, 79);
+			this.arg10.Name = "arg10";
+			this.arg10.Size = new System.Drawing.Size(73, 14);
+			this.arg10.TabIndex = 27;
+			this.arg10.Text = "Arg 1:";
+			this.arg10.UseMnemonic = false;
+			// 
 			// LinedefInfoPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1132,6 +1262,16 @@ namespace CodeImp.DoomBuilder.Controls
 		private System.Windows.Forms.Label arg3;
 		private System.Windows.Forms.Label arg2;
 		private System.Windows.Forms.Label arg1;
+		private System.Windows.Forms.Label arglbl6;
+		private System.Windows.Forms.Label arglbl7;
+		private System.Windows.Forms.Label arglbl8;
+		private System.Windows.Forms.Label arglbl9;
+		private System.Windows.Forms.Label arglbl10;
+		private System.Windows.Forms.Label arg6;
+		private System.Windows.Forms.Label arg7;
+		private System.Windows.Forms.Label arg8;
+		private System.Windows.Forms.Label arg9;
+		private System.Windows.Forms.Label arg10;
 		private System.Windows.Forms.GroupBox infopanel;
 		private System.Windows.Forms.Label unpegged;
 		private System.Windows.Forms.Label peglabel;

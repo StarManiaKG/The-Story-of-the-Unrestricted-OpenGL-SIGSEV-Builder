@@ -136,6 +136,10 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					alpha = General.Clamp(linedef.Args[1], 0, 255);
 					renderinside = (linedef.Args[3] & 7) != 0;
 					break;
+				case "srb2_foflight":
+				case "srb2_fofintangibleinvisible":
+					alpha = 0;
+					break;
 				case "srb2_fofintangible":
 					alpha = General.Clamp(linedef.Args[1], 0, 255);
 					renderinside = (linedef.Args[3] & 4) != 4;
@@ -220,7 +224,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 					disablelighting = (linedef.Args[4] & 1) == 1;
 					break;
 				case "srb2_foflight":
-					restrictlighting = linedef.Args[1] != 0;
+					restrictlighting = linedef.Args[1] == 0;
 					break;
 				case "srb2_foffog":
 				case "srb2_fofintangibleinvisible":

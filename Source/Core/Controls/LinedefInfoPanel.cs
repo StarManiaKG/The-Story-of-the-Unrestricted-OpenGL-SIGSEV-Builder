@@ -50,8 +50,8 @@ namespace CodeImp.DoomBuilder.Controls
 			hexenformatwidth = infopanel.Width;
 			doomformatwidth = infopanel.Width - 190;
 
-			arglabels = new Label[] { arglbl1, arglbl2, arglbl3, arglbl4, arglbl5 };
-			args = new Label[] { arg1, arg2, arg3, arg4, arg5 };
+			arglabels = new Label[] { arglbl1, arglbl2, arglbl3, arglbl4, arglbl5, arglbl6, arglbl7, arglbl8, arglbl9, arglbl10 };
+			args = new Label[] { arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10 };
 
 			// We have to set the parernt (and subsequently the new location relative to the parent) here since
 			// we can't set the parent in the designer. And if the parent is not set to the ConfigurablePictureBox
@@ -120,28 +120,34 @@ namespace CodeImp.DoomBuilder.Controls
 				if(General.Map.UDMF)
 				{
 					// Hijack activation labels to show lock numer...
-					activationlabel.Text = "Lock:";
+					// For SRB2, hijack to show executor delay
+					activationlabel.Text = "Exec. delay:";
 					activationlabel.Visible = true;
 					activation.Visible = true;
 
-					int locknum = l.Fields.GetValue("locknumber", 0);
+					activationlabel.Size = new Size(100, 14);
+					activationlabel.Location = new Point(78, 34);
+					activation.Location = new Point(180, 34);
+
+					int locknum = l.Fields.GetValue("executordelay", 0);
 					if(locknum != 0)
 					{
 						activationlabel.Enabled = true;
 						activation.Enabled = true;
 
-						if(General.Map.Config.Enums.ContainsKey("keys"))
-						{
-							foreach(EnumItem item in General.Map.Config.Enums["keys"])
-							{
-								if(item.GetIntValue() == locknum)
-								{
-									activation.Text = locknum + " - " + item.Title;
-									break;
-								}
-							}
-						}
-						else
+
+						//if(General.Map.Config.Enums.ContainsKey("keys"))
+						//{
+						//	foreach(EnumItem item in General.Map.Config.Enums["keys"])
+						//	{
+						//		if(item.GetIntValue() == locknum)
+						//		{
+						//			activation.Text = locknum + " - " + item.Title;
+						//			break;
+						//		}
+						//	}
+						//}
+						//else
 						{
 							activation.Text = locknum.ToString();
 						}

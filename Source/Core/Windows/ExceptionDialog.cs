@@ -81,7 +81,12 @@ namespace CodeImp.DoomBuilder.Windows
 				"ALL YOUR RINGS ARE BELONG TO US!",
 				"Hohohoho!! *B^D",
 				"So that's it. I was so busy playing SRB2 I never noticed... but... everything's gone...",
-				"Tails! You made the engines quit!"
+				"Tails! You made the engines quit!",
+				"Oh no, we dead? D:",
+				@"oh no! back to reality!\r\n",
+				"They're dead, Jim.",
+				"We're dead now. De-solidify.",
+				"Yousa dead now, Okieday?"
 			};
 
 			this.Text = titles[new Random().Next(0, titles.Length - 1)];
